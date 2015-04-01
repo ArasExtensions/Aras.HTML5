@@ -10,6 +10,12 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
+# Dojo Source
+src/static/dojo/
+src/static/dijit/
+src/static/dojox/
+src/static/util/
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
