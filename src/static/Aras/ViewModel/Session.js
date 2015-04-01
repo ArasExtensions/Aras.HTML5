@@ -23,45 +23,20 @@
 */
 
 define([
-	'dojo/_base/declare', 
-	'dojo/_base/lang',
-	'Aras/ViewModel/Server'
-], function(declare, lang, Server) {
+	'dojo/_base/declare',
+	'dojo/request'
+], function(declare, request) {
 	
-	return declare('Aras.Test.Session.Test', null, {
+	return declare('Aras.ViewModel.Session', null, {
 		
-		URL: null,
+		database: null, 
 		
-		DatabaseID: null,
+		username: null,
 		
-		Username: null,
-		
-		Password: null,
+		password: null,
 		
 		constructor: function(args) {
 			declare.safeMixin(this, args);
-		},
-		
-		Execute: function() {
-			
-			// Create Server
-			var server = new Server({ URL: this.URL });
-			
-			// List all Databases
-			server.Databases().then(
-				function(databases) {
-					console.log(databases);
-				});
-				
-			// Get Database
-			server.Database(this.DatabaseID).then(
-				lang.hitch(this, function(database) {
-					console.log(database);
-					
-					// Login
-					database.Login(this.Username, this.Password);
-				})
-				);
 		}
 	});
 });

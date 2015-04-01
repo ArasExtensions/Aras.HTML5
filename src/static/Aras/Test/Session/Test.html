@@ -39,8 +39,8 @@
 		<script type="text/javascript" src="../../../dojo/dojo.js"></script>
 		<script>
 			require(['Aras/Test/Session/Test'], function(Test) {		
-				var test = new Test({url: 'http://localhost/Aras.WebService'});
-				test.execute();
+				var test = new Test({URL: 'http://localhost/Aras.WebService', DatabaseID: 'Development100SP4', Username: 'admin', Password: 'innovator'});
+				test.Execute();
 			});
 		</script>
 	</head>

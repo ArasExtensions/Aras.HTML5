@@ -32,25 +32,49 @@ define([
 	
 	return declare('Aras.ViewModel.Server', null, {
 		
-		url: null,
+		URL: null,
+		
+		_databaseCache: new Object(),
 		
 		constructor: function(args) {
 			declare.safeMixin(this, args);
 		},
 		
-		databases: function() {
-			return request.get(this.url + '/api/databases', { headers: {'Accept': 'application/json'}, handleAs: 'json'}).then(
+		Databases: function() {
+			return request.get(this.URL + '/databases', { headers: {'Accept': 'application/json'}, handleAs: 'json'}).then(
 				lang.hitch(this, function(result) {
 					var ret = [];
 			
 					array.forEach(result, lang.hitch(this, function(entry) {
-						entry['server'] = this;
-						ret.push(new Database(entry));
+						
+						if (!this._databaseCache[entry.ID])
+						{
+							entry['Server'] = this;
+							this._databaseCache[entry.ID] = new Database(entry);
+						}
+
+						ret.push(this._databaseCache[entry.ID]);
 					}));
 					
 					return ret;
 				})
 			);
+		},
+		
+		Database: function(ID) {
+			return request.get(this.URL + '/databases/' + ID, { headers: {'Accept': 'application/json'}, handleAs: 'json'}).then(
+				lang.hitch(this, function(entry) {
+					
+					if (!this._databaseCache[entry.ID])
+					{
+						entry['Server'] = this;
+						this._databaseCache[entry.ID] = new Database(entry);
+					}
+
+					return this._databaseCache[entry.ID];
+				})
+			);			
+			
 		}
 		
 	});

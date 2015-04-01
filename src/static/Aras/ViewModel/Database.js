@@ -24,19 +24,25 @@
 
 define([
 	'dojo/_base/declare',
-	'dojo/request'
-], function(declare, request) {
+	'dojo/request',
+	'dojo/_base/lang',
+	'dojo/json'
+], function(declare, request, lang, json) {
 	
 	return declare('Aras.ViewModel.Database', null, {
 		
-		server: null,
+		Server: null,
+		
+		ID: null,
 		
 		constructor: function(args) {
 			declare.safeMixin(this, args);
 		},
 		
-		login: function(username, password) {
-			
+		Login: function(Username, Password) {
+			return request.post(this.Server.URL + '/databases/' + this.ID + '/login', {headers: {'Content-Type': 'application/json', 'Accept': 'application/json'}, handleAs: 'json', data: json.stringify({ Username: Username, Password: Password }) });
 		}
+		
+		
 	});
 });
