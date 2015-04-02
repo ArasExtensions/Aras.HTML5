@@ -41,7 +41,10 @@ define([
 		},
 		
 		Databases: function() {
-			return request.get(this.URL + '/databases', { headers: {'Accept': 'application/json'}, handleAs: 'json'}).then(
+			return request.get(this.URL + '/databases', 
+							   { headers: {'Accept': 'application/json'}, 
+								 handleAs: 'json'
+							   }).then(
 				lang.hitch(this, function(result) {
 					var ret = [];
 			
@@ -62,7 +65,10 @@ define([
 		},
 		
 		Database: function(ID) {
-			return request.get(this.URL + '/databases/' + ID, { headers: {'Accept': 'application/json'}, handleAs: 'json'}).then(
+			return request.get(this.URL + '/databases/' + ID, 
+							   { headers: {'Accept': 'application/json'}, 
+								 handleAs: 'json'
+							   }).then(
 				lang.hitch(this, function(entry) {
 					
 					if (!this._databaseCache[entry.ID])
@@ -73,8 +79,7 @@ define([
 
 					return this._databaseCache[entry.ID];
 				})
-			);			
-			
+			);
 		}
 		
 	});

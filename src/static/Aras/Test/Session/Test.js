@@ -59,9 +59,13 @@ define([
 					console.log(database);
 					
 					// Login
-					database.Login(this.Username, this.Password);
+					database.Login(this.Username, this.Password).then(lang.hitch(this, function(session){
+							console.log(session);
+							session.Applications().then(function(result){ console.log(result);});
+						})
+					);
 				})
-				);
+			);
 		}
 	});
 });

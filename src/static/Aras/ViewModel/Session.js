@@ -24,19 +24,48 @@
 
 define([
 	'dojo/_base/declare',
-	'dojo/request'
-], function(declare, request) {
+	'dojo/request',
+	'dojo/_base/lang',
+	'dojo/_base/array',
+	'./Control'
+], function(declare, request, lang, array, Control) {
 	
 	return declare('Aras.ViewModel.Session', null, {
 		
-		database: null, 
+		Database: null, 
 		
-		username: null,
+		Username: null,
 		
-		password: null,
+		Password: null,
+		
+		_controlCache: new Object(),
 		
 		constructor: function(args) {
 			declare.safeMixin(this, args);
+		},
+		
+		Applications: function() {
+				return request.get(this.Database.Server.URL + '/applications', 
+							   { headers: {'Accept': 'application/json'}, 
+								 handleAs: 'json'
+							   }).then(
+				lang.hitch(this, function(result) {
+					var ret = [];
+			
+					array.forEach(result, lang.hitch(this, function(entry) {
+						
+						if (!this._controlCache[entry.ID])
+						{
+							entry['Session'] = this;
+							this._controlCache[entry.ID] = new Control(entry);
+						}
+
+						ret.push(this._controlCache[entry.ID]);
+					}));
+					
+					return ret;
+				})
+			);
 		}
 	});
 });
