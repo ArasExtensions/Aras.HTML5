@@ -29,11 +29,9 @@ define([
 ], function(declare, BorderContainer, Control) {
 	
 	return declare('Aras.View.Application', [BorderContainer, Control], {
-		
-		ViewModel: null, 
-				
-		constructor: function(args) {
-			declare.safeMixin(this, args);
+			
+		constructor: function() {
+			
 		}
 	});
 });

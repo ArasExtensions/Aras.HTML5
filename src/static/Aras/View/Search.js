@@ -23,13 +23,13 @@
 */
 
 define([
-	'dojo/_base/declare'
-], function(declare) {
+	'dojo/_base/declare',
+	'dijit/layout/ContentPane',
+	'./Control'
+], function(declare, ContentPane, Control) {
 	
-	return declare('Aras.View.Control', null, {
-		
-		ViewModel: null, 
-				
+	return declare('Aras.View.Search', [ContentPane, Control], {
+			
 		constructor: function() {
 			
 		}

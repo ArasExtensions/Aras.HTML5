@@ -23,15 +23,15 @@
 */
 
 define([
-	'dojo/_base/declare'
-], function(declare) {
+	'dojo/_base/declare',
+	'dgrid/Grid',
+	'./Control'
+], function(declare, Grid, Control) {
 	
-	return declare('Aras.View.Control', null, {
-		
-		ViewModel: null, 
-				
-		constructor: function() {
+	return declare('Aras.View.Grid', [Grid, Control], {
 			
+		constructor: function(args) {
+			this.inherited(args);
 		}
 	});
 });
