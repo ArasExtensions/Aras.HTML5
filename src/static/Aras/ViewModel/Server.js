@@ -1,5 +1,5 @@
 /*
-  Aras.View.HTML5 provides a HTML5 client library to build Aras Innovator Applications
+  Aras.HTML5 provides a HTML5 client library to build Aras Innovator Applications
 
   Copyright (C) 2015 Processwall Limited.
 
