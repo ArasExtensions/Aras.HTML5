@@ -24,15 +24,23 @@
 
 define([
 	'dojo/_base/declare',
-	'dojo/Stateful'
-], function(declare, Stateful) {
+	'dojo/Stateful',
+	'dojo/_base/lang'
+], function(declare, Stateful, lang) {
 	
 	return declare('Aras.View.Control', [Stateful], {
 		
 		ViewModel: null, 
 				
-		constructor: function(args) {
-			declare.safeMixin(this, args);
+		constructor: function() {
+			
+			// Watch ViewModel
+			this.watch("ViewModel", lang.hitch(this, this.OnViewModelChange));
+		},
+		
+		OnViewModelChange: function(name, oldValue, newValue) {
+			console.debug(name);
 		}
+		
 	});
 });

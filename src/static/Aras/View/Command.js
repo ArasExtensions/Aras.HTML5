@@ -24,19 +24,23 @@
 
 define([
 	'dojo/_base/declare',
-	'dgrid/Grid',
-	'dgrid/extensions/DijitRegistry',
-	'./Control'
-], function(declare, Grid, DijitRegistry, Control) {
+	'dojo/Stateful',
+	'dojo/_base/lang'
+], function(declare, Stateful, lang) {
 	
-	return declare('Aras.View.Grid', [Grid, DijitRegistry, Control], {
-			
+	return declare('Aras.View.Command', [Stateful], {
+		
+		ViewModel: null, 
+				
 		constructor: function() {
 			
+			// Watch ViewModel
+			this.watch("ViewModel", lang.hitch(this, this.OnViewModelChange));
 		},
 		
-		startup: function() {
-			this.inherited(arguments);
+		OnViewModelChange: function(name, oldValue, newValue) {
+			console.debug(name);
 		}
+		
 	});
 });

@@ -17,6 +17,8 @@ src/static/dojox/
 src/static/util/
 src/static/dgrid/
 src/static/dstore/
+src/static/put-selector/
+src/static/xstyle/
 
 # Build results
 [Dd]ebug/

@@ -71,7 +71,6 @@ define([
 										if (application.Type == this.Name)
 										{
 											this.set("ViewModel", application);
-											console.debug(application);
 										}
 									}));
 								})
