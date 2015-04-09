@@ -66,6 +66,24 @@ define([
 					return ret;
 				})
 			);
+		},
+		
+		Control: function(ID) {
+				return request.get(this.Database.Server.URL + '/controls/' + ID, 
+							   { headers: {'Accept': 'application/json'}, 
+								 handleAs: 'json'
+							   }).then(
+				lang.hitch(this, function(result) {
+			
+					if (!this._controlCache[ID])
+					{
+						entry['Session'] = this;
+						this._controlCache[ID] = new Control(entry);
+					}
+
+					return this._controlCache[ID];
+				})
+			);
 		}
 	});
 });

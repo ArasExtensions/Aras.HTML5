@@ -24,14 +24,62 @@
 
 define([
 	'dojo/_base/declare',
+	'dojo/_base/lang',
+	'dojo/_base/array',
 	'dijit/layout/BorderContainer',
-	'./Control'
-], function(declare, BorderContainer, Control) {
+	'./Control',
+	'Aras/ViewModel/Server'
+], function(declare, lang, array, BorderContainer, Control, Server) {
 	
 	return declare('Aras.View.Application', [BorderContainer, Control], {
+		
+		URL: null,
+		
+		DatabaseID: null,
+		
+		Username: null,
+		
+		Password: null,
+		
+		Name: null,
+		
+		constructor: function(args) {
+			declare.safeMixin(this, args);
+		},
+		
+		startup: function() {
+			this.inherited(arguments);
 			
-		constructor: function() {
+			// Create Server
+			var server = new Server({ URL: this.URL });
 			
+			// Get Database
+			server.Database(this.DatabaseID).then(
+				lang.hitch(this, function(database) {
+		
+					// Login
+					database.Login(this.Username, this.Password).then(
+						lang.hitch(this, function(session){
+							
+							// Get Application ViewModel
+							session.Applications().then(
+								lang.hitch(this, function(applications){ 
+								
+									// Set ViewModel
+									array.forEach(applications, lang.hitch(this, function(application){
+										
+										if (application.Type == this.Name)
+										{
+											this.set("ViewModel", application);
+											console.debug(application);
+										}
+									}));
+								})
+							);
+						})
+					);
+				})
+			);
 		}
 	});
 });

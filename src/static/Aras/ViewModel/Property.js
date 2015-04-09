@@ -23,33 +23,32 @@
 */
 
 define([
-	'dojo/_base/declare',
-	'dojo/_base/array',
-	'dojo/_base/lang',
-	'./Property'
-], function(declare, array, lang, Property) {
+	'dojo/_base/declare'
+], function(declare) {
 	
-	return declare('Aras.ViewModel.Control', null, {
+	return declare('Aras.ViewModel.Property', null, {
 		
-		Session: null,
+		Control: null,
 		
-		ID: null,
+		Name: null,
 		
 		Type: null,
 		
-		Properties: null,
+		Value: null,
 		
 		constructor: function(args) {
-			this.Session = args.Session;
-			this.ID = args.ID;
+			this.Control = args.Control;
+			this.Name = args.Name;
 			this.Type = args.Type;
-			this.Properties = new Object();
 			
-			array.forEach(args.Properties, lang.hitch(this, function(property){
-				property.Control = this;
-				this.Properties[property.Name] = new Property(property);
-			}));
-			
+			if (this.Type == 'Control')
+			{
+				this.Value = this.Control.Session.Control(args.Value);
+			}
+			else
+			{
+				this.Value = args.Value;
+			}
 		}
 	});
 });

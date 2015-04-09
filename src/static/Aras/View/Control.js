@@ -23,15 +23,16 @@
 */
 
 define([
-	'dojo/_base/declare'
-], function(declare) {
+	'dojo/_base/declare',
+	'dojo/Stateful'
+], function(declare, Stateful) {
 	
-	return declare('Aras.View.Control', null, {
+	return declare('Aras.View.Control', [Stateful], {
 		
 		ViewModel: null, 
 				
-		constructor: function() {
-			
+		constructor: function(args) {
+			declare.safeMixin(this, args);
 		}
 	});
 });
