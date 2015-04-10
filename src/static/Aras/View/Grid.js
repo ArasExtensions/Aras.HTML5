@@ -29,14 +29,7 @@ define([
 	'./Control'
 ], function(declare, Grid, DijitRegistry, Control) {
 	
-	return declare('Aras.View.Grid', [Grid, DijitRegistry, Control], {
+	return declare('Aras.View.Grid', [Control, Grid, DijitRegistry], {
 			
-		constructor: function() {
-			
-		},
-		
-		startup: function() {
-			this.inherited(arguments);
-		}
 	});
 });

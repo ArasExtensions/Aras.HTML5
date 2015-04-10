@@ -33,55 +33,28 @@ define([
 ], function(declare, BorderContainer, ContentPane, Control, Toolbar, Button, Grid) {
 	
 	return declare('Aras.View.Search', [BorderContainer, Control], {
-			
-		ToolbarPane: null,
-		
+	
 		Toolbar: null,
 		
 		SearchButton: null,
-		
-		GridPane: null,
-		
+				
 		Grid: null,
 		
 		constructor: function() {
 			
 		},
-		
-		postCreate:function () {
-            this.inherited(arguments);
-	
-			this.ToolbarPane = new ContentPane();
-			this.Toolbar = new Toolbar();
-			this.SearchButton = new Button({ label: 'Search' });
-			
-			
-			
-			this.GridPane = new ContentPane( { content: 'Loading' } );
-			this.addChild(this.GridPane);
-			
-			this.Grid = new Grid();
-			console.debug(this.Grid);
-			this.GridPane.addChild(this.Grid);
-			
-			// Add Toolbar
-			//this.addChild(this.ToolbarPane);
-			//this.ToolbarPane.addChild(this.Toolbar);
-			//this.Toolbar.addChild(this.SearchButton);
-						
-			// Add Grid
-			
-		
-		
-		},
-		
+				
 		startup: function() {
 			this.inherited(arguments);
-			
 
-		
-			//var testdata = [ {first: 'Hello'}];
-			//this.Grid.renderArray(testdata);
+			this.Toolbar = new Toolbar();
+			this.addChild(this.Toolbar);
+			
+			this.SearchButton = new Button({ label: 'Search' });
+			this.Toolbar.addChild(this.SearchButton);
+						
+			this.Grid = new Grid();
+			this.addChild(this.Grid);
 		}
 	});
 });

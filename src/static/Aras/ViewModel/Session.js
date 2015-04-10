@@ -77,8 +77,8 @@ define([
 			
 					if (!this._controlCache[ID])
 					{
-						entry['Session'] = this;
-						this._controlCache[ID] = new Control(entry);
+						result['Session'] = this;
+						this._controlCache[ID] = new Control(result);
 					}
 
 					return this._controlCache[ID];

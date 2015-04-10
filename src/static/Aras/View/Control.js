@@ -39,7 +39,7 @@ define([
 		},
 		
 		OnViewModelChange: function(name, oldValue, newValue) {
-			console.debug(name);
+
 		}
 		
 	});

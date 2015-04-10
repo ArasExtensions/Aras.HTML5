@@ -44,7 +44,7 @@ define([
 		Name: null,
 		
 		constructor: function(args) {
-			declare.safeMixin(this, args);
+			
 		},
 		
 		startup: function() {
