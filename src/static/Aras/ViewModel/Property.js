@@ -23,8 +23,10 @@
 */
 
 define([
-	'dojo/_base/declare'
-], function(declare) {
+	'dojo/_base/declare',
+	'dojo/_base/array',
+	'dojo/_base/lang'
+], function(declare, array, lang) {
 	
 	return declare('Aras.ViewModel.Property', null, {
 		
@@ -43,11 +45,19 @@ define([
 			
 			if (this.Type == 'Control')
 			{
-				this.Value = this.Control.Session.Control(args.Value);
+				this.Value = this.Control.Session.Control(args.Values[0]);
+			}
+			else if (this.Type == 'ControlList')
+			{
+				this.Value = [];
+				array.forEach(args.Values, lang.hitch(this, function(value) {
+						this.Value.push(this.Control.Session.Control(value));
+					}
+				));
 			}
 			else
 			{
-				this.Value = args.Value;
+				this.Value = args.Values[0];
 			}
 		}
 	});

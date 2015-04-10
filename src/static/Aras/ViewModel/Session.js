@@ -69,21 +69,21 @@ define([
 		},
 		
 		Control: function(ID) {
-				return request.get(this.Database.Server.URL + '/controls/' + ID, 
+			
+			if (!this._controlCache[ID])
+			{
+				this._controlCache[ID] = request.get(this.Database.Server.URL + '/controls/' + ID, 
 							   { headers: {'Accept': 'application/json'}, 
 								 handleAs: 'json'
-							   }).then(
-				lang.hitch(this, function(result) {
+							   }).then(lang.hitch(this, function(result) {
 			
-					if (!this._controlCache[ID])
-					{
-						result['Session'] = this;
-						this._controlCache[ID] = new Control(result);
-					}
-
-					return this._controlCache[ID];
-				})
-			);
+					result['Session'] = this;
+					return new Control(result);
+					})
+				);
+			}
+			
+			return this._controlCache[ID];
 		}
 	});
 });
