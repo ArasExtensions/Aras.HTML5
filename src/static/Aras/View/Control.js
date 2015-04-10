@@ -33,7 +33,12 @@ define([
 		ViewModel: null, 
 				
 		constructor: function() {
-			
+
+		},
+		
+		startup: function() {
+			this.inherited(arguments);
+	
 			// Watch ViewModel
 			this.watch("ViewModel", lang.hitch(this, this.OnViewModelChange));
 		},
