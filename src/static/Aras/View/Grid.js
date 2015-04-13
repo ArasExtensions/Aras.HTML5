@@ -26,14 +26,20 @@ define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
 	'dojo/when',
+	'dojo/promise/all',
+	'dojo/_base/array',
 	'./_Grid',
 	'dijit/layout/BorderContainer',
 	'./Control'
-], function(declare, lang, when, _Grid, BorderContainer, Control) {
+], function(declare, lang, when, all, array, _Grid, BorderContainer, Control) {
 	
 	return declare('Aras.View.Grid', [BorderContainer, Control], {
 			
 		_grid: null,
+		
+		_columns: null,
+		
+		_rows: null,
 		
 		constructor: function() {
 			
@@ -45,15 +51,40 @@ define([
 			// Create Grid
 			this._grid = new _Grid();
 			this.addChild(this._grid);
+			
+			// Watch Rows
+			this.watch("_rows", lang.hitch(this, this.OnRowsChange));
 		},
 		
 		OnViewModelChange: function(name, oldValue, newValue) {
 			this.inherited(arguments);
-			
-			console.debug('Grid vm change');
-			
-			// Set Grid ViewModel
+						
+			// Update Grid
 			when(this.ViewModel, lang.hitch(this, function(viewmodel){
+								
+				// Update Columns
+				this._columns = all(viewmodel.Properties.Columns.Value).then(lang.hitch(this, function(columns){
+					var gridcolumns = {};
+					
+					array.forEach(columns, lang.hitch(this, function(column){
+						gridcolumns[column.Properties.Name.Value] = column.Properties.Label.Value;
+					}));
+					
+					this._grid._setColumns(gridcolumns);
+				}));
+				
+				// Update Rows
+				this.set('_rows', viewmodel.Properties.Rows);
+			}));
+		},
+				
+		OnRowsChange: function(name, oldValue, newValue) {
+			this.inherited(arguments);
+			
+			// Update Rows once columns are completed
+			when(this._columns, lang.hitch(this, function(columns){
+				
+				console.debug(this._rows);
 				
 			}));
 		}
