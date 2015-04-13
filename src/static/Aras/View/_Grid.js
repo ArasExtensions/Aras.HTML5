@@ -24,39 +24,11 @@
 
 define([
 	'dojo/_base/declare',
-	'dojo/_base/lang',
-	'dojo/when',
-	'./_Grid',
-	'dijit/layout/BorderContainer',
-	'./Control'
-], function(declare, lang, when, _Grid, BorderContainer, Control) {
+	'dgrid/Grid',
+	'dgrid/extensions/DijitRegistry'
+], function(declare, Grid, DijitRegistry) {
 	
-	return declare('Aras.View.Grid', [BorderContainer, Control], {
-			
-		_grid: null,
-		
-		constructor: function() {
-			
-		},
-		
-		startup: function() {
-			this.inherited(arguments);
-			
-			// Create Grid
-			this._grid = new _Grid();
-			this.addChild(this._grid);
-		},
-		
-		OnViewModelChange: function(name, oldValue, newValue) {
-			this.inherited(arguments);
-			
-			console.debug('Grid vm change');
-			
-			// Set Grid ViewModel
-			when(this.ViewModel, lang.hitch(this, function(viewmodel){
-				
-			}));
-		}
+	return declare('Aras.View._Grid', [Grid, DijitRegistry], {
 		
 	});
 });
