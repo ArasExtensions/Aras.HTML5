@@ -65,9 +65,13 @@ define([
 		OnViewModelChange: function(name, oldValue, newValue) {
 			this.inherited(arguments);
 			
-			// Set Grid ViewModel
 			when(this.ViewModel, lang.hitch(this, function(viewmodel){
+				
+				// Set Grid ViewModel
 				this.Grid.set("ViewModel", viewmodel.Properties.Grid.Value);
+				
+				// Set Search Button ViewModel
+				this.SearchButton.set("ViewModel", viewmodel.Commands.Refresh);		
 			}));
 		}
 	});

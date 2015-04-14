@@ -132,6 +132,19 @@ define([
 			}
 	
 			return this._controlCache[ID];
+		},
+		
+		Execute: function(Command) {
+			
+			// Execute Command
+			request.put(this.Database.Server.URL + '/commands/' + Command.ID + '/execute', 
+								{ headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, 
+								  handleAs: 'json'
+								}).then(lang.hitch(this, function(response){
+					this._processResponse(response);
+				})
+			);				
 		}
+		
 	});
 });

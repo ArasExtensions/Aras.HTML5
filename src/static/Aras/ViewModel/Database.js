@@ -41,7 +41,7 @@ define([
 		},
 		
 		Login: function(Username, Password) {
-			return request.post(this.Server.URL + '/databases/' + this.ID + '/login', 
+			return request.put(this.Server.URL + '/databases/' + this.ID + '/login', 
 								{ headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, 
 								  handleAs: 'json', 
 								  data: json.stringify({ Username: Username, Password: Password })

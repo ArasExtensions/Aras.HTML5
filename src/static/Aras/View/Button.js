@@ -24,9 +24,11 @@
 
 define([
 	'dojo/_base/declare',
+	'dojo/_base/lang',
+	'dojo/on',
 	'dijit/form/Button',
 	'./Command'
-], function(declare, Button, Command) {
+], function(declare, lang, on, Button, Command) {
 	
 	return declare('Aras.View.Button', [Button, Command], {
 			
@@ -36,6 +38,14 @@ define([
 		
 		startup: function() {
 			this.inherited(arguments);
+		},
+		
+		OnViewModelChange: function(name, oldValue, newValue) {
+			this.inherited(arguments);
+			
+			this.set('onClick', lang.hitch(this, function() {
+				this.ViewModel.Execute();
+			}));
 		}
 	});
 });

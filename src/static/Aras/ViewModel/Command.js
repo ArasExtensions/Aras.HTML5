@@ -47,7 +47,7 @@ define([
 		},
 		
 		Execute: function() {
-			
+			this.Control.Session.Execute(this);
 		}
 		
 	});
