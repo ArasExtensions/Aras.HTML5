@@ -84,7 +84,7 @@ define([
 			// Update Rows once columns are completed
 			when(this._columns, lang.hitch(this, function(columns){
 				
-				console.debug(this._rows);
+				console.debug(this._rows.Value);
 				
 			}));
 		}

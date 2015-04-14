@@ -26,8 +26,9 @@ define([
 	'dojo/_base/declare',
 	'dojo/_base/array',
 	'dojo/_base/lang',
-	'./Property'
-], function(declare, array, lang, Property) {
+	'./Property',
+	'./Command',
+], function(declare, array, lang, Property, Command) {
 	
 	return declare('Aras.ViewModel.Control', null, {
 		
@@ -39,10 +40,14 @@ define([
 		
 		Properties: null,
 		
+		Commands: null,
+		
 		constructor: function(args) {
 			this.Session = args.Session;
 			this.ID = args.ID;
 			this.Type = args.Type;
+			
+			// Add Properties
 			this.Properties = new Object();
 			
 			array.forEach(args.Properties, lang.hitch(this, function(property){
@@ -50,6 +55,13 @@ define([
 				this.Properties[property.Name] = new Property(property);
 			}));
 			
+			// Add Commands
+			this.Commands = new Object();
+			
+			array.forEach(args.Commands, lang.hitch(this, function(command){
+				command.Control = this;
+				this.Commands[command.Name] = new Command(command);
+			}));			
 		}
 	});
 });
