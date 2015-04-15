@@ -41,8 +41,6 @@ define([
 		
 		_rowsHandle: null,
 		
-		_rowData: null,
-		
 		constructor: function() {
 			
 		},
@@ -72,9 +70,6 @@ define([
 					// Set Grid Columns
 					this._grid._setColumns(gridcolumns);
 					
-					// Initialise Rows
-					this._rowData = [];
-					
 					// Watch Rows
 					if (this._rowsHandle != null)
 					{
@@ -90,31 +85,7 @@ define([
 				}));	
 			}));
 		},
-			
-		_initialiseRowData: function(columns, count) {
-			
-			if (count > this._rowData.length)
-			{
-				var diff = count - this._rowData.length;
-				
-				for (i=0; i<diff; i++)
-				{
-					var newrow = new Object();
-					
-					for(j=0; j<columns.length; j++)
-					{
-						newrow[columns[j].Properties.Name.Value] = null;
-					}
-					
-					this._rowData.push(newrow);
-				}					
-			}
-			else if (count < this._rowData.length)
-			{
-				this._rowData = this._rowData.sice(0, count - 1);
-			}
-		},
-		
+
 		_processRows: function(rowsresponse) {
 
 			// Update Rows once columns are completed
@@ -122,15 +93,11 @@ define([
 				
 				all(rowsresponse).then(lang.hitch(this, function(rows) {
 					
-					// Initialise Row Data
-					this._initialiseRowData(columns, rows.length);
-					
 					// Ensure have all cells
 					var cells = [rows.length];
 									
 					array.forEach(rows, lang.hitch(this, function(row, i) {
-						
-						cells[i] = all(row.Properties.Cells.Value).then(lang.hitch(this, function(cells) {
+							cells[i] = all(row.Properties.Cells.Value).then(lang.hitch(this, function(cells) {
 							return cells;
 						}));
 					}));
@@ -138,19 +105,23 @@ define([
 					// When all cells are received update Grid
 					all(cells).then(lang.hitch(this, function(cells) {
 						
-						array.forEach(rows, lang.hitch(this, function(row, i) {
+						var rowdata = new Array(rows.length);
 						
+						array.forEach(rows, lang.hitch(this, function(row, i) {
+							rowdata[i] = new Object();
+							
 							array.forEach(cells[i], lang.hitch(this, function(cell) {
 										
 								// Set Cell Value
-								this._rowData[i][cell.Properties.Name.Value] = cell.Properties.Value.Value;						
+								rowdata[i][cell.Properties.Name.Value] = cell.Properties.Value.Value;						
 							}));
 							
 						}));
-						
-						// Render Grid
-						this._grid.renderArray(this._rowData);
-					
+												
+						// Refresh Grid
+						this._grid.refresh();
+						console.debug(rowdata);
+						this._grid.renderArray(rowdata);
 					}));
 
 				}));

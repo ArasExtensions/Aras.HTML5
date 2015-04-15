@@ -1,0 +1,9 @@
+﻿html, body
+{
+    height: 100%;
+	width: 100%;
+}
+
+.dgrid-row {
+    height: 22px;
+}
