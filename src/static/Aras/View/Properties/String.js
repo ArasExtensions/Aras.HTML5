@@ -25,12 +25,16 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
-	'dijit/form/Button',
-	'./Command'
-], function(declare, lang, Button, Command) {
+	'dijit/form/TextBox',
+	'../Property'
+], function(declare, lang, TextBox, Property) {
 	
-	return declare('Aras.View.Button', [Button, Command], {
+	return declare('Aras.View.Properties.String', [TextBox, Property], {
 			
+		_viewmodelValueHandle: null, 
+		
+		_viewValueHandle: null, 
+		
 		constructor: function(args) {
 	
 		},
@@ -41,10 +45,24 @@ define([
 		
 		OnViewModelChange: function(name, oldValue, newValue) {
 			this.inherited(arguments);
+		
+			// Watch ViewModel Value
+			if (this._viewmodelValueHandle != null)
+			{
+				this._viewmodelValueHandle.unwatch();
+			}
 			
-			this.set('onClick', lang.hitch(this, function() {
-				this.ViewModel.Execute();
+			this._viewmodelValueHandle = this.ViewModel.watch('Value', land.hitch(this, function(name, oldval, newval) {
+				this.set('value', newval);
 			}));
+			
+			// Watch TextBox value
+			if (this._viewValueHandle == null)
+			{
+				this._viewValueHandle = this.watch('value', lang.hitch(this, function(name, oldval, newval) {
+					this.ViewModel.set('Value', newval);
+				}));
+			}
 		}
 	});
 });

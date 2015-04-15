@@ -39,7 +39,9 @@ define([
 		
 		_columns: null,
 		
-		_rows: null,
+		_rowsHandle: null,
+		
+		_rowData: null,
 		
 		constructor: function() {
 			
@@ -51,9 +53,6 @@ define([
 			// Create Grid
 			this._grid = new _Grid();
 			this.addChild(this._grid);
-			
-			// Watch Rows
-			this.watch("_rows", lang.hitch(this, this.OnRowsChange));
 		},
 		
 		OnViewModelChange: function(name, oldValue, newValue) {
@@ -70,23 +69,99 @@ define([
 						gridcolumns[column.Properties.Name.Value] = column.Properties.Label.Value;
 					}));
 					
+					// Set Grid Columns
 					this._grid._setColumns(gridcolumns);
-				}));
+					
+					// Initialise Rows
+					this._rowData = [];
+					
+					// Watch Rows
+					if (this._rowsHandle != null)
+					{
+						this._rowsHandle.unwatch();
+					}
 				
-				// Update Rows
-				this.set('_rows', viewmodel.Properties.Rows);
+					this._rowsHandle = viewmodel.Properties.Rows.watch("Value", lang.hitch(this, this.OnRowsChange));
+			
+					// Process Rows
+					this._processRows(viewmodel.Properties.Rows.Value);
+				
+					return columns;
+				}));	
 			}));
 		},
-				
-		OnRowsChange: function(name, oldValue, newValue) {
-			this.inherited(arguments);
 			
+		_initialiseRowData: function(columns, count) {
+			
+			if (count > this._rowData.length)
+			{
+				var diff = count - this._rowData.length;
+				
+				for (i=0; i<diff; i++)
+				{
+					var newrow = new Object();
+					
+					for(j=0; j<columns.length; j++)
+					{
+						newrow[columns[j].Properties.Name.Value] = null;
+					}
+					
+					this._rowData.push(newrow);
+				}					
+			}
+			else if (count < this._rowData.length)
+			{
+				this._rowData = this._rowData.sice(0, count - 1);
+			}
+		},
+		
+		_processRows: function(rowsresponse) {
+
 			// Update Rows once columns are completed
 			when(this._columns, lang.hitch(this, function(columns){
 				
-				console.debug(this._rows.Value);
-				
-			}));
+				all(rowsresponse).then(lang.hitch(this, function(rows) {
+					
+					// Initialise Row Data
+					this._initialiseRowData(columns, rows.length);
+					
+					// Ensure have all cells
+					var cells = [rows.length];
+									
+					array.forEach(rows, lang.hitch(this, function(row, i) {
+						
+						cells[i] = all(row.Properties.Cells.Value).then(lang.hitch(this, function(cells) {
+							return cells;
+						}));
+					}));
+					
+					// When all cells are received update Grid
+					all(cells).then(lang.hitch(this, function(cells) {
+						
+						array.forEach(rows, lang.hitch(this, function(row, i) {
+						
+							array.forEach(cells[i], lang.hitch(this, function(cell) {
+										
+								// Set Cell Value
+								this._rowData[i][cell.Properties.Name.Value] = cell.Properties.Value.Value;						
+							}));
+							
+						}));
+						
+						// Render Grid
+						this._grid.renderArray(this._rowData);
+					
+					}));
+
+				}));
+			}));	
+		},
+		
+		OnRowsChange: function(name, oldValue, newValue) {
+			this.inherited(arguments);
+			
+			// Process Rows
+			this._processRows(newValue);
 		}
 		
 	});

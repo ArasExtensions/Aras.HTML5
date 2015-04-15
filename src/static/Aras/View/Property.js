@@ -24,27 +24,28 @@
 
 define([
 	'dojo/_base/declare',
-	'dojo/_base/lang',
-	'dijit/form/Button',
-	'./Command'
-], function(declare, lang, Button, Command) {
+	'dojo/Stateful',
+	'dojo/_base/lang'
+], function(declare, Stateful, lang) {
 	
-	return declare('Aras.View.Button', [Button, Command], {
-			
-		constructor: function(args) {
-	
+	return declare('Aras.View.Property', [Stateful], {
+		
+		ViewModel: null, 
+				
+		constructor: function() {
+
 		},
 		
 		startup: function() {
 			this.inherited(arguments);
+	
+			// Watch ViewModel
+			this.watch("ViewModel", lang.hitch(this, this.OnViewModelChange));
 		},
 		
 		OnViewModelChange: function(name, oldValue, newValue) {
-			this.inherited(arguments);
-			
-			this.set('onClick', lang.hitch(this, function() {
-				this.ViewModel.Execute();
-			}));
+
 		}
+		
 	});
 });
