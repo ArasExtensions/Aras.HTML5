@@ -4,6 +4,15 @@
 	width: 100%;
 }
 
-.dgrid-row {
+.dgrid-row 
+{
     height: 22px;
+}
+
+.searchIcon 
+{
+  background-image:  url('./images/ExecuteSearch.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
 }

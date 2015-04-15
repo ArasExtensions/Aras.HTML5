@@ -25,10 +25,11 @@
 define([
 	'dojo/_base/declare',
 	'dgrid/Grid',
-	'dgrid/extensions/DijitRegistry'
-], function(declare, Grid, DijitRegistry) {
+	'dgrid/extensions/DijitRegistry',
+	'dgrid/Selection'
+], function(declare, Grid, DijitRegistry, Selection) {
 	
-	return declare('Aras.View._Grid', [Grid, DijitRegistry], {
+	return declare('Aras.View._Grid', [Grid, DijitRegistry, Selection], {
 		
 	});
 });

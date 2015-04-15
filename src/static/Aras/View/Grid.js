@@ -120,7 +120,6 @@ define([
 												
 						// Refresh Grid
 						this._grid.refresh();
-						console.debug(rowdata);
 						this._grid.renderArray(rowdata);
 					}));
 

@@ -54,7 +54,7 @@ define([
 			this.addChild(this.Toolbar);
 			
 			// Create Search Button
-			this.SearchButton = new Button({ label: 'Search' });
+			this.SearchButton = new Button({ iconClass: 'searchIcon'});
 			this.Toolbar.addChild(this.SearchButton);
 			
 			// Create Grid			
