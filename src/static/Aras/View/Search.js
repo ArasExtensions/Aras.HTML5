@@ -43,14 +43,14 @@ define([
 		Grid: null,
 		
 		constructor: function() {
-			
+
 		},
 				
 		startup: function() {
 			this.inherited(arguments);
 
 			// Create Toolbar
-			this.Toolbar = new Toolbar();
+			this.Toolbar = new Toolbar({ region: 'top' });
 			this.addChild(this.Toolbar);
 			
 			// Create Search Button
@@ -58,7 +58,7 @@ define([
 			this.Toolbar.addChild(this.SearchButton);
 			
 			// Create Grid			
-			this.Grid = new Grid();		
+			this.Grid = new Grid({style: 'height: 100%; width: 100%', region: 'center', gutters: false });		
 			this.addChild(this.Grid);
 		},
 		

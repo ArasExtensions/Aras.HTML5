@@ -39,7 +39,7 @@
 		<script>
 			require(['Aras/View/PDF', 'dojo/dom', 'dojo/domReady!'], function(PDF, dom) {
 				var target = dom.byId('main');			
-				var pdf = new PDF({ url: './3dpdf_aero_machined.pdf', width: 800, height: 600 }, target);
+				var pdf = new PDF({ url: './3dpdf_aero_machined.pdf'}, target);
 				pdf.startup();
 			});
 		</script>

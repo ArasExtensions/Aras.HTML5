@@ -49,7 +49,7 @@ define([
 			this.inherited(arguments);
 			
 			// Create Grid
-			this._grid = new _Grid();
+			this._grid = new _Grid({ region: 'center' });
 			this.addChild(this._grid);
 		},
 		

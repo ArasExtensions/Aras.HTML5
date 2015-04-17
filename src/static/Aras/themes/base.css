@@ -2,11 +2,19 @@
 {
     height: 100%;
 	width: 100%;
+	margin: 0;
+	padding: 0;
 }
 
 .dgrid-row 
 {
     height: 22px;
+}
+
+.dgrid
+{
+	height: 100%;
+	width: 100%;
 }
 
 .searchIcon 

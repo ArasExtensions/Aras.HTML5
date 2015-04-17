@@ -24,21 +24,22 @@
 
 define([
 	'dojo/_base/declare',
-	'dojo/parser',
-	'dojo/ready',
-	'dijit/_WidgetBase',
-	'dijit/_TemplatedMixin'
-], function(declare, parser, ready, _WidgetBase, _TemplatedMixin) {
+	'dijit/layout/ContentPane'
+], function(declare, ContentPane) {
 	
-	return declare('Aras.View.PDF', [_WidgetBase, _TemplatedMixin], {
+	return declare('Aras.View.PDF', [ContentPane], {
 
 		url: null,
 		
-		width: 600,
+		_updateContent: function() {
+			this.set('content', '<object style="width: 100%; height: 100%" class="arasPDF" data="' + this.url + '" type="application/pdf"/>');
+		},
 		
-		height: 400,
-		
-		templateString: '<div><object data="${url}" type="application/pdf" width="${width}" height="${height}" ><embed src="./3dpdf_aero_machined.pdf" type="application/pdf" width="${width}" height="${height}" /></object></div>'
+		startup: function() {
+			this.inherited(arguments);
+			
+			this._updateContent();
+		}
 		
 	});
 });
