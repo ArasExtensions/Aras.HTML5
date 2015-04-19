@@ -24,21 +24,34 @@
 
 define([
 	'dojo/_base/declare',
+	'dojo/_base/lang',
 	'dijit/layout/ContentPane'
-], function(declare, ContentPane) {
+], function(declare, lang, ContentPane) {
 	
 	return declare('Aras.View.PDF', [ContentPane], {
 
 		url: null,
 		
 		_updateContent: function() {
-			this.set('content', '<object style="width: 100%; height: 100%" class="arasPDF" data="' + this.url + '" type="application/pdf"/>');
+			
+			if (this.url != null)
+			{
+				this.set('content', '<object style="width: 100%; height: 100%" class="arasPDF" data="' + this.url + '" type="application/pdf"/>');
+			}
+			else
+			{
+				this.set('content', '');
+			}
 		},
 		
 		startup: function() {
 			this.inherited(arguments);
 			
 			this._updateContent();
+			
+			this.watch('url', lang.hitch(this, function(name, oldval, newcal) {
+				this._updateContent();
+			}));
 		}
 		
 	});
