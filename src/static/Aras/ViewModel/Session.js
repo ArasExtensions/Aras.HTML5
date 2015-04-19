@@ -27,8 +27,9 @@ define([
 	'dojo/request',
 	'dojo/_base/lang',
 	'dojo/_base/array',
+	'dojo/json',
 	'./Control'
-], function(declare, request, lang, array, Control) {
+], function(declare, request, lang, array, json, Control) {
 	
 	return declare('Aras.ViewModel.Session', null, {
 		
@@ -134,12 +135,50 @@ define([
 			return this._controlCache[ID];
 		},
 		
+		Property: function(ID) {
+			return this._propertyCache[ID];
+		},
+		
 		Execute: function(Command) {
 			
 			// Execute Command
 			request.put(this.Database.Server.URL + '/commands/' + Command.ID + '/execute', 
 								{ headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, 
 								  handleAs: 'json'
+								}).then(lang.hitch(this, function(response){
+					this._processResponse(response);
+				})
+			);				
+		},
+		
+		_propertyData: function(Property) {
+			var data = new Object({ ID: Property.ID , Name: Property.Name, Type: Property.Type, Values: [] });
+			
+			if (Property.Type == 'Control')
+			{
+				data.Values.push(Property.Value.ID);
+			}
+			else if (Property.Type == 'ControlList')
+			{
+				array.forEach(Property.Value, lang.hitch(this, function(control) {
+					data.Values.push(control.ID);
+				}));
+			}
+			else
+			{
+				data.Values.push(Property.Value);
+			}
+			
+			return data;
+		},
+		
+		UpdateProperty: function(Property) {
+			
+			// Update Property
+			request.put(this.Database.Server.URL + '/properties/' + Property.ID, 
+								{ headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, 
+								  handleAs: 'json',
+								  data: json.stringify(this._propertyData(Property))
 								}).then(lang.hitch(this, function(response){
 					this._processResponse(response);
 				})

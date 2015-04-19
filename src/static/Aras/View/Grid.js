@@ -40,7 +40,7 @@ define([
 		_columns: null,
 		
 		_rowsHandle: null,
-		
+				
 		constructor: function() {
 			
 		},
@@ -49,8 +49,15 @@ define([
 			this.inherited(arguments);
 			
 			// Create Grid
-			this._grid = new _Grid({ region: 'center' });
+			this._grid = new _Grid({ region: 'center', selectionMode: 'single' });
 			this.addChild(this._grid);
+			
+			this._grid.on('dgrid-select', lang.hitch(this, function(event) {
+				when(this.ViewModel, lang.hitch(this, function(viewmodel){
+					viewmodel.Properties.Selected.Value = viewmodel.Session.Control(event.rows[0].data.id);
+					viewmodel.Session.UpdateProperty(viewmodel.Properties.Selected);
+				}));
+			}));
 		},
 		
 		OnViewModelChange: function(name, oldValue, newValue) {
@@ -109,6 +116,7 @@ define([
 						
 						array.forEach(rows, lang.hitch(this, function(row, i) {
 							rowdata[i] = new Object();
+							rowdata[i]['id'] = row.ID;
 							
 							array.forEach(cells[i], lang.hitch(this, function(cell) {
 										
