@@ -28,8 +28,9 @@ define([
 	'dojo/_base/lang',
 	'dojo/_base/array',
 	'dojo/json',
+	'dojo/when',
 	'./Control'
-], function(declare, request, lang, array, json, Control) {
+], function(declare, request, lang, array, json, when, Control) {
 	
 	return declare('Aras.ViewModel.Session', null, {
 		
@@ -41,8 +42,6 @@ define([
 		
 		_controlCache: new Object(),
 		
-		_propertyCache: new Object(),
-		
 		_commandCache: new Object(),
 		
 		constructor: function(args) {
@@ -51,13 +50,9 @@ define([
 		
 		_processResponse: function(Response) {
 			
-			// Update Properties
-			array.forEach(Response.PropertyQueue, lang.hitch(this, function(property) {
-				
-				if (this._propertyCache[property.ID])
-				{
-					this._propertyCache[property.ID]._processValues(property.Values);
-				}
+			// Update Controls
+			array.forEach(Response.ControlQueue, lang.hitch(this, function(control) {
+				this._updateControl(control);
 			}));
 					
 			// Update Commands
@@ -69,17 +64,29 @@ define([
 				}
 			}));	
 		},
+				
+		_updateControl: function(ControlResponse) {	
+			
+			if (this._controlCache[ControlResponse.ID])
+			{
+				// Update Existing Control
+				when(this._controlCache[ControlResponse.ID], lang.hitch(this, function(control) {
+					control._updateProperties(ControlResponse.Properties);
+				}));
+			}
+			else
+			{
+				// Does not exist, Create new Control
+				this._createControl(ControlResponse);
+			}
+		},
 		
-		_processControl: function(ControlResponse) {
+		_createControl: function(ControlResponse) {
 			
 			ControlResponse['Session'] = this;
+			
+			// Create Control and add to Cache
 			this._controlCache[ControlResponse.ID] = new Control(ControlResponse);
-
-			// Add Properties to Cache
-			for (propertyname in this._controlCache[ControlResponse.ID].Properties)
-			{
-				this._propertyCache[this._controlCache[ControlResponse.ID].Properties[propertyname].ID] = this._controlCache[ControlResponse.ID].Properties[propertyname];
-			}
 				
 			// Add Commands to Cache
 			for (commandname in this._controlCache[ControlResponse.ID].Commands)
@@ -101,7 +108,7 @@ define([
 					var ret = [];
 			
 					array.forEach(result.Values, lang.hitch(this, function(entry) {
-						ret.push(this._processControl(entry));
+						ret.push(this._createControl(entry));
 					}));
 					
 					// Process Response
@@ -122,7 +129,7 @@ define([
 							   }).then(lang.hitch(this, function(result) {
 								   
 						// Process Control
-						var ret = this._processControl(result.Value);
+						var ret = this._createControl(result.Value);
 						
 						// Process Response
 						this._processResponse(result);
@@ -134,11 +141,7 @@ define([
 	
 			return this._controlCache[ID];
 		},
-		
-		Property: function(ID) {
-			return this._propertyCache[ID];
-		},
-		
+				
 		Execute: function(Command) {
 			
 			// Execute Command

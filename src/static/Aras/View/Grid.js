@@ -52,6 +52,7 @@ define([
 			this._grid = new _Grid({ region: 'center', selectionMode: 'single' });
 			this.addChild(this._grid);
 			
+			// Connect to Grid Selection Changed
 			this._grid.on('dgrid-select', lang.hitch(this, function(event) {
 				when(this.ViewModel, lang.hitch(this, function(viewmodel){
 					viewmodel.Properties.Selected.Value = viewmodel.Session.Control(event.rows[0].data.id);
@@ -62,7 +63,7 @@ define([
 		
 		OnViewModelChange: function(name, oldValue, newValue) {
 			this.inherited(arguments);
-						
+					
 			// Update Grid
 			when(this.ViewModel, lang.hitch(this, function(viewmodel){
 								
@@ -118,10 +119,11 @@ define([
 							rowdata[i] = new Object();
 							rowdata[i]['id'] = row.ID;
 							
-							array.forEach(cells[i], lang.hitch(this, function(cell) {
-										
+							array.forEach(cells[i], lang.hitch(this, function(cell, j) {
+
+								console.debug(cell.Properties.Value);
 								// Set Cell Value
-								rowdata[i][cell.Properties.Name.Value] = cell.Properties.Value.Value;						
+								rowdata[i][columns[j].Properties.Name.Value] = "Hello";						
 							}));
 							
 						}));

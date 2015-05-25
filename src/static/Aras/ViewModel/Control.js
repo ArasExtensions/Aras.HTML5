@@ -62,6 +62,14 @@ define([
 				command.Control = this;
 				this.Commands[command.Name] = new Command(command);
 			}));			
+		},
+		
+		_updateProperties: function(PropertiesResponse) {
+			
+			array.forEach(PropertiesResponse, lang.hitch(this, function(property){
+				property.Control = this;
+				this.Properties[property.Name]._updateValues(property.Values);
+			}));
 		}
 	});
 });

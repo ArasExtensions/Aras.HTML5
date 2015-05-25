@@ -33,8 +33,6 @@ define([
 		
 		Control: null,
 		
-		ID: null,
-		
 		Name: null,
 		
 		Type: null,
@@ -43,25 +41,24 @@ define([
 	
 		constructor: function(args) {
 			this.Control = args.Control;
-			this.ID = args.ID;
 			this.Name = args.Name;
 			this.Type = args.Type;
-			this._processValues(args.Values);
+			this._createValues(args.Values);
 			delete args.Values;
 		},
 		
-		_processValues: function(Values) {
+		_createValues: function(Values) {
 	
 			if (Values != null)
 			{
-				if (this.Type == 'Control')
+				if (this.Type == 3)
 				{
 					// Get Control from Cache
 					this.set('Value', this.Control.Session.Control(Values[0]));
 				}
-				else if (this.Type == 'ControlList')
+				else if (this.Type == 4)
 				{
-					// get List of Controls from Cache
+					// Get List of Controls from Cache
 					var valuelist = [];
 				
 					array.forEach(Values, lang.hitch(this, function(value) {
@@ -76,6 +73,39 @@ define([
 					// Set Value
 					this.set('Value', Values[0]);
 				}
+			}
+			else
+			{
+				this.set('Value', null);
+			}
+		},
+		
+		_updateValues: function(Values) {
+
+			if (Values != null)
+			{
+				if (this.Type == 3)
+				{
+					// Get Control from Cache
+					this.set('Value', this.Control.Session.Control(Values[0]));
+				}
+				else if (this.Type == 4)
+				{					
+					// Get List of Controls from Cache
+					var valuelist = [];
+				
+					array.forEach(Values, lang.hitch(this, function(value) {
+							valuelist.push(this.Control.Session.Control(value));
+						}
+					));
+					
+					this.set('Value', valuelist);
+				}
+				else
+				{
+					// Set Value
+					this.set('Value', Values[0]);
+				}				
 			}
 			else
 			{
