@@ -113,24 +113,39 @@ define([
 					// When all cells are received update Grid
 					all(cells).then(lang.hitch(this, function(cells) {
 						
-						var rowdata = new Array(rows.length);
+						// Ensure have all cell Values
+						var cellvalues = [(rows.length * columns.length)];
 						
 						array.forEach(rows, lang.hitch(this, function(row, i) {
-							rowdata[i] = new Object();
-							rowdata[i]['id'] = row.ID;
 							
 							array.forEach(cells[i], lang.hitch(this, function(cell, j) {
-
-								console.debug(cell.Properties.Value);
-								// Set Cell Value
-								rowdata[i][columns[j].Properties.Name.Value] = "Hello";						
+								cellvalues[((i * columns.length) + j)] = all(cell.Properties.Value.Value).then(lang.hitch(this, function(value) {
+									return value;
+								}));
 							}));
 							
 						}));
-												
-						// Refresh Grid
-						this._grid.refresh();
-						this._grid.renderArray(rowdata);
+						
+						// Process cell values
+						all(cellvalues).then(lang.hitch(this, function(values) {
+							
+							var rowdata = new Array(rows.length);
+							
+							array.forEach(rows, lang.hitch(this, function(row, i) {
+								rowdata[i] = new Object();
+								rowdata[i]['id'] = row.ID;
+								
+								array.forEach(cells[i], lang.hitch(this, function(cell, j) {
+									rowdata[i][columns[j].Properties.Name.Value] = values[((i * columns.length) + j)].Properties.Value.Value;
+								}));
+								
+							}));
+							
+							// Refresh Grid
+							this._grid.refresh();
+							this._grid.renderArray(rowdata);
+						}));
+							
 					}));
 
 				}));
