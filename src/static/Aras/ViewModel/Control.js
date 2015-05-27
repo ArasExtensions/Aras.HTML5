@@ -26,11 +26,11 @@ define([
 	'dojo/_base/declare',
 	'dojo/_base/array',
 	'dojo/_base/lang',
-	'./Property',
+	'dojo/Stateful',
 	'./Command',
-], function(declare, array, lang, Property, Command) {
+], function(declare, array, lang, Stateful, Command) {
 	
-	return declare('Aras.ViewModel.Control', null, {
+	return declare('Aras.ViewModel.Control', [Stateful], {
 		
 		Session: null,
 		
@@ -38,38 +38,70 @@ define([
 		
 		Type: null,
 		
-		Properties: null,
-		
-		Commands: null,
-		
 		constructor: function(args) {
 			this.Session = args.Session;
 			this.ID = args.ID;
 			this.Type = args.Type;
 			
 			// Add Properties
-			this.Properties = new Object();
-			
-			array.forEach(args.Properties, lang.hitch(this, function(property){
-				property.Control = this;
-				this.Properties[property.Name] = new Property(property);
-			}));
+			this._updateProperties(args.Properties);
 			
 			// Add Commands
-			this.Commands = new Object();
-			
-			array.forEach(args.Commands, lang.hitch(this, function(command){
-				command.Control = this;
-				this.Commands[command.Name] = new Command(command);
-			}));			
+			this._updateCommands(args.Commands);
 		},
 		
-		_updateProperties: function(PropertiesResponse) {
+		_updateProperties: function(Properties) {
 			
-			array.forEach(PropertiesResponse, lang.hitch(this, function(property){
-				property.Control = this;
-				this.Properties[property.Name]._updateValues(property.Values);
+			array.forEach(Properties, lang.hitch(this, function(property){
+			
+				if (property.Values != null)
+				{
+					if (property.Type == 3)
+					{
+						// Get Control from Cache
+						this.set(property.Name, this.Session.Control(property.Values[0]));
+					}
+					else if (property.Type == 4)
+					{
+						// Get List of Controls from Cache
+						var valuelist = [];
+				
+						array.forEach(property.Values, lang.hitch(this, function(value) {
+							valuelist.push(this.Session.Control(value));
+						}));
+				
+						this.set(property.Name, valuelist);
+					}
+					else
+					{
+						// Set Value
+						this.set(property.Name, property.Values[0]);
+					}
+				}
+				else
+				{
+					this.set(property.Name, null);
+				}
+
+			}));
+		},
+		
+		_updateCommands: function(Commands) {
+			
+			array.forEach(Commands, lang.hitch(this, function(command){
+				
+				if (this[command.Name])
+				{
+					this[command.Name].set('CanExecute', command.CanExecute);
+				}
+				else
+				{
+					command.Control = this;
+					this.set(command.Name, new Command(command));
+				}
 			}));
 		}
+		
 	});
+	
 });

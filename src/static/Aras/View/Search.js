@@ -68,10 +68,10 @@ define([
 			when(this.ViewModel, lang.hitch(this, function(viewmodel){
 				
 				// Set Grid ViewModel
-				this.Grid.set("ViewModel", viewmodel.Properties.Grid.Value);
+				this.Grid.set("ViewModel", viewmodel.Grid);
 				
 				// Set Search Button ViewModel
-				this.SearchButton.set("ViewModel", viewmodel.Commands.Refresh);		
+				this.SearchButton.set("ViewModel", viewmodel.Refresh);		
 			}));
 		}
 	});
