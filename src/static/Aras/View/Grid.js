@@ -104,24 +104,24 @@ define([
 					if (rows)
 					{
 						// Ensure have all cells
-						var cells = [rows.length];
+						var cellsresponse = [rows.length];
 									
 						array.forEach(rows, lang.hitch(this, function(row, i) {
-								cells[i] = all(row.Cells).then(lang.hitch(this, function(cells) {
+								cellsresponse[i] = all(row.Cells).then(lang.hitch(this, function(cells) {
 								return cells;
 							}));
 						}));
 					
 						// When all cells are received update Grid
-						all(cells).then(lang.hitch(this, function(cells) {
+						all(cellsresponse).then(lang.hitch(this, function(cells) {
 						
 							// Ensure have all cell Values
-							var cellvalues = [(rows.length * columns.length)];
+							var cellvaluesresponse = [(rows.length * columns.length)];
 						
 							array.forEach(rows, lang.hitch(this, function(row, i) {
 							
 								array.forEach(cells[i], lang.hitch(this, function(cell, j) {
-									cellvalues[((i * columns.length) + j)] = all(cell.Value).then(lang.hitch(this, function(value) {
+									cellvaluesresponse[((i * columns.length) + j)] = all(cell.Value).then(lang.hitch(this, function(value) {
 										return value;
 									}));
 								}));
@@ -129,7 +129,7 @@ define([
 							}));
 						
 							// Process cell values
-							all(cellvalues).then(lang.hitch(this, function(values) {
+							all(cellvaluesresponse).then(lang.hitch(this, function(cellvalues) {
 							
 								var rowdata = new Array(rows.length);
 							
@@ -138,7 +138,7 @@ define([
 									rowdata[i]['id'] = row.ID;
 								
 									array.forEach(cells[i], lang.hitch(this, function(cell, j) {
-										rowdata[i][columns[j].Name] = values[((i * columns.length) + j)].Value;
+										rowdata[i][columns[j].Name] = cellvalues[((i * columns.length) + j)].get("Value");
 									}));
 								
 								}));
@@ -163,7 +163,7 @@ define([
 		
 		OnRowsChange: function(name, oldValue, newValue) {
 			this.inherited(arguments);
-	
+
 			// Process Rows
 			this._processRows(newValue);
 		}

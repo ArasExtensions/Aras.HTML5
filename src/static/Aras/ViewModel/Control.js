@@ -53,7 +53,7 @@ define([
 		_updateProperties: function(Properties) {
 			
 			array.forEach(Properties, lang.hitch(this, function(property){
-			
+				
 				if (property.Values != null)
 				{
 					if (property.Type == 3)
@@ -69,7 +69,7 @@ define([
 						array.forEach(property.Values, lang.hitch(this, function(value) {
 							valuelist.push(this.Session.Control(value));
 						}));
-				
+
 						this.set(property.Name, valuelist);
 					}
 					else
