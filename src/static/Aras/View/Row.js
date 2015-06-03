@@ -45,14 +45,28 @@ define([
 		OnViewModelChange: function(name, oldValue, newValue) {
 			this.inherited(arguments);
 				
-			this.Cells = [];
+			if (this.Cells)
+			{
+				if (this.Cells.length > newValue.length)
+				{
+					this.Cells = this.Cells.slice(0, newValue.length);
+				}
+			}
+			else
+			{
+				this.Cells = [];
+			}
 						
-			array.forEach(newValue.Cells, lang.hitch(this, function(cellviewmodel){
-				var cell = new Cell();
-				cell.startup();
-				cell.set('Row', this);
-				cell.set('ViewModel', cellviewmodel);
-				this.Cells.push(cell);
+			array.forEach(newValue.Cells, lang.hitch(this, function(cellviewmodel, i){
+				
+				if (!this.Cells[i])
+				{
+					this.Cells[i] = new Cell();
+					this.Cells[i].startup();
+					this.Cells[i].set('Row', this);
+				}
+				
+				this.Cells[i].set('ViewModel', cellviewmodel);
 			}));		
 		}
 		

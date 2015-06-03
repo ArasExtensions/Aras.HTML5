@@ -44,17 +44,21 @@ define([
 		OnViewModelChange: function(name, oldValue, newValue) {
 			this.inherited(arguments);
 				
-			// Unwatch current ViewModel
-			if (this._valueHandle != null)
-			{
-				this._valueHandle.unwatch();
-			}
+			when(newValue).then(lang.hitch(this, function(viewmodel) {
+				
+				// Unwatch current ViewModel
+				if (this._valueHandle != null)
+				{
+					this._valueHandle.unwatch();
+				}
 			
-			// Set Value
-			this.Value = newValue.Value;
+				// Set Value
+				console.debug(newValue);
+				this.set('Value', viewmodel.get('Value'));
 			
-			// Watch for changes in Value on ViewModel
-			this._valueHandle = newValue.watch("Value", lang.hitch(this, this.OnValueChange));	
+				// Watch for changes in Value on ViewModel
+				this._valueHandle = viewmodel.watch("Value", lang.hitch(this, this.OnValueChange));	
+			}));
 		},
 		
 		OnValueChange: function(name, oldValue, newValue) {
