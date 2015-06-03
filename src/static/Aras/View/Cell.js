@@ -24,27 +24,43 @@
 
 define([
 	'dojo/_base/declare',
-	'dojo/Stateful',
-	'dojo/_base/lang'
-], function(declare, Stateful, lang) {
+	'dojo/_base/lang',
+	'dojo/when',
+	'./Control'
+], function(declare, lang, when, Control) {
 	
-	return declare('Aras.View.Property', [Stateful], {
+	return declare('Aras.View.Cell', [Control], {
 		
-		ViewModel: null, 
-				
+		Row: null,
+		
+		Value: null,
+		
+		_valueHandle: null,
+		
 		constructor: function() {
-
-		},
-		
-		startup: function() {
 			this.inherited(arguments);
-	
-			// Watch ViewModel
-			this.watch("ViewModel", lang.hitch(this, this.OnViewModelChange));
 		},
 		
 		OnViewModelChange: function(name, oldValue, newValue) {
-
+			this.inherited(arguments);
+				
+			// Unwatch current ViewModel
+			if (this._valueHandle != null)
+			{
+				this._valueHandle.unwatch();
+			}
+			
+			// Set Value
+			this.Value = newValue.Value;
+			
+			// Watch for changes in Value on ViewModel
+			this._valueHandle = newValue.watch("Value", lang.hitch(this, this.OnValueChange));	
+		},
+		
+		OnValueChange: function(name, oldValue, newValue) {
+		
+			this.Value = newValue;
+			this.Row.Grid._refreshRows();
 		}
 		
 	});

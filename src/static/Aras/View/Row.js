@@ -26,53 +26,35 @@ define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
 	'dojo/when',
-	'dijit/layout/BorderContainer',
-	'dijit/layout/ContentPane',
+	'dojo/promise/all',
+	'dojo/_base/array',
 	'./Control',
-	'./Toolbar',
-	'./Button',
-	'./Grid'
-], function(declare, lang, when, BorderContainer, ContentPane, Control, Toolbar, Button, Grid) {
+	'./Cell',
+], function(declare, lang, when, all, array, Control, Cell) {
 	
-	return declare('Aras.View.Search', [BorderContainer, Control], {
-	
-		Toolbar: null,
-		
-		SearchButton: null,
-				
+	return declare('Aras.View.Row', [Control], {
+
 		Grid: null,
 		
+		Cells: null,
+
 		constructor: function() {
 			this.inherited(arguments);
-		},
-				
-		startup: function() {
-			this.inherited(arguments);
-
-			// Create Toolbar
-			this.Toolbar = new Toolbar({ region: 'top' });
-			this.addChild(this.Toolbar);
-			
-			// Create Search Button
-			this.SearchButton = new Button({ iconClass: 'searchIcon'});
-			this.Toolbar.addChild(this.SearchButton);
-			
-			// Create Grid			
-			this.Grid = new Grid({style: 'height: 100%; width: 100%', region: 'center', gutters: false });		
-			this.addChild(this.Grid);
 		},
 		
 		OnViewModelChange: function(name, oldValue, newValue) {
 			this.inherited(arguments);
-			
-			when(this.ViewModel, lang.hitch(this, function(viewmodel){
 				
-				// Set Grid ViewModel
-				this.Grid.set("ViewModel", viewmodel.Grid);
-				
-				// Set Search Button ViewModel
-				this.SearchButton.set("ViewModel", viewmodel.Refresh);		
-			}));
+			this.Cells = [];
+						
+			array.forEach(newValue.Cells, lang.hitch(this, function(cellviewmodel){
+				var cell = new Cell();
+				cell.startup();
+				cell.set('Row', this);
+				cell.set('ViewModel', cellviewmodel);
+				this.Cells.push(cell);
+			}));		
 		}
+		
 	});
 });
