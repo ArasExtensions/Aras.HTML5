@@ -60,7 +60,7 @@ define([
 					// Login
 					database.Login(this.Username, this.Password).then(
 						lang.hitch(this, function(session){
-							
+
 							// Get Application ViewModel
 							session.Applications().then(
 								lang.hitch(this, function(applications){ 

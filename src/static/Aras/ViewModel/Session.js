@@ -71,22 +71,20 @@ define([
 			{
 				// Update Existing Control
 				when(this._controlCache[ControlResponse.ID], lang.hitch(this, function(control) {
-					control._updateProperties(ControlResponse.Properties);
+					control.set('Data', ControlResponse);
 				}));
 			}
 			else
 			{
 				// Does not exist, Create new Control
-				this._createControl(ControlResponse);
+				this._createControl(this, ControlResponse);
 			}
 		},
 		
 		_createControl: function(ControlResponse) {
 			
-			ControlResponse['Session'] = this;
-			
 			// Create Control and add to Cache
-			this._controlCache[ControlResponse.ID] = new Control(ControlResponse);
+			this._controlCache[ControlResponse.ID] = new Control(this, ControlResponse);
 				
 			// Add Commands to Cache
 			for (commandname in this._controlCache[ControlResponse.ID].Commands)
@@ -154,34 +152,16 @@ define([
 			);				
 		},
 		
-		_propertyData: function(Property) {
-			var data = new Object({ ID: Property.ID , Name: Property.Name, Type: Property.Type, Values: [] });
+		UpdateControl: function(Control) {
 			
-			if (Property.Type == 'Control')
-			{
-				data.Values.push(Property.Value.ID);
-			}
-			else if (Property.Type == 'ControlList')
-			{
-				array.forEach(Property.Value, lang.hitch(this, function(control) {
-					data.Values.push(control.ID);
-				}));
-			}
-			else
-			{
-				data.Values.push(Property.Value);
-			}
+			// Update Control Data
+			Control._updateData();
 			
-			return data;
-		},
-		
-		UpdateProperty: function(Property) {
-			
-			// Update Property
-			request.put(this.Database.Server.URL + '/properties/' + Property.ID, 
+			// Send to Server
+			request.put(this.Database.Server.URL + '/controls/' + Control.ID, 
 								{ headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, 
 								  handleAs: 'json',
-								  data: json.stringify(this._propertyData(Property))
+								  data: json.stringify(Control.Data)
 								}).then(lang.hitch(this, function(response){
 					this._processResponse(response);
 				})

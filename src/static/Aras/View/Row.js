@@ -67,7 +67,7 @@ define([
 				}
 				
 				this.Cells[i].set('ViewModel', cellviewmodel);
-			}));		
+			}));			
 		}
 		
 	});

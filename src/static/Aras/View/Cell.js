@@ -53,11 +53,13 @@ define([
 				}
 			
 				// Set Value
-				console.debug(newValue);
 				this.set('Value', viewmodel.get('Value'));
 			
 				// Watch for changes in Value on ViewModel
 				this._valueHandle = viewmodel.watch("Value", lang.hitch(this, this.OnValueChange));	
+				
+				// Refreh Grid
+				this.Row.Grid._refreshRows();
 			}));
 		},
 		

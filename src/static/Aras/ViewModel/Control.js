@@ -34,25 +34,40 @@ define([
 		
 		Session: null,
 		
+		Data: null,
+		
 		ID: null,
 		
 		Type: null,
 		
-		constructor: function(args) {
-			this.Session = args.Session;
-			this.ID = args.ID;
-			this.Type = args.Type;
+		constructor: function(Session, Data) {
+
+			// Set Session
+			this.set('Session', Session);
+
+			// Watch for Data Updates
+			this.watch('Data', lang.hitch(this, function(name, oldValue, newValue) {
+				
+				// Set ID
+				this.set('ID', this.Data.ID);
+				
+				// Set Type
+				this.set('Type', this.Data.Type);
 			
-			// Add Properties
-			this._updateProperties(args.Properties);
+				// Add Properties
+				this._updateProperties();
 			
-			// Add Commands
-			this._updateCommands(args.Commands);
+				// Add Commands
+				this._updateCommands();
+			}));
+			
+			// Set Data
+			this.set('Data', Data);
 		},
 		
-		_updateProperties: function(Properties) {
+		_updateProperties: function() {
 			
-			array.forEach(Properties, lang.hitch(this, function(property){
+			array.forEach(this.Data.Properties, lang.hitch(this, function(property){
 				
 				if (property.Values != null)
 				{
@@ -85,10 +100,58 @@ define([
 
 			}));
 		},
-		
-		_updateCommands: function(Commands) {
+	
+		_updateData: function() {
 			
-			array.forEach(Commands, lang.hitch(this, function(command){
+			array.forEach(this.Data.Properties, lang.hitch(this, function(property, i){
+				
+				console.debug(property.Values);
+				
+				if (property.Values != null)
+				{
+					if (property.Type == 3)
+					{
+						// Update Control ID
+			
+						if (this.get(property.Name) == null)
+						{
+							property.Values[0] = null;
+						}
+						else
+						{
+							property.Values[0] = this.get(property.Name).ID;
+						}
+					}
+					else if (property.Type == 4)
+					{
+						// Get List of Controls from Cache
+						var valuelist = [];
+				
+						array.forEach(property.Values, lang.hitch(this, function(value, i) {
+							
+							if (this.get(property.Name)[i] == null)
+							{
+								property.Values[i] = null;
+							}
+							else
+							{
+								property.Values[i] = this.get(property.Name)[i].ID;
+							}
+						}));
+					}
+					else
+					{						
+						// Set Value
+						property.Values[0] = this.get(property.Name);
+					}
+				}
+
+			}));
+		},
+		
+		_updateCommands: function() {
+			
+			array.forEach(this.Data.Commands, lang.hitch(this, function(command){
 				
 				if (this[command.Name])
 				{
