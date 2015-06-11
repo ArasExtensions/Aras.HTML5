@@ -46,7 +46,7 @@ define([
 		
 		OnViewModelLoaded: function() {
 			this.inherited(arguments);
-				
+							
 			// Ensure correct number of Cells
 			if (this.Cells)
 			{
@@ -71,10 +71,10 @@ define([
 				}
 				
 				this.Cells[i].set('ViewModel', cellviewmodel);
-			}, this);
+			}, this);	
 
-			// Set to Loaded
-			this.set('Loaded', true);			
+			// Set Loaded
+			this.set('Loaded', true);				
 		}
 		
 	});

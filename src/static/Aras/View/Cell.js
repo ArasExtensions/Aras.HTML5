@@ -46,6 +46,9 @@ define([
 		
 		OnViewModelLoaded: function() {
 			this.inherited(arguments);
+		
+			// Set to Loaded
+			this.set('Loaded', false);
 				
 			// Unwatch current ViewModel
 			if (this._valueHandle)
@@ -63,7 +66,7 @@ define([
 
 				// Set to Loaded
 				this.set('Loaded', true);
-				
+								
 				// Refresh Grid
 				this.Row.Grid._refreshRows();
 			}

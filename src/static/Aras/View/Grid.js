@@ -59,7 +59,7 @@ define([
 
 		OnViewModelLoaded: function() {
 			this.inherited(arguments);
-	
+			
 			// Update Columns
 			this._updateColumns();
 									
@@ -163,11 +163,12 @@ define([
 		_refreshRows: function() {
 			
 			if (this.Rows && this.Rows.length > 0)
-			{					
-				var rowdata = new Array(this.Rows.length);
-				var loaded = true;
+			{		
+
+					var rowdata = new Array(this.Rows.length);
+					var loaded = true;
 							
-				array.forEach(this.Rows, function(row, i) {
+					array.forEach(this.Rows, function(row, i) {
 					
 					if (row.Loaded)
 					{
@@ -195,10 +196,9 @@ define([
 				// Refresh Grid
 				if (loaded)
 				{
-					console.debug('Refreshing');
 					this._grid.refresh();
 					this._grid.renderArray(rowdata);
-				}				
+				}	
 			}
 			else
 			{
