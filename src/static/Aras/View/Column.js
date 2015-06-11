@@ -52,11 +52,14 @@ define([
 		OnViewModelLoaded: function() {
 			this.inherited(arguments);
 
-			this.set('Name', this.ViewModel.Name);
-			this.set('Label', this.ViewModel.Label);
-			this.set('Loaded', true);
+			if (this.ViewModel != null)
+			{
+				this.set('Name', this.ViewModel.Name);
+				this.set('Label', this.ViewModel.Label);
+				this.set('Loaded', true);
 			
-			this.Grid._refreshColumns();
+				this.Grid._refreshColumns();
+			}
 		}
 		
 	});

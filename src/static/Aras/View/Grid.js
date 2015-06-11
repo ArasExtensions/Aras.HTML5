@@ -25,12 +25,13 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
+	'dojo/_base/array',
 	'./_Grid',
 	'dijit/layout/BorderContainer',
 	'./Control',
 	'./Column',
 	'./Row'
-], function(declare, lang, _Grid, BorderContainer, Control, Column, Row) {
+], function(declare, lang, array, _Grid, BorderContainer, Control, Column, Row) {
 	
 	return declare('Aras.View.Grid', [BorderContainer, Control], {
 			
@@ -94,8 +95,8 @@ define([
 				this.Columns = [];
 			}
 					
-			for(i=0; i<this.ViewModel.Columns.length; i++)
-			{		
+			array.forEach(this.ViewModel.Columns, function(columnviewmodel, i) {
+					
 				if (!this.Columns[i])
 				{
 					this.Columns[i] = new Column();
@@ -103,8 +104,8 @@ define([
 					this.Columns[i].set('Grid', this);
 				}
 					
-				this.Columns[i].set('ViewModel', this.ViewModel.Columns[i]);
-			}
+				this.Columns[i].set('ViewModel', columnviewmodel);
+			}, this);
 		},
 
 		_updateRows: function() {
@@ -122,8 +123,8 @@ define([
 				this.Rows = [];
 			}
 					
-			for(i=0; i<this.ViewModel.Rows.length; i++)
-			{	
+			array.forEach(this.ViewModel.Rows, function(rowviewmodel, i) {
+			
 				if (!this.Rows[i])
 				{
 					this.Rows[i] = new Row();
@@ -131,8 +132,8 @@ define([
 					this.Rows[i].set('Grid', this);
 				}
 
-				this.Rows[i].set('ViewModel', this.ViewModel.Rows[i]);
-			}
+				this.Rows[i].set('ViewModel', rowviewmodel);
+			}, this);
 		},
 
 		_refreshColumns: function() {
@@ -140,26 +141,22 @@ define([
 			var gridcolumns = {};
 			var loaded = true;
 			
-			for (i=0; i<this.Columns.length; i++) {
+			array.forEach(this.Columns, function(column, i) {
 				
-				if (this.Columns[i].Loaded)
+				if (column.Loaded)
 				{
 					gridcolumns[this.Columns[i].Name] = this.Columns[i].Label;
 				}
 				else
 				{
 					loaded = false;
-					break;;
 				}
-			}
+			}, this);
 			
 			if (loaded)
 			{
 				// Set Grid Columns
 				this._grid._setColumns(gridcolumns);
-				
-				// Clear Rows
-				this._grid.refresh();
 			}
 		},
 		
@@ -170,37 +167,30 @@ define([
 				var rowdata = new Array(this.Rows.length);
 				var loaded = true;
 							
-				for(i=0; i<this.Rows.length; i++) {
+				array.forEach(this.Rows, function(row, i) {
 					
-					if (this.Rows[i].Loaded)
+					if (row.Loaded)
 					{
 						rowdata[i] = new Object();
-						rowdata[i]['id'] = this.Rows[i].ID;
+						rowdata[i]['id'] = row.ID;
 								
-						for(j=0; j<this.Rows[i].Cells.length; j++) {
+						array.forEach(row.Cells, function(cell, j) {
 							
-							if (this.Rows[i].Cells[j].Loaded)
+							if (cell.Loaded)
 							{
-								rowdata[i][this.Columns[j].Name] = this.Rows[i].Cells[j].Value;
+								rowdata[i][this.Columns[j].Name] = cell.Value;
 							}
 							else
 							{
 								loaded = false;
-								break;
 							}
-						}
+						}, this);
 					}
 					else
 					{
 						loaded = false;
-					}
-					
-					if (!loaded)
-					{
-						break;
-					}
-							
-				}
+					}	
+				}, this);
 				
 				// Refresh Grid
 				if (loaded)

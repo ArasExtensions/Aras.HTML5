@@ -25,9 +25,10 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
+	'dojo/_base/array',
 	'./Control',
 	'./Cell',
-], function(declare, lang, Control, Cell) {
+], function(declare, lang, array, Control, Cell) {
 	
 	return declare('Aras.View.Row', [Control], {
 
@@ -60,8 +61,8 @@ define([
 			}
 				
 			// Set ViewModel for each Cell
-			for (i=0; i<this.ViewModel.Cells.length; i++)
-			{
+			array.forEach(this.ViewModel.Cells, function(cellviewmodel, i) {
+			
 				if (!this.Cells[i])
 				{
 					this.Cells[i] = new Cell();
@@ -69,8 +70,8 @@ define([
 					this.Cells[i].set('Row', this);
 				}
 				
-				this.Cells[i].set('ViewModel', this.ViewModel.Cells[i]);
-			}
+				this.Cells[i].set('ViewModel', cellviewmodel);
+			}, this);
 
 			// Set to Loaded
 			this.set('Loaded', true);			

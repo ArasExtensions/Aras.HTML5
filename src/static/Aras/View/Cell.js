@@ -53,23 +53,32 @@ define([
 				this._valueHandle.unwatch();
 			}
 			
-			// Set Value
-			this.set('Value', this.ViewModel.get('Value'));
+			if (this.ViewModel != null)
+			{
+				// Set Value
+				this.set('Value', this.ViewModel.get('Value'));
 			
-			// Watch for changes in Value on ViewModel
-			this._valueHandle = this.ViewModel.watch("Value", lang.hitch(this, this.OnValueChange));
+				// Watch for changes in Value on ViewModel
+				this._valueHandle = this.ViewModel.watch("Value", lang.hitch(this, this.OnValueChange));
 
-			// Set to Loaded
-			this.set('Loaded', true);
+				// Set to Loaded
+				this.set('Loaded', true);
+				
+				// Refresh Grid
+				this.Row.Grid._refreshRows();
+			}
 		},
 		
 		OnValueChange: function(name, oldValue, newValue) {
-		
-			// Set new Value
-			this.set('Value', newValue);
+	
+			if (oldValue != newValue)
+			{
+				// Set new Value
+				this.set('Value', newValue);
 			
-			// Refresh Grid
-			this.Row.Grid._refreshRows();
+				// Refresh Grid
+				this.Row.Grid._refreshRows();
+			}
 		}
 		
 	});
