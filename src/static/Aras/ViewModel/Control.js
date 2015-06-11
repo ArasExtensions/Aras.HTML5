@@ -110,6 +110,22 @@ define([
 				this[command.Name].set('CanExecute', command.CanExecute);
 			}));
 				
+			// Remove ReadOnly Properties, these will never be written back to Server
+			this.Data.Properties = array.filter(this.Data.Properties, function(property) {
+				
+				if (!property.ReadOnly)
+				{
+					return true;
+				}
+				
+			}, this);
+			
+			// Remove Commands, these are never written back to Server
+			delete this.Data.Commands;
+			
+			// Delete Type, not needed by Server
+			delete this.Data.Type;
+			
 			// Set Loaded
 			this.set('Loaded', true);
 		},
