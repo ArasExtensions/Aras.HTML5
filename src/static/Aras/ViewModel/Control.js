@@ -114,52 +114,63 @@ define([
 			this.set('Loaded', true);
 		},
 	
+		Read: function() {
+		
+			this.Session._readControl(this);
+		},
+		
+		Write: function() {
+			
+			this._writeData();
+			this.Session._writeControl(this);
+		},
+		
 		_writeData: function() {
 			
-			array.forEach(this.Data.Properties, lang.hitch(this, function(property, i){
-				
-				console.debug(property.Values);
-				
-				if (property.Values != null)
+			array.forEach(this.Data.Properties, function(property, i){
+					
+				if (property.Type == 3)
 				{
-					if (property.Type == 3)
-					{
-						// Update Control ID
+					// Reset Values
+					property.Values = [];
+					
+					// Update Control ID
 			
-						if (this.get(property.Name) == null)
+					if (this.get(property.Name) == null)
+					{
+						property.Values[0] = null;
+					}
+					else
+					{
+						property.Values[0] = this.get(property.Name).ID;
+					}
+				}
+				else if (property.Type == 4)
+				{
+					// Get List of Controls from Cache
+					property.Values = [];
+				
+					array.forEach(property.Values, function(value, i) {
+							
+						if (this.get(property.Name)[i] == null)
 						{
-							property.Values[0] = null;
+							property.Values[i] = null;
 						}
 						else
 						{
-							property.Values[0] = this.get(property.Name).ID;
+							property.Values[i] = this.get(property.Name)[i].ID;
 						}
-					}
-					else if (property.Type == 4)
-					{
-						// Get List of Controls from Cache
-						var valuelist = [];
-				
-						array.forEach(property.Values, lang.hitch(this, function(value, i) {
-							
-							if (this.get(property.Name)[i] == null)
-							{
-								property.Values[i] = null;
-							}
-							else
-							{
-								property.Values[i] = this.get(property.Name)[i].ID;
-							}
-						}));
-					}
-					else
-					{						
-						// Set Value
-						property.Values[0] = this.get(property.Name);
-					}
+						
+					}, this);
+				}
+				else
+				{						
+					// Set Value
+					property.Values = [];
+					property.Values[0] = this.get(property.Name);
 				}
 
-			}));
+			}, this);
 		}
 		
 	});

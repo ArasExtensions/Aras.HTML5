@@ -134,10 +134,7 @@ define([
 			);				
 		},
 		
-		UpdateControl: function(Control) {
-			
-			// Update Control Data
-			Control._writeData();
+		_writeControl: function(Control) {
 			
 			// Send to Server
 			request.put(this.Database.Server.URL + '/controls/' + Control.ID, 
