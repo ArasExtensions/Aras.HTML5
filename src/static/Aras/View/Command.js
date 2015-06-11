@@ -31,15 +31,15 @@ define([
 	return declare('Aras.View.Command', [Stateful], {
 		
 		ViewModel: null, 
-				
+		
 		constructor: function() {
 			
 			// Watch ViewModel
-			this.watch("ViewModel", lang.hitch(this, this.OnViewModelChange));
+			this.watch("ViewModel", lang.hitch(this, this.OnViewModelLoaded));
 		},
-		
-		OnViewModelChange: function(name, oldValue, newValue) {
-
+				
+		OnViewModelLoaded: function() {
+			
 		}
 		
 	});

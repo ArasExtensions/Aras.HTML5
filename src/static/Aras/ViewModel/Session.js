@@ -29,8 +29,9 @@ define([
 	'dojo/_base/array',
 	'dojo/json',
 	'dojo/when',
-	'./Control'
-], function(declare, request, lang, array, json, when, Control) {
+	'./Control',
+	'./Command'
+], function(declare, request, lang, array, json, when, Control, Command) {
 	
 	return declare('Aras.ViewModel.Session', null, {
 		
@@ -52,49 +53,16 @@ define([
 			
 			// Update Controls
 			array.forEach(Response.ControlQueue, lang.hitch(this, function(control) {
-				this._updateControl(control);
+				this.Control(control.ID).set('Data', control);
 			}));
 					
 			// Update Commands
 			array.forEach(Response.CommandQueue, lang.hitch(this, function(command) {
-				
-				if (this._commandCache[command.ID])
-				{
-					this._commandCache[command.ID].set('CanExecute', command.CanExecute);
-				}
+				this.Command(command.ID).set('Name', command.Name);
+				this.Command(command.ID).set('CanExecute', command.CanExecute);
 			}));	
 		},
 				
-		_updateControl: function(ControlResponse) {	
-			
-			if (this._controlCache[ControlResponse.ID])
-			{
-				// Update Existing Control
-				when(this._controlCache[ControlResponse.ID], lang.hitch(this, function(control) {
-					control.set('Data', ControlResponse);
-				}));
-			}
-			else
-			{
-				// Does not exist, Create new Control
-				this._createControl(this, ControlResponse);
-			}
-		},
-		
-		_createControl: function(ControlResponse) {
-			
-			// Create Control and add to Cache
-			this._controlCache[ControlResponse.ID] = new Control(this, ControlResponse);
-				
-			// Add Commands to Cache
-			for (commandname in this._controlCache[ControlResponse.ID].Commands)
-			{
-				this._commandCache[this._controlCache[ControlResponse.ID].Commands[commandname].ID] = this._controlCache[ControlResponse.ID].Commands[commandname];
-			}
-			
-			return this._controlCache[ControlResponse.ID];
-		},
-		
 		Applications: function() {
 				return request.get(this.Database.Server.URL + '/applications', 
 							   { headers: {'Accept': 'application/json'}, 
@@ -105,8 +73,9 @@ define([
 					// Process Applications
 					var ret = [];
 			
-					array.forEach(result.Values, lang.hitch(this, function(entry) {
-						ret.push(this._createControl(entry));
+					array.forEach(result.Values, lang.hitch(this, function(entry) {			
+						this.Control(entry.ID).set('Data', entry);						
+						ret.push(this.Control(entry.ID));
 					}));
 					
 					// Process Response
@@ -117,29 +86,42 @@ define([
 			);
 		},
 		
+		_readControl: function(Control) {
+		
+			request.get(this.Database.Server.URL + '/controls/' + Control.ID, 
+						{ headers: {'Accept': 'application/json'}, 
+						  handleAs: 'json'
+						}).then(lang.hitch(this, function(result) {
+								   
+				// Update Data on Control
+				Control.set("Data", result.Value);
+						
+				// Process Response
+				this._processResponse(result);
+			}));	
+		},
+		
 		Control: function(ID) {
 			
 			if (!this._controlCache[ID])
 			{
-				this._controlCache[ID] = request.get(this.Database.Server.URL + '/controls/' + ID, 
-							   { headers: {'Accept': 'application/json'}, 
-								 handleAs: 'json'
-							   }).then(lang.hitch(this, function(result) {
-								   
-						// Process Control
-						var ret = this._createControl(result.Value);
-						
-						// Process Response
-						this._processResponse(result);
-						
-						return ret;
-					})
-				);
+				this._controlCache[ID] = new Control(this, ID);
+				this._readControl(this._controlCache[ID]);
 			}
 	
 			return this._controlCache[ID];
 		},
-				
+			
+		Command: function(ID) {
+			
+			if (!this._commandCache[ID])
+			{
+				this._commandCache[ID] = new Command(this, ID);
+			}
+	
+			return this._commandCache[ID];
+		},
+		
 		Execute: function(Command) {
 			
 			// Execute Command
@@ -155,7 +137,7 @@ define([
 		UpdateControl: function(Control) {
 			
 			// Update Control Data
-			Control._updateData();
+			Control._writeData();
 			
 			// Send to Server
 			request.put(this.Database.Server.URL + '/controls/' + Control.ID, 

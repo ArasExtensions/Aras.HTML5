@@ -31,7 +31,9 @@ define([
 	return declare('Aras.View.Control', [Stateful], {
 		
 		ViewModel: null, 
-				
+		
+		_viewModelLoadedHandle: null,
+		
 		constructor: function() {
 
 		},
@@ -40,12 +42,40 @@ define([
 			this.inherited(arguments);
 	
 			// Watch ViewModel
-			this.watch("ViewModel", lang.hitch(this, this.OnViewModelChange));
+			this.watch("ViewModel", lang.hitch(this, this._onViewModelChange));
 		},
 		
-		OnViewModelChange: function(name, oldValue, newValue) {
+		_onViewModelChange: function(name, oldValue, newValue) {
 
-		}
+			// Watch ViewModel Loaded
+			if (this._viewModelLoadedHandle)
+			{
+				this._viewModelLoadedHandle.unwatch();
+			}
+			
+			if (this.ViewModel != null)
+			{
+				if (this.ViewModel.Loaded)
+				{
+					this.OnViewModelLoaded();
+				}
+				else
+				{
+					this.__viewModelLoadedHandle = this.ViewModel.watch('Loaded', lang.hitch(this, function(name, oldValue, newValue) {
+					
+						if (newValue)
+						{
+							this.OnViewModelLoaded();
+						}
+					
+					}));
+				}
+			}
+		},
 		
+		OnViewModelLoaded: function() {
+			
+		}
+
 	});
 });

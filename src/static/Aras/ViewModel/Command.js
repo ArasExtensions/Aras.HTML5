@@ -31,7 +31,7 @@ define([
 	
 	return declare('Aras.ViewModel.Command', [Stateful], {
 		
-		Control: null,
+		Session: null,
 		
 		ID: null,
 		
@@ -39,15 +39,13 @@ define([
 		
 		CanExecute: null,
 		
-		constructor: function(args) {
-			this.Control = args.Control;
-			this.ID = args.ID;
-			this.Name = args.Name;
-			this.CanExecute = args.CanExecute;
+		constructor: function(Session, ID) {
+			this.set('Session', Session);
+			this.set('ID', ID);
 		},
 		
 		Execute: function() {
-			this.Control.Session.Execute(this);
+			this.Session.Execute(this);
 		}
 		
 	});

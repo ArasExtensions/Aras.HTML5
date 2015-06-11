@@ -39,7 +39,7 @@ define([
 			this.inherited(arguments);
 		},
 		
-		OnViewModelChange: function(name, oldValue, newValue) {
+		OnViewModelLoaded: function() {
 			this.inherited(arguments);
 			
 			this.set('onClick', lang.hitch(this, function() {

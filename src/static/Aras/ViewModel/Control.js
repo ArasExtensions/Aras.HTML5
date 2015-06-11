@@ -27,8 +27,7 @@ define([
 	'dojo/_base/array',
 	'dojo/_base/lang',
 	'dojo/Stateful',
-	'./Command',
-], function(declare, array, lang, Stateful, Command) {
+], function(declare, array, lang, Stateful) {
 	
 	return declare('Aras.ViewModel.Control', [Stateful], {
 		
@@ -40,33 +39,31 @@ define([
 		
 		Type: null,
 		
-		constructor: function(Session, Data) {
+		Loaded: null,
+		
+		constructor: function(Session, ID) {
 
 			// Set Session
 			this.set('Session', Session);
-
+			
+			// Set ID
+			this.set('ID', ID);
+			
+			// Set Loaded
+			this.set('Loaded', false);
+			
 			// Watch for Data Updates
 			this.watch('Data', lang.hitch(this, function(name, oldValue, newValue) {
-				
-				// Set ID
-				this.set('ID', this.Data.ID);
-				
-				// Set Type
-				this.set('Type', this.Data.Type);
-			
-				// Add Properties
-				this._updateProperties();
-			
-				// Add Commands
-				this._updateCommands();
+				this._readData();
 			}));
-			
-			// Set Data
-			this.set('Data', Data);
 		},
 		
-		_updateProperties: function() {
+		_readData: function() {
+
+			// Set Type
+			this.set('Type', this.Data.Type);
 			
+			// Process Properties
 			array.forEach(this.Data.Properties, lang.hitch(this, function(property){
 				
 				if (property.Values != null)
@@ -99,9 +96,25 @@ define([
 				}
 
 			}));
+			
+			// Process Commands
+			array.forEach(this.Data.Commands, lang.hitch(this, function(command){
+				
+				// Set Command
+				this[command.Name] = this.Session.Command(command.ID);
+				
+				// Update Command Name
+				this[command.Name].set('Name', command.Name);
+				
+				// Update Command CanExecute
+				this[command.Name].set('CanExecute', command.CanExecute);
+			}));
+				
+			// Set Loaded
+			this.set('Loaded', true);
 		},
 	
-		_updateData: function() {
+		_writeData: function() {
 			
 			array.forEach(this.Data.Properties, lang.hitch(this, function(property, i){
 				
@@ -146,22 +159,6 @@ define([
 					}
 				}
 
-			}));
-		},
-		
-		_updateCommands: function() {
-			
-			array.forEach(this.Data.Commands, lang.hitch(this, function(command){
-				
-				if (this[command.Name])
-				{
-					this[command.Name].set('CanExecute', command.CanExecute);
-				}
-				else
-				{
-					command.Control = this;
-					this.set(command.Name, new Command(command));
-				}
 			}));
 		}
 		

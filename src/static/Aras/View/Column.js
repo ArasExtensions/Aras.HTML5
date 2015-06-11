@@ -37,21 +37,26 @@ define([
 		
 		Label: null,
 		
+		Loaded: null,
+		
 		constructor: function() {
 			this.inherited(arguments);
+			
+			this.set('Loaded', false);
 		},
 		
 		startup: function() {
 			this.inherited(arguments);
 		},
 				
-		OnViewModelChange: function(name, oldValue, newValue) {
+		OnViewModelLoaded: function() {
 			this.inherited(arguments);
+
+			this.set('Name', this.ViewModel.Name);
+			this.set('Label', this.ViewModel.Label);
+			this.set('Loaded', true);
 			
-			when(newValue, lang.hitch(this, function(viewmodel) {
-				this.set('Name', viewmodel.Name);
-				this.set('Label', viewmodel.Label);
-			}));
+			this.Grid._refreshColumns();
 		}
 		
 	});

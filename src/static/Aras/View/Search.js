@@ -25,14 +25,13 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
-	'dojo/when',
 	'dijit/layout/BorderContainer',
 	'dijit/layout/ContentPane',
 	'./Control',
 	'./Toolbar',
 	'./Button',
 	'./Grid'
-], function(declare, lang, when, BorderContainer, ContentPane, Control, Toolbar, Button, Grid) {
+], function(declare, lang, BorderContainer, ContentPane, Control, Toolbar, Button, Grid) {
 	
 	return declare('Aras.View.Search', [BorderContainer, Control], {
 	
@@ -62,17 +61,14 @@ define([
 			this.addChild(this.Grid);
 		},
 		
-		OnViewModelChange: function(name, oldValue, newValue) {
+		OnViewModelLoaded: function() {
 			this.inherited(arguments);
-			
-			when(this.ViewModel, lang.hitch(this, function(viewmodel){
+
+			// Set Grid ViewModel
+			this.Grid.set("ViewModel", this.ViewModel.Grid);
 				
-				// Set Grid ViewModel
-				this.Grid.set("ViewModel", viewmodel.Grid);
-				
-				// Set Search Button ViewModel
-				this.SearchButton.set("ViewModel", viewmodel.Refresh);		
-			}));
+			// Set Search Button ViewModel			
+			this.SearchButton.set("ViewModel", this.ViewModel.Refresh);	
 		}
 	});
 });

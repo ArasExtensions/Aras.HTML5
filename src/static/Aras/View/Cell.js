@@ -25,9 +25,8 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
-	'dojo/when',
 	'./Control'
-], function(declare, lang, when, Control) {
+], function(declare, lang, Control) {
 	
 	return declare('Aras.View.Cell', [Control], {
 		
@@ -37,35 +36,42 @@ define([
 		
 		_valueHandle: null,
 		
+		Loaded: null,
+		
 		constructor: function() {
 			this.inherited(arguments);
+			
+			this.set('Loaded', false);
 		},
 		
-		OnViewModelChange: function(name, oldValue, newValue) {
+		OnViewModelLoaded: function() {
 			this.inherited(arguments);
 				
-			when(newValue).then(lang.hitch(this, function(viewmodel) {
-				
-				// Unwatch current ViewModel
-				if (this._valueHandle != null)
-				{
-					this._valueHandle.unwatch();
-				}
+			// Unwatch current ViewModel
+			if (this._valueHandle)
+			{
+				this._valueHandle.unwatch();
+			}
 			
-				// Set Value
-				this.set('Value', viewmodel.get('Value'));
+			// Set Value
+			this.set('Value', this.ViewModel.get('Value'));
 			
-				// Watch for changes in Value on ViewModel
-				this._valueHandle = viewmodel.watch("Value", lang.hitch(this, this.OnValueChange));	
-				
-				// Refreh Grid
-				this.Row.Grid._refreshRows();
-			}));
+			// Watch for changes in Value on ViewModel
+			this._valueHandle = this.ViewModel.watch("Value", lang.hitch(this, this.OnValueChange));
+
+			// Set to Loaded
+			this.set('Loaded', true);
+			
+			// Refresh Grid
+			this.Row.Grid._refreshRows();
 		},
 		
 		OnValueChange: function(name, oldValue, newValue) {
 		
-			this.Value = newValue;
+			// Set new Value
+			this.set('Value', newValue);
+			
+			// Refresh Grid
 			this.Row.Grid._refreshRows();
 		}
 		

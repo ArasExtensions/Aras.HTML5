@@ -25,12 +25,10 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
-	'dojo/when',
-	'dojo/promise/all',
 	'dojo/_base/array',
 	'./Control',
 	'./Cell',
-], function(declare, lang, when, all, array, Control, Cell) {
+], function(declare, lang, array, Control, Cell) {
 	
 	return declare('Aras.View.Row', [Control], {
 
@@ -38,26 +36,32 @@ define([
 		
 		Cells: null,
 
+		Loaded: null,
+		
 		constructor: function() {
 			this.inherited(arguments);
+			
+			this.set('Loaded', false);
 		},
 		
-		OnViewModelChange: function(name, oldValue, newValue) {
+		OnViewModelLoaded: function() {
 			this.inherited(arguments);
 				
+			// Ensure correct number of Cells
 			if (this.Cells)
 			{
-				if (this.Cells.length > newValue.length)
+				if (this.Cells.length > this.ViewModel.Cells.length)
 				{
-					this.Cells = this.Cells.slice(0, newValue.length);
+					this.Cells = this.Cells.slice(0, this.ViewModel.Cells.length);
 				}
 			}
 			else
 			{
 				this.Cells = [];
 			}
-						
-			array.forEach(newValue.Cells, lang.hitch(this, function(cellviewmodel, i){
+				
+			// Set ViewModel for each Cell
+			array.forEach(this.ViewModel.Cells, lang.hitch(this, function(cellviewmodel, i){
 				
 				if (!this.Cells[i])
 				{
@@ -67,7 +71,10 @@ define([
 				}
 				
 				this.Cells[i].set('ViewModel', cellviewmodel);
-			}));			
+			}));
+
+			// Set to Loaded
+			this.set('Loaded', true);			
 		}
 		
 	});

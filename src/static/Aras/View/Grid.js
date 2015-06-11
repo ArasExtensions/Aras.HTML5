@@ -25,15 +25,13 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
-	'dojo/when',
-	'dojo/promise/all',
 	'dojo/_base/array',
 	'./_Grid',
 	'dijit/layout/BorderContainer',
 	'./Control',
 	'./Column',
 	'./Row'
-], function(declare, lang, when, all, array, _Grid, BorderContainer, Control, Column, Row) {
+], function(declare, lang, array, _Grid, BorderContainer, Control, Column, Row) {
 	
 	return declare('Aras.View.Grid', [BorderContainer, Control], {
 			
@@ -59,146 +57,159 @@ define([
 			this.addChild(this._grid);
 		},
 
-		OnViewModelChange: function(name, oldValue, newValue) {
+		OnViewModelLoaded: function() {
 			this.inherited(arguments);
-					
-			when(newValue, lang.hitch(this, function(viewmodel) {
-			
-				// Update Columns
-				this._updateColumns(viewmodel.Columns);
+	
+			// Update Columns
+			this._updateColumns();
 									
-				if (this._columnsHandle != null)
+			if (this._columnsHandle != null)
+			{
+				this._columnsHandle.unwatch();
+			}
+				
+			this._columnsHandle = this.ViewModel.watch("Columns", lang.hitch(this, this._updateColumns));
+				
+			// Update Rows
+			this._updateRows();
+				
+			if (this._rowsHandle != null)
+			{
+				this._rowsHandle.unwatch();
+			}
+				
+			this._rowsHandle = this.ViewModel.watch("Rows", lang.hitch(this, this._updateRows));
+		},
+		
+		_updateColumns: function() {
+
+			if (this.Columns)
+			{
+				if (this.Columns.length > this.ViewModel.Columns.length)
 				{
-					this._columnsHandle.unwatch();
+					this.Columns = this.Columns.slice(0, this.ViewModel.Columns.length);
 				}
-				
-				this._columnsHandle = viewmodel.watch("Columns", lang.hitch(this, this.OnColumnsViewModelChange));
-				
-				// Update Rows
-				this._updateRows(viewmodel.Rows);
-				
-				if (this._rowsHandle != null)
+			}
+			else
+			{
+				this.Columns = [];
+			}
+					
+			array.forEach(this.ViewModel.Columns, lang.hitch(this, function(columnviewmodel, i){
+					
+				if (!this.Columns[i])
 				{
-					this._rowsHandle.unwatch();
+					this.Columns[i] = new Column();
+					this.Columns[i].startup();
+					this.Columns[i].set('Grid', this);
 				}
-				
-				this._rowsHandle = viewmodel.watch("Rows", lang.hitch(this, this.OnRowsViewModelChange));
+					
+				this.Columns[i].set('ViewModel', columnviewmodel);
 			}));
 		},
 
-		OnColumnsViewModelChange: function(name, oldValue, newValue) {
-
-			// Process Columns
-			this._updateColumns(newValue);
-		},
-		
-		OnRowsViewModelChange: function(name, oldValue, newValue) {
-
-			// Process Rows
-			this._updateRows(newValue);
-		},
-		
-		_updateColumns: function(ColumnsResponse) {
-
-			all(ColumnsResponse).then(lang.hitch(this, function(columnsviewmodel){
-
-				if (this.Columns)
-				{
-					if (this.Columns.length > columnsviewmodel.length)
-					{
-						this.Columns = this.Columns.slice(0, columnsviewmodel.length);
-					}
-				}
-				else
-				{
-					this.Columns = [];
-				}
-					
-				array.forEach(columnsviewmodel, lang.hitch(this, function(columnviewmodel, i){
-					
-					if (!this.Columns[i])
-					{
-						this.Columns[i] = new Column();
-						this.Columns[i].startup();
-						this.Columns[i].set('Grid', this);
-					}
-					
-					this.Columns[i].set('ViewModel', columnviewmodel);
-				}));
-				
-				// Refresh Columns
-				this._refreshColumns();
-			}));			
-		},
-
-		_updateRows: function(RowsResponse) {
+		_updateRows: function() {
 
 			// Update Rows
-			all(RowsResponse).then(lang.hitch(this, function(rowsviewmodel){
-				
-				if (this.Rows)
+			if (this.Rows)
+			{
+				if (this.Rows.length > this.ViewModel.Rows.length)
 				{
-					if (this.Rows.length > rowsviewmodel.length)
-					{
-						this.Rows = this.Rows.slice(0, rowsviewmodel.length);
-					}
+					this.Rows = this.Rows.slice(0, this.ViewModel.Rows.length);
 				}
-				else
+			}
+			else
+			{
+				this.Rows = [];
+			}
+					
+			array.forEach(this.ViewModel.Rows, lang.hitch(this, function(rowviewmodel, i){
+					
+				if (!this.Rows[i])
 				{
-					this.Rows = [];
+					this.Rows[i] = new Row();
+					this.Rows[i].startup();
+					this.Rows[i].set('Grid', this);
 				}
-					
-				array.forEach(rowsviewmodel, lang.hitch(this, function(rowviewmodel, i){
-					
-					if (!this.Rows[i])
-					{
-						this.Rows[i] = new Row();
-						this.Rows[i].startup();
-						this.Rows[i].set('Grid', this);
-					}
 
-					this.Rows[i].set('ViewModel', rowviewmodel);
-				}));
-				
-				// Refresh Rows
-				this._refreshRows();
+				this.Rows[i].set('ViewModel', rowviewmodel);
 			}));
 		},
 
 		_refreshColumns: function() {
 		
 			var gridcolumns = {};
-					
-			array.forEach(this.Columns, lang.hitch(this, function(column){
-				gridcolumns[column.Name] = column.Label;
-			}));
-					
-			// Set Grid Columns
-			this._grid._setColumns(gridcolumns);
+			var loaded = true;
+			
+			for (i=0; i<this.Columns.length; i++) {
 				
-			// Refresh Rows
-			this._refreshRows();
+				if (this.Columns[i].Loaded)
+				{
+					gridcolumns[this.Columns[i].Name] = this.Columns[i].Label;
+				}
+				else
+				{
+					loaded = false;
+					break;;
+				}
+			}
+			
+			if (loaded)
+			{
+				// Set Grid Columns
+				this._grid._setColumns(gridcolumns);
+				
+				// Clear Rows
+				this._grid.refresh();
+			}
 		},
 		
 		_refreshRows: function() {
 			
-			if (this.Rows)
+			if (this.Rows && this.Rows.length > 0)
 			{					
 				var rowdata = new Array(this.Rows.length);
+				var loaded = true;
 							
-				array.forEach(this.Rows, lang.hitch(this, function(row, i) {
-					rowdata[i] = new Object();
-					rowdata[i]['id'] = row.ID;
+				for(i=0; i<this.Rows.length; i++) {
+					
+					if (this.Rows[i].Loaded)
+					{
+						rowdata[i] = new Object();
+						rowdata[i]['id'] = this.Rows[i].ID;
 								
-					array.forEach(row.Cells, lang.hitch(this, function(cell, j) {
-						rowdata[i][this.Columns[j].Name] = cell.Value;
-					}));
+						for(j=0; j<this.Rows[i].Cells.length; j++) {
 							
-				}));
-		
+							if (this.Rows[i].Cells[j].Loaded)
+							{
+								rowdata[i][this.Columns[j].Name] = this.Rows[i].Cells[j].Value;
+							}
+							else
+							{
+								loaded = false;
+								break;
+							}
+						}
+					}
+					else
+					{
+						loaded = false;
+					}
+					
+					if (!loaded)
+					{
+						break;
+					}
+							
+				}
+				
 				// Refresh Grid
-				this._grid.refresh();
-				this._grid.renderArray(rowdata);							
+				if (loaded)
+				{
+					console.debug('Refreshing');
+					this._grid.refresh();
+					this._grid.renderArray(rowdata);
+				}				
 			}
 			else
 			{
