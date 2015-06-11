@@ -25,13 +25,12 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
-	'dojo/_base/array',
 	'./_Grid',
 	'dijit/layout/BorderContainer',
 	'./Control',
 	'./Column',
 	'./Row'
-], function(declare, lang, array, _Grid, BorderContainer, Control, Column, Row) {
+], function(declare, lang, _Grid, BorderContainer, Control, Column, Row) {
 	
 	return declare('Aras.View.Grid', [BorderContainer, Control], {
 			
@@ -95,8 +94,8 @@ define([
 				this.Columns = [];
 			}
 					
-			array.forEach(this.ViewModel.Columns, lang.hitch(this, function(columnviewmodel, i){
-					
+			for(i=0; i<this.ViewModel.Columns.length; i++)
+			{		
 				if (!this.Columns[i])
 				{
 					this.Columns[i] = new Column();
@@ -104,8 +103,8 @@ define([
 					this.Columns[i].set('Grid', this);
 				}
 					
-				this.Columns[i].set('ViewModel', columnviewmodel);
-			}));
+				this.Columns[i].set('ViewModel', this.ViewModel.Columns[i]);
+			}
 		},
 
 		_updateRows: function() {
@@ -123,8 +122,8 @@ define([
 				this.Rows = [];
 			}
 					
-			array.forEach(this.ViewModel.Rows, lang.hitch(this, function(rowviewmodel, i){
-					
+			for(i=0; i<this.ViewModel.Rows.length; i++)
+			{	
 				if (!this.Rows[i])
 				{
 					this.Rows[i] = new Row();
@@ -132,8 +131,8 @@ define([
 					this.Rows[i].set('Grid', this);
 				}
 
-				this.Rows[i].set('ViewModel', rowviewmodel);
-			}));
+				this.Rows[i].set('ViewModel', this.ViewModel.Rows[i]);
+			}
 		},
 
 		_refreshColumns: function() {

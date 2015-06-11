@@ -61,9 +61,6 @@ define([
 
 			// Set to Loaded
 			this.set('Loaded', true);
-			
-			// Refresh Grid
-			this.Row.Grid._refreshRows();
 		},
 		
 		OnValueChange: function(name, oldValue, newValue) {
