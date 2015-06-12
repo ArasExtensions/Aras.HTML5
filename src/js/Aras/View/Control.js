@@ -25,8 +25,10 @@
 define([
 	'dojo/_base/declare',
 	'dojo/Stateful',
-	'dojo/_base/lang'
-], function(declare, Stateful, lang) {
+	'dojo/_base/lang',
+	'dijit/_base/manager',
+	'dijit/_base'
+], function(declare, Stateful, lang, manager, base) {
 	
 	return declare('Aras.View.Control', [Stateful], {
 		
