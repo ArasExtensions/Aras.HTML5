@@ -11,14 +11,14 @@
 *.userprefs
 
 # Dojo Source
-src/static/dojo/
-src/static/dijit/
-src/static/dojox/
-src/static/util/
-src/static/dgrid/
-src/static/dstore/
-src/static/put-selector/
-src/static/xstyle/
+src/js/dojo/
+src/js/dijit/
+src/js/dojox/
+src/js/util/
+src/js/dgrid/
+src/js/dstore/
+src/js/put-selector/
+src/js/xstyle/
 
 # Build results
 [Dd]ebug/
