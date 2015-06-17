@@ -68,37 +68,84 @@ define([
 				
 				if (property.Values != null)
 				{
-					if (property.Type == 0)
+					switch(property.Type)
 					{
-						if (property.Values[0] == '1')
-						{
-							this.set(property.Name, true);
-						}
-						else
-						{
-							this.set(property.Name, false);
-						}
-					}
-					else if (property.Type == 3)
-					{
-						// Get Control from Cache
-						this.set(property.Name, this.Session.Control(property.Values[0]));
-					}
-					else if (property.Type == 4)
-					{
-						// Get List of Controls from Cache
-						var valuelist = [];
+						case 0:
+						
+							// Boolean
+							
+							if (property.Values[0] == '1')
+							{
+								this.set(property.Name, true);
+							}
+							else
+							{
+								this.set(property.Name, false);
+							}
+							
+							break;
+						case 1:
+						
+							// Int32
+							this.set(property.Name, parseInt(property.Values[0]));
+							break;
+							
+						case 2:
+						
+							// String
+							this.set(property.Name, property.Values[0]);
+							break;
+							
+						case 3:
+						
+							// Control
+							this.set(property.Name, this.Session.Control(property.Values[0]));
+							
+							break;
+							
+						case 4:
+						
+							// Control List
+							var valuelist = [];
 				
-						array.forEach(property.Values, lang.hitch(this, function(value) {
-							valuelist.push(this.Session.Control(value));
-						}));
+							array.forEach(property.Values, function(value) {
+								valuelist.push(this.Session.Control(value));
+							}, this);
 
-						this.set(property.Name, valuelist);
-					}
-					else
-					{
-						// Set Value
-						this.set(property.Name, property.Values[0]);
+							this.set(property.Name, valuelist);
+						
+							break;
+							
+						case 5:
+						
+							// NullableInt32
+							if (property.Values[0] == null)
+							{
+								this.set(property.Name, null);
+							}
+							else
+							{
+								this.set(property.Name, parseInt(property.Values[0]));
+							}
+							
+							break;
+						
+						case 6:
+						
+							// Float
+							this.set(property.Name, Number(property.Values[0]));
+							break;
+						
+						case 7:
+						
+							// String List
+							this.set(property.Name, property.Values);
+						
+							break;
+							
+						default:
+						
+							break;
 					}
 				}
 				else

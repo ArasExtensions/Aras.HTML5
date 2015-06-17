@@ -25,8 +25,11 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
-	'./Control'
-], function(declare, lang, Control) {
+	'dojo/_base/array',
+	'./Control',
+	'./Fields/String',
+	'./Fields/List'
+], function(declare, lang, array, Control, String, List) {
 	
 	return declare('Aras.View.Cell', [Control], {
 		
@@ -38,6 +41,8 @@ define([
 		
 		Node: null,
 		
+		_viewModelValueHandle: null,
+		
 		_valueHandle: null,
 						
 		constructor: function() {
@@ -48,42 +53,141 @@ define([
 		OnViewModelLoaded: function() {
 			this.inherited(arguments);
 						
-			// Unwatch current ViewModel
-			if (this._valueHandle)
+			// Remove watch on current ViewModel
+			if (this._viewModelValueHandle)
 			{
-				this._valueHandle.unwatch();
+				this._viewModelValueHandle.unwatch();
 			}
 			
 			if (this.ViewModel != null)
 			{
 				// Set Value
-				this._setValue(this.ViewModel.get('Value'));
+				this._setValue();
 			
 				// Watch for changes in Value on ViewModel
-				this._valueHandle = this.ViewModel.watch("Value", lang.hitch(this, this.OnValueChange));
+				this._viewModelValueHandle = this.ViewModel.watch("Value", lang.hitch(this, this.OnViewModelValueChange));
 			}
 		},
 		
-		OnValueChange: function(name, oldValue, newValue) {
+		OnViewModelValueChange: function(name, oldValue, newValue) {
 	
 			if (oldValue != newValue)
 			{
 				// Set new Value
-				this._setValue(newValue);
+				this._setValue();
 			}
 		},
 		
-		_setValue: function(Value) {
+		_setValue: function() {
 			
 			if (this.Value)
 			{
-				this.Value.set('value', Value);
+				if (this.ViewModel.Type == 'Aras.ViewModel.Cells.List')
+				{
+					// Set List Options
+					var options = [];
+					
+					array.forEach(this.ViewModel.Values, function(value) {
+						options.push({label: value, value: value});
+					}, this);
+					
+					this.Value.set('options', options);
+				}
+								
+				// Set Value
+				this.Value.set('value', this.ViewModel.get('Value'));
 			}
 			else
 			{
-				this.Node.innerHTML = Value;
+				this.Node.innerHTML = this.ViewModel.get('Value');
 			}
 			
+		},
+		
+		renderCell: function(node) {
+
+			switch(this.Column.ViewModel.Type)
+			{
+				case 'Aras.ViewModel.Columns.Boolean':
+				
+					if (this.Column.Editable)
+					{
+						this.Value = new String( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
+						this.Value.placeAt(node);
+						this._setValueWatch('value');
+					}
+					else
+					{
+						this.Node = node;
+					}
+					
+					break;
+				case 'Aras.ViewModel.Columns.String':
+				
+					if (this.Column.Editable)
+					{
+						this.Value = new String( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
+						this.Value.placeAt(node);
+						this._setValueWatch('value');
+					}
+					else
+					{
+						this.Node = node;
+					}
+					
+					break;
+				case 'Aras.ViewModel.Columns.List':
+				
+					if (this.Column.Editable)
+					{
+						this.Value = new List( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
+						this.Value.placeAt(node);
+						this._setValueWatch('value');
+					}
+					else
+					{
+						this.Node = node;
+					}
+					
+					break;
+				case 'Aras.ViewModel.Columns.Float':
+				
+					if (this.Column.Editable)
+					{
+						this.Value = new String( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
+						this.Value.placeAt(node);
+						this._setValueWatch('value');
+					}
+					else
+					{
+						this.Node = node;
+					}
+					
+					break;
+				default:
+					this.Node = node;
+				break;				
+			}
+		
+		},
+		
+		_setValueWatch: function(Property) {
+		
+			if (this._valueHandle)
+			{
+				this._valueHandle.unwatch();
+			}	
+
+			this._valueHandle = this.Value.watch(Property, lang.hitch(this, this.OnValueChange));
+		},
+		
+		OnValueChange: function(name, oldValue, newValue) {
+			
+			if (newValue != this.ViewModel.get('Value'))
+			{
+				this.ViewModel.set('Value', newValue);
+				this.ViewModel.Write();
+			}
 		}
 		
 	});

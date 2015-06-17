@@ -28,11 +28,10 @@ define([
 	'dojo/_base/array',
 	'./_Grid',
 	'dijit/layout/BorderContainer',
-	'./Fields/String',
 	'./Control',
 	'./Column',
 	'./Row'
-], function(declare, lang, array, _Grid, BorderContainer, String, Control, Column, Row) {
+], function(declare, lang, array, _Grid, BorderContainer, Control, Column, Row) {
 	
 	return declare('Aras.View.Grid', [BorderContainer, Control], {
 			
@@ -175,66 +174,7 @@ define([
 		
 		_renderCell: function(object, value, node, options) {
 
-			var column = this;
-			var cell = column.Grid.Rows[object.id].Cells[column.Index];
-			
-			switch(column.ViewModel.Type)
-			{
-				case 'Aras.ViewModel.Columns.Boolean':
-				
-					if (column.Editable)
-					{
-						cell.Value = new String( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
-					}
-					else
-					{
-						cell.Node = node;
-					}
-					
-					break;
-				case 'Aras.ViewModel.Columns.String':
-				
-					if (column.Editable)
-					{
-						cell.Value = new String( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
-						cell.Value.placeAt(node);
-					}
-					else
-					{
-						cell.Node = node;
-					}
-					
-					break;
-				case 'Aras.ViewModel.Columns.List':
-				
-					if (column.Editable)
-					{
-						cell.Value = new String( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
-						cell.Value.placeAt(node);
-					}
-					else
-					{
-						cell.Node = node;
-					}
-					
-					break;
-				case 'Aras.ViewModel.Columns.Float':
-				
-					if (column.Editable)
-					{
-						cell.Value = new String( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
-						cell.Value.placeAt(node);
-					}
-					else
-					{
-						cell.Node = node;
-					}
-					
-					break;
-				default:
-					cell.Node = node;
-				break;				
-			}
+			this.Grid.Rows[object.id].Cells[this.Index].renderCell(node);			
 		},
 		
 		_refreshRows: function() {
