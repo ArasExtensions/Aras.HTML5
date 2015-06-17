@@ -54,31 +54,21 @@ define([
 			var server = new Server({ URL: this.URL });
 			
 			// Get Database
-			server.Database(this.DatabaseID).then(
-				lang.hitch(this, function(database) {
+			server.Database(this.DatabaseID).then(lang.hitch(this, function(database) {
 		
-					// Login
-					database.Login(this.Username, this.Password).then(
-						lang.hitch(this, function(session){
+				// Login
+				database.Login(this.Username, this.Password).then(lang.hitch(this, function(session){
 
-							// Get Application ViewModel
-							session.Applications().then(
-								lang.hitch(this, function(applications){ 
+					// Get Application ViewModel
+					session.Application(this.Name).then(lang.hitch(this, function(application){ 
 								
-									// Set ViewModel
-									array.forEach(applications, lang.hitch(this, function(application){
+						// Set ViewModel
+						this.set("ViewModel", application);
 										
-										if (application.Type == this.Name)
-										{
-											this.set("ViewModel", application);
-										}
-									}));
-								})
-							);
-						})
-					);
-				})
-			);
+					}));
+				}));
+			}));
 		}
+		
 	});
 });

@@ -63,20 +63,15 @@ define([
 			}));	
 		},
 				
-		Applications: function() {
-				return request.get(this.Database.Server.URL + '/applications', 
+		Application: function(Name) {
+				return request.get(this.Database.Server.URL + '/applications/' + Name + '/', 
 							   { headers: {'Accept': 'application/json'}, 
 								 handleAs: 'json'
 							   }).then(
 				lang.hitch(this, function(result) {
 					
-					// Process Applications
-					var ret = [];
-			
-					array.forEach(result.Values, lang.hitch(this, function(entry) {			
-						this.Control(entry.ID).set('Data', entry);						
-						ret.push(this.Control(entry.ID));
-					}));
+					// Create Application
+					var ret = this.Control(result.Value.ID).set('Data', result.Value);	
 					
 					// Process Response
 					this._processResponse(result);
