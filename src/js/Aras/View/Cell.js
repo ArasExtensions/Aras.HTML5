@@ -30,26 +30,24 @@ define([
 	
 	return declare('Aras.View.Cell', [Control], {
 		
+		Column: null,
+		
 		Row: null,
 		
 		Value: null,
 		
+		Node: null,
+		
 		_valueHandle: null,
-		
-		Loaded: null,
-		
+						
 		constructor: function() {
 			this.inherited(arguments);
 			
-			this.set('Loaded', false);
 		},
 		
 		OnViewModelLoaded: function() {
 			this.inherited(arguments);
-		
-			// Set to Loaded
-			this.set('Loaded', false);
-				
+						
 			// Unwatch current ViewModel
 			if (this._valueHandle)
 			{
@@ -59,16 +57,10 @@ define([
 			if (this.ViewModel != null)
 			{
 				// Set Value
-				this.set('Value', this.ViewModel.get('Value'));
+				this._setValue(this.ViewModel.get('Value'));
 			
 				// Watch for changes in Value on ViewModel
 				this._valueHandle = this.ViewModel.watch("Value", lang.hitch(this, this.OnValueChange));
-
-				// Set to Loaded
-				this.set('Loaded', true);
-								
-				// Refresh Grid
-				this.Row.Grid._refreshRows();
 			}
 		},
 		
@@ -77,11 +69,21 @@ define([
 			if (oldValue != newValue)
 			{
 				// Set new Value
-				this.set('Value', newValue);
-			
-				// Refresh Grid
-				this.Row.Grid._refreshRows();
+				this._setValue(newValue);
 			}
+		},
+		
+		_setValue: function(Value) {
+			
+			if (this.Value)
+			{
+				this.Value.set('value', Value);
+			}
+			else
+			{
+				this.Node.innerHTML = Value;
+			}
+			
 		}
 		
 	});

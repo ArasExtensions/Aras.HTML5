@@ -28,16 +28,19 @@ define([
 	'dojo/_base/array',
 	'./_Grid',
 	'dijit/layout/BorderContainer',
+	'./Fields/String',
 	'./Control',
 	'./Column',
 	'./Row'
-], function(declare, lang, array, _Grid, BorderContainer, Control, Column, Row) {
+], function(declare, lang, array, _Grid, BorderContainer, String, Control, Column, Row) {
 	
 	return declare('Aras.View.Grid', [BorderContainer, Control], {
 			
 		_grid: null,
 		
 		Columns: null,
+		
+		ColumnsLoaded: null,
 		
 		_columnsHandle: null,
 		
@@ -47,6 +50,7 @@ define([
 				
 		constructor: function() {
 			
+			this.ColumnsLoaded = false;
 		},
 		
 		startup: function() {
@@ -62,7 +66,8 @@ define([
 			
 			// Update Columns
 			this._updateColumns();
-									
+				
+			// Watch for Changes in Columns
 			if (this._columnsHandle != null)
 			{
 				this._columnsHandle.unwatch();
@@ -73,6 +78,7 @@ define([
 			// Update Rows
 			this._updateRows();
 				
+			// Watch for Changes in Rows
 			if (this._rowsHandle != null)
 			{
 				this._rowsHandle.unwatch();
@@ -99,11 +105,11 @@ define([
 					
 				if (!this.Columns[i])
 				{
-					this.Columns[i] = new Column();
+					this.Columns[i] = new Column({ Grid: this });
 					this.Columns[i].startup();
-					this.Columns[i].set('Grid', this);
 				}
 					
+				this.Columns[i].set('Index', i);
 				this.Columns[i].set('ViewModel', columnviewmodel);
 			}, this);
 		},
@@ -127,11 +133,11 @@ define([
 			
 				if (!this.Rows[i])
 				{
-					this.Rows[i] = new Row();
+					this.Rows[i] = new Row({ Grid: this });
 					this.Rows[i].startup();
-					this.Rows[i].set('Grid', this);
 				}
 
+				this.Rows[i].set('Index', i);
 				this.Rows[i].set('ViewModel', rowviewmodel);
 			}, this);
 		},
@@ -145,7 +151,9 @@ define([
 				
 				if (column.Loaded)
 				{
-					gridcolumns[this.Columns[i].Name] = this.Columns[i].Label;
+					gridcolumns[this.Columns[i].Name] = {};
+					gridcolumns[this.Columns[i].Name].label = this.Columns[i].Label;
+					gridcolumns[this.Columns[i].Name].renderCell = lang.hitch(column, this._renderCell);
 				}
 				else
 				{
@@ -157,55 +165,107 @@ define([
 			{
 				// Set Grid Columns
 				this._grid._setColumns(gridcolumns);
+				
+				this.set('ColumnsLoaded', true);
+				
+				// Refresh Rows
+				this._refreshRows();
+			}
+		},
+		
+		_renderCell: function(object, value, node, options) {
+
+			var column = this;
+			var cell = column.Grid.Rows[object.id].Cells[column.Index];
+			
+			switch(column.ViewModel.Type)
+			{
+				case 'Aras.ViewModel.Columns.Boolean':
+				
+					if (column.Editable)
+					{
+						cell.Value = new String( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
+					}
+					else
+					{
+						cell.Node = node;
+					}
+					
+					break;
+				case 'Aras.ViewModel.Columns.String':
+				
+					if (column.Editable)
+					{
+						cell.Value = new String( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
+						cell.Value.placeAt(node);
+					}
+					else
+					{
+						cell.Node = node;
+					}
+					
+					break;
+				case 'Aras.ViewModel.Columns.List':
+				
+					if (column.Editable)
+					{
+						cell.Value = new String( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
+						cell.Value.placeAt(node);
+					}
+					else
+					{
+						cell.Node = node;
+					}
+					
+					break;
+				case 'Aras.ViewModel.Columns.Float':
+				
+					if (column.Editable)
+					{
+						cell.Value = new String( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
+						cell.Value.placeAt(node);
+					}
+					else
+					{
+						cell.Node = node;
+					}
+					
+					break;
+				default:
+					cell.Node = node;
+				break;				
 			}
 		},
 		
 		_refreshRows: function() {
 			
-			if (this.Rows && this.Rows.length > 0)
+			if (this.Rows && this.ColumnsLoaded)
 			{		
-
+				if (this.Rows.length > 0)
+				{
 					var rowdata = new Array(this.Rows.length);
-					var loaded = true;
 							
 					array.forEach(this.Rows, function(row, i) {
 					
-					if (row.Loaded)
-					{
 						rowdata[i] = new Object();
-						rowdata[i]['id'] = row.ID;
+						rowdata[i]['id'] = i;
 								
 						array.forEach(row.Cells, function(cell, j) {
-							
-							if (cell.Loaded)
-							{
-								rowdata[i][this.Columns[j].Name] = cell.Value;
-							}
-							else
-							{
-								loaded = false;
-							}
+							rowdata[i][this.Columns[j].Name] = cell.Value;
 						}, this);
-					}
-					else
-					{
-						loaded = false;
-					}	
-				}, this);
+		
+					}, this);
 				
-				// Refresh Grid
-				if (loaded)
-				{
+					// Refresh Grid
 					this._grid.refresh();
 					this._grid.renderArray(rowdata);
-				}	
+				}
+				else
+				{
+					// No Rows
+					this._grid.refresh();
+				}
 			}
-			else
-			{
-				// No Rows
-				this._grid.refresh();
-			}
-
 		}
 
 	});

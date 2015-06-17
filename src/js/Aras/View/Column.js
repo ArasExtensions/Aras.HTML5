@@ -37,6 +37,8 @@ define([
 		
 		Label: null,
 		
+		Editable: null,
+		
 		Loaded: null,
 		
 		constructor: function() {
@@ -56,6 +58,7 @@ define([
 			{
 				this.set('Name', this.ViewModel.Name);
 				this.set('Label', this.ViewModel.Label);
+				this.set('Editable', this.ViewModel.Editable);
 				this.set('Loaded', true);
 			
 				this.Grid._refreshColumns();

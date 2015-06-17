@@ -68,7 +68,18 @@ define([
 				
 				if (property.Values != null)
 				{
-					if (property.Type == 3)
+					if (property.Type == 0)
+					{
+						if (property.Values[0] == '1')
+						{
+							this.set(property.Name, true);
+						}
+						else
+						{
+							this.set(property.Name, false);
+						}
+					}
+					else if (property.Type == 3)
 					{
 						// Get Control from Cache
 						this.set(property.Name, this.Session.Control(property.Values[0]));
@@ -145,7 +156,18 @@ define([
 			
 			array.forEach(this.Data.Properties, function(property, i){
 					
-				if (property.Type == 3)
+				if (property.Type == 0)
+				{
+					if (this.get(property.Name))
+					{
+						property.Values[0] = '1';
+					}
+					else
+					{
+						property.Values[0] = '0';
+					}
+				}
+				else if (property.Type == 3)
 				{
 					// Reset Values
 					property.Values = [];

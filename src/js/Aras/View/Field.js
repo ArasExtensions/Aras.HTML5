@@ -25,45 +25,15 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
-	'dojo/_base/array',
-	'./Control',
-	'./Cell',
-], function(declare, lang, array, Control, Cell) {
+	'./Control'
+], function(declare, lang, Control) {
 	
-	return declare('Aras.View.Row', [Control], {
-
-		Grid: null,
-		
-		Cells: null,
-		
-		Index: null,
-		
+	return declare('Aras.View.Field', [Control], {
+								
 		constructor: function() {
-			this.inherited(arguments);
-
-		},
-		
-		startup: function() {
-			this.inherited(arguments);
+	
 			
-			this.Cells = [];
-			
-			array.forEach(this.Grid.Columns, function(column, i) {
-				
-				this.Cells[i] = new Cell({ Column: column, Row: this, Index: i });
-				this.Cells[i].startup();
-				
-			}, this);
-		},
-		
-		OnViewModelLoaded: function() {
-			this.inherited(arguments);
-			
-			// Set ViewModel for each Cell
-			array.forEach(this.ViewModel.Cells, function(cellviewmodel, i) {				
-				this.Cells[i].set('ViewModel', cellviewmodel);
-			}, this);			
 		}
-		
+
 	});
 });
