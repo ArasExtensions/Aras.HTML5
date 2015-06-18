@@ -61,11 +61,15 @@ define([
 			
 			if (this.ViewModel != null)
 			{
-				// Set Value
-				this._setValue();
+				// Render Cell
+				this._renderCell();
 			
 				// Watch for changes in Value on ViewModel
 				this._viewModelValueHandle = this.ViewModel.watch("Value", lang.hitch(this, this.OnViewModelValueChange));
+			}
+			else
+			{
+				this.Value = null;
 			}
 		},
 		
@@ -74,99 +78,195 @@ define([
 			if (oldValue != newValue)
 			{
 				// Set new Value
-				this._setValue();
+				this._updateValue();
 			}
 		},
-		
-		_setValue: function() {
-			
-			if (this.Value)
-			{
-				if (this.ViewModel.Type == 'Aras.ViewModel.Cells.List')
-				{
-					// Set List Options
-					var options = [];
-					
-					array.forEach(this.ViewModel.Values, function(value) {
-						options.push({label: value, value: value});
-					}, this);
-					
-					this.Value.set('options', options);
-				}
-								
-				// Set Value
-				this.Value.set('value', this.ViewModel.get('Value'));
-			}
-			else
-			{
-				this.Node.innerHTML = this.ViewModel.get('Value');
-			}
-			
-		},
-		
-		renderCell: function(node) {
+				
+		_updateValue: function() {
 
-			switch(this.Column.ViewModel.Type)
+			switch(this.ViewModel.Type)
 			{
-				case 'Aras.ViewModel.Columns.Boolean':
+				case 'Aras.ViewModel.Cells.Boolean':
 				
-					if (this.Column.Editable)
+					if (this.ViewModel.Editable)
 					{
-						this.Value = new String( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
-						this.Value.placeAt(node);
-						this._setValueWatch('value');
+						this.Value.set('value', this.ViewModel.get('Value'));
 					}
 					else
 					{
-						this.Node = node;
+						this.Node.innerHTML = this.ViewModel.get('Value');
 					}
 					
 					break;
-				case 'Aras.ViewModel.Columns.String':
+					
+				case 'Aras.ViewModel.Cells.String':
 				
-					if (this.Column.Editable)
+					if (this.ViewModel.Editable)
 					{
-						this.Value = new String( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
-						this.Value.placeAt(node);
-						this._setValueWatch('value');
+						this.Value.set('value', this.ViewModel.get('Value'));
 					}
 					else
 					{
-						this.Node = node;
+						this.Node.innerHTML = this.ViewModel.get('Value');
 					}
 					
 					break;
-				case 'Aras.ViewModel.Columns.List':
+					
+				case 'Aras.ViewModel.Cells.List':
 				
-					if (this.Column.Editable)
+					if (this.ViewModel.Editable)
 					{
-						this.Value = new List( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
-						this.Value.placeAt(node);
-						this._setValueWatch('value');
+						this.Value.set('value', this.ViewModel.get('Value'));
 					}
 					else
 					{
-						this.Node = node;
+						this.Node.innerHTML = this.ViewModel.get('Value');
 					}
 					
 					break;
-				case 'Aras.ViewModel.Columns.Float':
+					
+				case 'Aras.ViewModel.Cells.Float':
 				
-					if (this.Column.Editable)
+					if (this.ViewModel.Editable)
 					{
-						this.Value = new String( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
-						this.Value.placeAt(node);
-						this._setValueWatch('value');
+						this.Value.set('value', this.ViewModel.get('Value'));
 					}
 					else
 					{
-						this.Node = node;
+						this.Node.innerHTML = this.ViewModel.get('Value');
 					}
 					
 					break;
+					
 				default:
-					this.Node = node;
-				break;				
+					this.Node.innerHTML = this.ViewModel.get('Value');
+					break;				
+			}
+		
+		},
+		
+		_destroyValue: function() {
+			
+			if (this.Value != null)
+			{
+				this.Value.destroy();
+				this.Value = null;
+			}
+		},
+		
+		_setNodeValue: function() {
+		
+			this._destroyValue();
+			this.Node.innerHTML = this.ViewModel.get('Value');
+		},
+		
+		_renderCell: function() {
+
+			switch(this.ViewModel.Type)
+			{
+				case 'Aras.ViewModel.Cells.Boolean':
+				
+					if (this.ViewModel.Editable)
+					{
+						if ((this.Value == null) || (this.Value.declaredClass != 'Aras.View.Fields.String'))
+						{
+							this._destroyValue();
+							this.Value = new String( {value: this.ViewModel.get('Value'), style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
+							this.Value.placeAt(this.Node);
+							this._setValueWatch('value');
+						}
+						else
+						{
+							this.Value.set('value', this.ViewModel.get('Value'));
+						}
+					}
+					else
+					{
+						this._setNodeValue();
+					}
+					
+					break;
+					
+				case 'Aras.ViewModel.Cells.String':
+				
+					if (this.ViewModel.Editable)
+					{
+						if ((this.Value == null) || (this.Value.declaredClass != 'Aras.View.Fields.String'))
+						{
+							this._destroyValue();
+							this.Value = new String( {value: this.ViewModel.get('Value'), style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
+							this.Value.placeAt(this.Node);
+							this._setValueWatch('value');
+						}
+						else
+						{
+							this.Value.set('value', this.ViewModel.get('Value'));
+						}
+					}
+					else
+					{
+						this._setNodeValue();
+					}
+					
+					break;
+					
+				case 'Aras.ViewModel.Cells.List':
+				
+					if (this.ViewModel.Editable)
+					{
+						if ((this.Value == null) || (this.Value.declaredClass != 'Aras.View.Fields.List'))
+						{							
+							this._destroyValue();
+							
+							// Build Options
+							var options = [];
+					
+							array.forEach(this.ViewModel.Values, function(value) {
+								options.push({label: value, value: value});
+							}, this);
+					
+							this.Value = new List( {value: this.ViewModel.get('Value'), options: options, style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
+							this.Value.placeAt(this.Node);
+							this._setValueWatch('value');
+						}
+						else
+						{
+							this.Value.set('value', this.ViewModel.get('Value'));
+						}
+					}
+					else
+					{
+						this._setNodeValue();
+					}
+					
+					break;
+					
+				case 'Aras.ViewModel.Cells.Float':
+				
+					if (this.ViewModel.Editable)
+					{
+						if ((this.Value == null) || (this.Value.declaredClass != 'Aras.View.Fields.String'))
+						{
+							this._destroyValue();
+							this.Value = new String( {value: this.ViewModel.get('Value'), style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
+							this.Value.placeAt(this.Node);
+							this._setValueWatch('value');
+						}
+						else
+						{
+							this.Value.set('value', this.ViewModel.get('Value'));
+						}
+					}
+					else
+					{
+						this._setNodeValue();
+					}
+					
+					break;
+					
+				default:
+					this._setNodeValue();
+					break;				
 			}
 		
 		},

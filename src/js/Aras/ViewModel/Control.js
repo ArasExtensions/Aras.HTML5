@@ -64,7 +64,7 @@ define([
 			this.set('Type', this.Data.Type);
 			
 			// Process Properties
-			array.forEach(this.Data.Properties, lang.hitch(this, function(property){
+			array.forEach(this.Data.Properties, function(property){
 				
 				if (property.Values != null)
 				{
@@ -153,10 +153,10 @@ define([
 					this.set(property.Name, null);
 				}
 
-			}));
+			}, this);
 			
 			// Process Commands
-			array.forEach(this.Data.Commands, lang.hitch(this, function(command){
+			array.forEach(this.Data.Commands, function(command){
 				
 				// Set Command
 				this[command.Name] = this.Session.Command(command.ID);
@@ -166,7 +166,7 @@ define([
 				
 				// Update Command CanExecute
 				this[command.Name].set('CanExecute', command.CanExecute);
-			}));
+			}, this);
 				
 			// Remove ReadOnly Properties, these will never be written back to Server
 			this.Data.Properties = array.filter(this.Data.Properties, function(property) {

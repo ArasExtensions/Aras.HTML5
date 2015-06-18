@@ -174,7 +174,8 @@ define([
 		
 		_renderCell: function(object, value, node, options) {
 
-			this.Grid.Rows[object.id].Cells[this.Index].renderCell(node);			
+			// Set Cell Node
+			this.Grid.Rows[object.id].Cells[this.Index].set('Node', node);			
 		},
 		
 		_refreshRows: function() {
