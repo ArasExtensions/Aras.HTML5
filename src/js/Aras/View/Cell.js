@@ -25,11 +25,12 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
+	'dojo/dom-construct',
 	'dojo/_base/array',
 	'./Control',
 	'./Fields/String',
 	'./Fields/List'
-], function(declare, lang, array, Control, String, List) {
+], function(declare, lang, construct, array, Control, String, List) {
 	
 	return declare('Aras.View.Cell', [Control], {
 		
@@ -145,18 +146,23 @@ define([
 		
 		},
 		
-		_destroyValue: function() {
+		_destroyNode: function() {
+			
+			// Destroy Widget if Exists
 			
 			if (this.Value != null)
 			{
-				this.Value.destroy();
+				this.Value.destroyRecursive();
 				this.Value = null;
 			}
+			
+			// Destroy all Node Children
+			construct.empty(this.Node);
 		},
 		
 		_setNodeValue: function() {
 		
-			this._destroyValue();
+			this._destroyNode();
 			this.Node.innerHTML = this.ViewModel.get('Value');
 		},
 		
@@ -170,7 +176,7 @@ define([
 					{
 						if ((this.Value == null) || (this.Value.declaredClass != 'Aras.View.Fields.String'))
 						{
-							this._destroyValue();
+							this._destroyNode();
 							this.Value = new String( {value: this.ViewModel.get('Value'), style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
 							this.Value.placeAt(this.Node);
 							this._setValueWatch('value');
@@ -193,7 +199,7 @@ define([
 					{
 						if ((this.Value == null) || (this.Value.declaredClass != 'Aras.View.Fields.String'))
 						{
-							this._destroyValue();
+							this._destroyNode();
 							this.Value = new String( {value: this.ViewModel.get('Value'), style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
 							this.Value.placeAt(this.Node);
 							this._setValueWatch('value');
@@ -216,7 +222,7 @@ define([
 					{
 						if ((this.Value == null) || (this.Value.declaredClass != 'Aras.View.Fields.List'))
 						{							
-							this._destroyValue();
+							this._destroyNode();
 							
 							// Build Options
 							var options = [];
@@ -247,7 +253,7 @@ define([
 					{
 						if ((this.Value == null) || (this.Value.declaredClass != 'Aras.View.Fields.String'))
 						{
-							this._destroyValue();
+							this._destroyNode();
 							this.Value = new String( {value: this.ViewModel.get('Value'), style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
 							this.Value.placeAt(this.Node);
 							this._setValueWatch('value');
