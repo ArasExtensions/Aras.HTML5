@@ -19,8 +19,30 @@
 
 .searchIcon 
 {
-  background-image:  url('./images/ExecuteSearch.svg');
+  background-image:  url('./images/Search.svg');
   background-size: 24px 24px;
   height: 24px;
   width: 24px;
+}
+
+.refreshIcon 
+{
+  background-image:  url('./images/Refresh.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
+
+.saveIcon 
+{
+  background-image:  url('./images/Save.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
+
+.disableIcon
+{
+  filter: url('./images/GrayScale.svg#grayscale');
+  opacity: 0.5;
 }

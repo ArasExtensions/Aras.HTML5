@@ -30,21 +30,56 @@ define([
 ], function(declare, lang, Button, Command) {
 	
 	return declare('Aras.View.Button', [Button, Command], {
-			
+		
+		_savedIconClass: null,
+		
 		constructor: function(args) {
-	
+			
+			// Default to Disabled
+			this.set('disbaled', true);
 		},
 		
 		startup: function() {
 			this.inherited(arguments);
+			
+			// Store IconClass
+			this._savedIconClass = this.iconClass;
+			
+			// Disable Button
+			this._setEnabled(false);
+		},
+		
+		_setEnabled: function(Enabled) {
+		
+			if (Enabled)
+			{
+				this.set('disabled', false);
+				this.set('iconClass', this._savedIconClass);
+			}
+			else
+			{
+				this.set('disabled', true);
+				this.set('iconClass', this._savedIconClass + ' disableIcon');
+			}
 		},
 		
 		OnViewModelLoaded: function() {
 			this.inherited(arguments);
 			
+			// Link Click Event
 			this.set('onClick', lang.hitch(this, function() {
+				this._setEnabled(false);
 				this.ViewModel.Execute();
 			}));
+			
+			// Set Enabled
+			this._setEnabled(this.ViewModel.CanExecute);
+			
+			// Watch for changes in CanExecute
+			this.ViewModel.watch('CanExecute', lang.hitch(this, function(name, oldValue, newValue) {
+				this._setEnabled(newValue);
+			}));
+			
 		}
 	});
 });
