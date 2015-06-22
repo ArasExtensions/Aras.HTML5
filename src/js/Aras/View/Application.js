@@ -28,7 +28,7 @@ define([
 	'dojo/_base/array',
 	'dijit/layout/BorderContainer',
 	'./Control',
-	'Aras/ViewModel/Server'
+	'../ViewModel/Server'
 ], function(declare, lang, array, BorderContainer, Control, Server) {
 	
 	return declare('Aras.View.Application', [BorderContainer, Control], {
