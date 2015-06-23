@@ -173,9 +173,12 @@ define([
 		},
 		
 		_renderCell: function(object, value, node, options) {
-
-			// Set Cell Node
-			this.Grid.Rows[object.id].Cells[this.Index].set('Node', node);			
+			
+			if (object.id < this.Grid.Rows.length)
+			{
+				// Set Cell Node
+				this.Grid.Rows[object.id].Cells[this.Index].set('Node', node);	
+			}			
 		},
 		
 		_refreshRows: function() {
