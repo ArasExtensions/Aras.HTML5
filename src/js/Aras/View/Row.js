@@ -60,8 +60,13 @@ define([
 			this.inherited(arguments);
 			
 			// Set ViewModel for each Cell
-			array.forEach(this.ViewModel.Cells, function(cellviewmodel, i) {				
-				this.Cells[i].set('ViewModel', cellviewmodel);
+			array.forEach(this.ViewModel.Cells, function(cellviewmodel, i) {	
+
+				if (this.Cells[i].ID != cellviewmodel.ID)
+				{
+					this.Cells[i].set('ViewModel', cellviewmodel);
+				}
+				
 			}, this);			
 		}
 		

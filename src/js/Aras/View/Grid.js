@@ -50,6 +50,8 @@ define([
 		constructor: function() {
 			
 			this.ColumnsLoaded = false;
+			this.Columns = [];
+			this.Rows = [];
 		},
 		
 		startup: function() {
@@ -62,44 +64,40 @@ define([
 
 		OnViewModelLoaded: function() {
 			this.inherited(arguments);
+		
+			// Unwatch for Changes in Columns
 			
-			// Update Columns
-			this._updateColumns();
-				
-			// Watch for Changes in Columns
 			if (this._columnsHandle != null)
 			{
 				this._columnsHandle.unwatch();
 			}
+			
+			// Update Columns
+			this._updateColumns();
 				
+			// Watch for changes in Columns
 			this._columnsHandle = this.ViewModel.watch("Columns", lang.hitch(this, this._updateColumns));
-				
-			// Update Rows
-			this._updateRows();
-				
-			// Watch for Changes in Rows
+	
+			// Unwatch for Changes in Rows
 			if (this._rowsHandle != null)
 			{
 				this._rowsHandle.unwatch();
 			}
+			
+			// Update Rows
+			this._updateRows();
 				
+			// Watch for Changes in Rows
 			this._rowsHandle = this.ViewModel.watch("Rows", lang.hitch(this, this._updateRows));
 		},
 		
 		_updateColumns: function() {
 
-			if (this.Columns)
+			if (this.Columns.length > this.ViewModel.Columns.length)
 			{
-				if (this.Columns.length > this.ViewModel.Columns.length)
-				{
-					this.Columns = this.Columns.slice(0, this.ViewModel.Columns.length);
-				}
+				this.Columns = this.Columns.slice(0, this.ViewModel.Columns.length);
 			}
-			else
-			{
-				this.Columns = [];
-			}
-					
+		
 			array.forEach(this.ViewModel.Columns, function(columnviewmodel, i) {
 					
 				if (!this.Columns[i])
@@ -115,29 +113,30 @@ define([
 
 		_updateRows: function() {
 
-			// Update Rows
-			if (this.Rows)
-			{
-				if (this.Rows.length > this.ViewModel.Rows.length)
-				{
-					this.Rows = this.Rows.slice(0, this.ViewModel.Rows.length);
-				}
-			}
-			else
-			{
-				this.Rows = [];
-			}
-					
-			array.forEach(this.ViewModel.Rows, function(rowviewmodel, i) {
+			console.debug('Update Rows', this.ViewModel.Rows.length);
 			
+			if (this.Rows.length > this.ViewModel.Rows.length)
+			{
+				this.Rows = this.Rows.slice(0, this.ViewModel.Rows.length);
+			}
+		
+			array.forEach(this.ViewModel.Rows, function(rowviewmodel, i) {
+
 				if (!this.Rows[i])
 				{
 					this.Rows[i] = new Row({ Grid: this });
 					this.Rows[i].startup();
+					this.Rows[i].set('Index', i);
+					this.Rows[i].set('ViewModel', rowviewmodel);
+				}
+				else
+				{
+					if (this.Rows[i].ViewModel.ID != rowviewmodel.ID)
+					{
+						this.Rows[i].set('ViewModel', rowviewmodel);
+					}
 				}
 
-				this.Rows[i].set('Index', i);
-				this.Rows[i].set('ViewModel', rowviewmodel);
 			}, this);
 		},
 
@@ -175,15 +174,15 @@ define([
 		_renderCell: function(object, value, node, options) {
 			
 			if (object.id < this.Grid.Rows.length)
-			{
+			{				
 				// Set Cell Node
-				this.Grid.Rows[object.id].Cells[this.Index].set('Node', node);	
+				this.Grid.Rows[object.id].Cells[this.Index].set('Node', node);			
 			}			
 		},
 		
 		_refreshRows: function() {
 			
-			if (this.Rows && this.ColumnsLoaded)
+			if (this.ColumnsLoaded)
 			{		
 				if (this.Rows.length > 0)
 				{
@@ -195,7 +194,7 @@ define([
 						rowdata[i]['id'] = i;
 								
 						array.forEach(row.Cells, function(cell, j) {
-							rowdata[i][this.Columns[j].Name] = cell.Value;
+							rowdata[i][this.Columns[j].Name] = null;
 						}, this);
 		
 					}, this);

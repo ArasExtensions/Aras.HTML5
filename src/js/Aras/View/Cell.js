@@ -45,6 +45,8 @@ define([
 		_viewModelValueHandle: null,
 		
 		_valueHandle: null,
+		
+		_nodeHandle: null,
 						
 		constructor: function() {
 			this.inherited(arguments);
@@ -67,6 +69,9 @@ define([
 			
 				// Watch for changes in Value on ViewModel
 				this._viewModelValueHandle = this.ViewModel.watch("Value", lang.hitch(this, this.OnViewModelValueChange));
+				
+				// Watch for changes in Node
+				this._nodeHandle = this.watch('Node', lang.hitch(this, this._renderCell));
 			}
 			else
 			{
@@ -178,13 +183,14 @@ define([
 						{
 							this._destroyNode();
 							this.Value = new String( {value: this.ViewModel.get('Value'), style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
-							this.Value.placeAt(this.Node);
 							this._setValueWatch('value');
 						}
 						else
 						{
 							this.Value.set('value', this.ViewModel.get('Value'));
 						}
+						
+						this.Value.placeAt(this.Node);
 					}
 					else
 					{
@@ -201,13 +207,14 @@ define([
 						{
 							this._destroyNode();
 							this.Value = new String( {value: this.ViewModel.get('Value'), style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
-							this.Value.placeAt(this.Node);
 							this._setValueWatch('value');
 						}
 						else
 						{
 							this.Value.set('value', this.ViewModel.get('Value'));
 						}
+						
+						this.Value.placeAt(this.Node);
 					}
 					else
 					{
@@ -232,13 +239,14 @@ define([
 							}, this);
 					
 							this.Value = new List( {value: this.ViewModel.get('Value'), options: options, style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
-							this.Value.placeAt(this.Node);
 							this._setValueWatch('value');
 						}
 						else
 						{
 							this.Value.set('value', this.ViewModel.get('Value'));
 						}
+						
+						this.Value.placeAt(this.Node);
 					}
 					else
 					{
@@ -255,13 +263,14 @@ define([
 						{
 							this._destroyNode();
 							this.Value = new String( {value: this.ViewModel.get('Value'), style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
-							this.Value.placeAt(this.Node);
 							this._setValueWatch('value');
 						}
 						else
 						{
 							this.Value.set('value', this.ViewModel.get('Value'));
 						}
+						
+						this.Value.placeAt(this.Node);
 					}
 					else
 					{
