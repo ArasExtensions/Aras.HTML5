@@ -43,6 +43,8 @@ define([
 		
 		Name: null,
 		
+		TopAras: null,
+		
 		Context: null,
 		
 		constructor: function(args) {
@@ -51,6 +53,15 @@ define([
 		
 		startup: function() {
 			this.inherited(arguments);
+			
+			// Check for Top Aras and update connection parameters
+			
+			if (this.TopAras != null)
+			{
+				this.DatabaseID = this.TopAras.commonProperties.database;
+				this.Username = this.TopAras.commonProperties.loginName;
+				this.Password = this.TopAras.commonProperties.password;
+			}
 			
 			// Create Server
 			var server = new Server({ URL: this.URL });
