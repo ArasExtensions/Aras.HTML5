@@ -70,6 +70,10 @@ define([
 					}));
 				}));
 			}));
+		},
+		
+		Refresh: function () {
+			
 		}
 		
 	});
