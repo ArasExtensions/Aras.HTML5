@@ -64,13 +64,33 @@ define([
 		},
 				
 		Application: function(Name) {
-				return request.get(this.Database.Server.URL + '/applications/' + Name + '/', 
-							   { headers: {'Accept': 'application/json'}, 
-								 handleAs: 'json'
+				return request.put(this.Database.Server.URL + '/applications', 
+							   { headers: {'Content-Type': 'application/json', 'Accept': 'application/json'}, 
+								 handleAs: 'json',
+								 data: json.stringify({ Name: Name })
 							   }).then(
 				lang.hitch(this, function(result) {
 					
 					// Create Application
+					var ret = this.Control(result.Value.ID).set('Data', result.Value);	
+					
+					// Process Response
+					this._processResponse(result);
+					
+					return ret;
+				})
+			);
+		},
+		
+		Plugin: function(Name, Context) {
+				return request.put(this.Database.Server.URL + '/plugins', 
+							   { headers: {'Content-Type': 'application/json', 'Accept': 'application/json'}, 
+								 handleAs: 'json',
+								 data: json.stringify({ Name: Name, Context: Context })
+							   }).then(
+				lang.hitch(this, function(result) {
+					
+					// Create Plugin
 					var ret = this.Control(result.Value.ID).set('Data', result.Value);	
 					
 					// Process Response

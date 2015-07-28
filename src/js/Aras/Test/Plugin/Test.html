@@ -24,7 +24,7 @@
 
 <html>
 	<head>
-		<title>Aras.ViewModel Application Test</title>
+		<title>Aras.ViewModel Plugin Test</title>
 		<style>
 			@import "../../../dijit/themes/tundra/tundra.css";
 			@import "../../../dojo/resources/dojo.css";
@@ -38,10 +38,10 @@
 		</script>
 		<script type="text/javascript" src="../../../dojo/dojo.js"></script>
 		<script>
-			require(['Aras/View/Application', 'dojo/dom', 'dojo/domReady!'], function(Application, dom) {
+			require(['Aras/View/Plugin', 'dojo/dom', 'dojo/domReady!'], function(Plugin, dom) {
 				var target = dom.byId('main');			
-				var application = new Application({ URL: 'http://localhost/Aras.WebService', DatabaseID: 'Development11SP1', Username: 'admin', Password: '607920b64fe136f9ab2389e371852af2', Name: 'AESSiS.PartViewer.Application'}, target);
-				application.startup();
+				var plugin = new Plugin({ URL: 'http://localhost/Aras.WebService', DatabaseID: 'VariantsDemo11SP1', Username: 'admin', Password: '607920b64fe136f9ab2389e371852af2', Name: 'AESSiS.Variants.Plugins.Order', Context: '164AA16BC3674CD8AD62E9EE81DAA473'}, target);
+				plugin.startup();
 			});
 		</script>
 	</head>
