@@ -64,31 +64,24 @@ define([
 
 		OnViewModelLoaded: function() {
 			this.inherited(arguments);
-		
-			// Unwatch for Changes in Columns
-			
-			if (this._columnsHandle != null)
+	
+			// Watch for changes in Columns
+			if (!this._columnsHandle)
 			{
-				this._columnsHandle.unwatch();
+				this._columnsHandle = this.ViewModel.watch("Columns", lang.hitch(this, this._updateColumns));
+			}
+	
+			// Watch for Changes in Rows
+			if (!this._rowsHandle)
+			{
+				this._rowsHandle = this.ViewModel.watch("Rows", lang.hitch(this, this._updateRows));
 			}
 			
 			// Update Columns
 			this._updateColumns();
-				
-			// Watch for changes in Columns
-			this._columnsHandle = this.ViewModel.watch("Columns", lang.hitch(this, this._updateColumns));
-	
-			// Unwatch for Changes in Rows
-			if (this._rowsHandle != null)
-			{
-				this._rowsHandle.unwatch();
-			}
 			
 			// Update Rows
 			this._updateRows();
-				
-			// Watch for Changes in Rows
-			this._rowsHandle = this.ViewModel.watch("Rows", lang.hitch(this, this._updateRows));
 		},
 		
 		_updateColumns: function() {
