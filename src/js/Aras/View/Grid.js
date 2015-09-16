@@ -112,8 +112,6 @@ define([
 		},
 
 		_updateRows: function() {
-
-			console.debug('Update Rows', this.ViewModel.Rows.length);
 			
 			if (this.Rows.length > this.ViewModel.Rows.length)
 			{
