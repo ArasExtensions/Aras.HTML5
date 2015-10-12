@@ -44,6 +44,8 @@ define([
 		_columnsHandle: null,
 		
 		Rows: null,
+		
+		VisibleRows: null,
 
 		_rowsHandle: null,
 				
@@ -52,6 +54,7 @@ define([
 			this.ColumnsLoaded = false;
 			this.Columns = [];
 			this.Rows = [];
+			this.VisibleRows = 0;
 		},
 		
 		startup: function() {
@@ -106,11 +109,8 @@ define([
 
 		_updateRows: function() {
 			
-			if (this.Rows.length > this.ViewModel.Rows.length)
-			{
-				this.Rows = this.Rows.slice(0, this.ViewModel.Rows.length);
-			}
-		
+			this.VisibleRows = this.ViewModel.Rows.length;
+					
 			array.forEach(this.ViewModel.Rows, function(rowviewmodel, i) {
 
 				if (!this.Rows[i])
@@ -175,20 +175,19 @@ define([
 			
 			if (this.ColumnsLoaded)
 			{		
-				if (this.Rows.length > 0)
+				if (this.VisibleRows > 0)
 				{
-					var rowdata = new Array(this.Rows.length);
+					var rowdata = new Array(this.VisibleRows);
 							
-					array.forEach(this.Rows, function(row, i) {
+					for (i=0; i<this.VisibleRows; i++) {
 					
 						rowdata[i] = new Object();
 						rowdata[i]['id'] = i;
-								
-						array.forEach(row.Cells, function(cell, j) {
+							
+						for (j=0; j<this.Rows[i].Cells.length; j++) {
 							rowdata[i][this.Columns[j].Name] = null;
-						}, this);
-		
-					}, this);
+						}		
+					}
 				
 					// Refresh Grid
 					this._grid.refresh();
