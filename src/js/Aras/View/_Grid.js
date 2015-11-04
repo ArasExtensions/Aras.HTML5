@@ -26,10 +26,11 @@ define([
 	'dojo/_base/declare',
 	'dgrid/Grid',
 	'dgrid/extensions/DijitRegistry',
-	'dgrid/Selection'
-], function(declare, Grid, DijitRegistry, Selection) {
+	'dgrid/Selection',
+	'dgrid/extensions/ColumnResizer'
+], function(declare, Grid, DijitRegistry, Selection, ColumnResizer) {
 	
-	return declare('Aras.View._Grid', [Grid, DijitRegistry, Selection], {
+	return declare('Aras.View._Grid', [Grid, DijitRegistry, Selection, ColumnResizer], {
 		
 	});
 });
