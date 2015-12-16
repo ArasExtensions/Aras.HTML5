@@ -44,6 +44,8 @@ define([
 		
 		_viewModelValueHandle: null,
 		
+		_viewModelEditableHandle: null,
+		
 		_valueHandle: null,
 		
 		_nodeHandle: null,
@@ -62,6 +64,11 @@ define([
 				this._viewModelValueHandle.unwatch();
 			}
 			
+			if (this._viewModelEditableHandle)
+			{
+				this._viewModelEditableHandle.unwatch();
+			}
+			
 			if (this.ViewModel != null)
 			{
 				// Render Cell
@@ -69,6 +76,9 @@ define([
 			
 				// Watch for changes in Value on ViewModel
 				this._viewModelValueHandle = this.ViewModel.watch("Value", lang.hitch(this, this.OnViewModelValueChange));
+				
+				// Watch for changes in Editable on ViewModel
+				this._viewModelEditableHandle = this.ViewModel.watch("Editable", lang.hitch(this, this.OnViewModelValueChange));
 				
 				// Watch for changes in Node
 				this._nodeHandle = this.watch('Node', lang.hitch(this, this._renderCell));
@@ -122,6 +132,15 @@ define([
 				
 					this.Value.set('value', this.ViewModel.get('Value'));
 	
+					if (this.ViewModel.Editable)
+					{
+						this.Value.set("readOnly", false);
+					}
+					else
+					{
+						this.Value.set("readOnly", true);
+					}
+					
 					break;
 					
 				case 'Aras.ViewModel.Cells.Float':
@@ -236,6 +255,10 @@ define([
 						if (!this.ViewModel.Editable)
 						{
 							this.Value.set("readOnly", true); 
+						}
+						else
+						{
+							this.Value.set("readOnly", false); 
 						}
 					}
 					else
