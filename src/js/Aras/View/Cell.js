@@ -120,15 +120,8 @@ define([
 					
 				case 'Aras.ViewModel.Cells.List':
 				
-					if (this.ViewModel.Editable)
-					{
-						this.Value.set('value', this.ViewModel.get('Value'));
-					}
-					else
-					{
-						this.Node.innerHTML = this.ViewModel.get('Value');
-					}
-					
+					this.Value.set('value', this.ViewModel.get('Value'));
+	
 					break;
 					
 				case 'Aras.ViewModel.Cells.Float':
@@ -225,34 +218,33 @@ define([
 					
 				case 'Aras.ViewModel.Cells.List':
 				
-					if (this.ViewModel.Editable)
-					{
-						if ((this.Value == null) || (this.Value.declaredClass != 'Aras.View.Fields.List'))
-						{							
-							this._destroyNode();
+					if ((this.Value == null) || (this.Value.declaredClass != 'Aras.View.Fields.List'))
+					{							
+						this._destroyNode();
 							
-							// Build Options
-							var options = [];
+						// Build Options
+						var options = [];
 					
-							array.forEach(this.ViewModel.Values, function(value) {
-								options.push({label: value, value: value});
-							}, this);
-					
-							this.Value = new List( {value: this.ViewModel.get('Value'), options: options, style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
-							this._setValueWatch('value');
-						}
-						else
+						for (i=0; i<this.ViewModel.Values.length; i++)
 						{
-							this.Value.set('value', this.ViewModel.get('Value'));
+							options.push({label: this.ViewModel.Labels[i], value: this.ViewModel.Values[i]});
 						}
-						
-						this.Value.placeAt(this.Node);
+					
+						this.Value = new List( {value: this.ViewModel.get('Value'), options: options, style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
+						this._setValueWatch('value');
+							
+						if (!this.ViewModel.Editable)
+						{
+							this.Value.set("readOnly", true); 
+						}
 					}
 					else
-					{
-						this._setNodeValue();
+					{	
+						this.Value.set('value', this.ViewModel.get('Value'));
 					}
-					
+						
+					this.Value.placeAt(this.Node);
+
 					break;
 					
 				case 'Aras.ViewModel.Cells.Float':
