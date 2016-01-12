@@ -36,12 +36,14 @@ define([
 		
 		ID: null,
 		
+		Name: null,
+		
 		constructor: function(args) {
 			declare.safeMixin(this, args);
 		},
 		
 		Login: function(Username, Password) {
-			return request.put(this.Server.URL + '/databases/' + this.ID + '/login', 
+			return request.put(this.Server.URL + '/databases/' + this.Name + '/login', 
 								{ headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, 
 								  handleAs: 'json', 
 								  data: json.stringify({ Username: Username, Password: Password })
