@@ -25,13 +25,25 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
-	'./Control'
-], function(declare, lang, Control) {
+	'../Property',
+	'dijit/form/CheckBox'
+], function(declare, lang, Property, CheckBox) {
 	
-	return declare('Aras.View.Field', [Control], {
+	return declare('Aras.View.Properties.Boolean', [CheckBox, Property], {
 								
 		constructor: function() {
-	
+		
+			
+		},
+		
+		startup: function() {
+			this.inherited(arguments);
+			
+		},
+		
+		OnViewModelLoaded: function() {
+			this.inherited(arguments);
+
 			
 		}
 

@@ -28,9 +28,10 @@ define([
 	'dojo/dom-construct',
 	'dojo/_base/array',
 	'./Control',
-	'./Fields/String',
-	'./Fields/List'
-], function(declare, lang, construct, array, Control, String, List) {
+	'./Properties/String',
+	'./Properties/List',
+	'./Properties/Float'
+], function(declare, lang, construct, array, Control, String, List, Float) {
 	
 	return declare('Aras.View.Cell', [Control], {
 		
@@ -42,50 +43,53 @@ define([
 		
 		Node: null,
 		
+		_viewModelValueLoadedHandle: null,
+		
 		_viewModelValueHandle: null,
-		
-		_viewModelEditableHandle: null,
-		
-		_valueHandle: null,
-		
-		_nodeHandle: null,
-						
+								
 		constructor: function() {
-			this.inherited(arguments);
 			
 		},
 		
 		OnViewModelLoaded: function() {
 			this.inherited(arguments);
 						
-			// Remove watch on current ViewModel
+			// Remove watch on ViewModel Value
 			if (this._viewModelValueHandle)
 			{
 				this._viewModelValueHandle.unwatch();
 			}
 			
-			if (this._viewModelEditableHandle)
+			// Remove watch on ViewModel Value Loaded
+			if (this._viewModelValueLoadedHandle)
 			{
-				this._viewModelEditableHandle.unwatch();
+				this._viewModelValueLoadedHandle.unwatch();
 			}
-			
+						
 			if (this.ViewModel != null)
 			{
-				// Render Cell
-				this._renderCell();
-			
-				// Watch for changes in Value on ViewModel
-				this._viewModelValueHandle = this.ViewModel.watch("Value", lang.hitch(this, this.OnViewModelValueChange));
-				
-				// Watch for changes in Editable on ViewModel
-				this._viewModelEditableHandle = this.ViewModel.watch("Editable", lang.hitch(this, this.OnViewModelValueChange));
-				
-				// Watch for changes in Node
-				this._nodeHandle = this.watch('Node', lang.hitch(this, this._renderCell));
+				if (this.ViewModel.Value.Loaded)
+				{
+					// Render Cell
+					this._renderCell();
+				}
+				else
+				{
+					this._viewModelValueLoadedHandle = this.ViewModel.Value.watch('Loaded', lang.hitch(this, function(name, oldValue, newValue) {
+					
+						if (newValue)
+						{
+							// Render Cell
+							this._renderCell();
+						}
+					
+					}));					
+				}
 			}
 			else
-			{
-				this.Value = null;
+			{				
+				// Render Cell
+				this._renderCell();
 			}
 		},
 		
@@ -93,80 +97,17 @@ define([
 	
 			if (oldValue != newValue)
 			{
-				// Set new Value
-				this._updateValue();
+				if (this.Value != null)
+				{
+					// Update Value ViewModel
+					this.Value.set("ViewModel", newValue);
+				}
 			}
 		},
-				
-		_updateValue: function() {
+		
+		_renderCell: function() {
 
-			switch(this.ViewModel.Type)
-			{
-				case 'Aras.ViewModel.Cells.Boolean':
-				
-					if (this.ViewModel.Editable)
-					{
-						this.Value.set('value', this.ViewModel.get('Value'));
-					}
-					else
-					{
-						this.Node.innerHTML = this.ViewModel.get('Value');
-					}
-					
-					break;
-					
-				case 'Aras.ViewModel.Cells.String':
-				
-					if (this.ViewModel.Editable)
-					{
-						this.Value.set('value', this.ViewModel.get('Value'));
-					}
-					else
-					{
-						this.Node.innerHTML = this.ViewModel.get('Value');
-					}
-					
-					break;
-					
-				case 'Aras.ViewModel.Cells.List':
-				
-					this.Value.set('value', this.ViewModel.get('Value'));
-	
-					if (this.ViewModel.Editable)
-					{
-						this.Value.set("readOnly", false);
-					}
-					else
-					{
-						this.Value.set("readOnly", true);
-					}
-					
-					break;
-					
-				case 'Aras.ViewModel.Cells.Float':
-				
-					if (this.ViewModel.Editable)
-					{
-						this.Value.set('value', this.ViewModel.get('Value'));
-					}
-					else
-					{
-						this.Node.innerHTML = this.ViewModel.get('Value');
-					}
-					
-					break;
-					
-				default:
-					this.Node.innerHTML = this.ViewModel.get('Value');
-					break;				
-			}
-		
-		},
-		
-		_destroyNode: function() {
-			
 			// Destroy Widget if Exists
-			
 			if (this.Value != null)
 			{
 				this.Value.destroyRecursive();
@@ -175,148 +116,46 @@ define([
 			
 			// Destroy all Node Children
 			construct.empty(this.Node);
-		},
-		
-		_setNodeValue: function() {
-		
-			this._destroyNode();
-			this.Node.innerHTML = this.ViewModel.get('Value');
-		},
-		
-		_renderCell: function() {
 
-			switch(this.ViewModel.Type)
+			if (this.ViewModel != null)
 			{
-				case 'Aras.ViewModel.Cells.Boolean':
-				
-					if (this.ViewModel.Editable)
-					{
-						if ((this.Value == null) || (this.Value.declaredClass != 'Aras.View.Fields.String'))
-						{
-							this._destroyNode();
-							this.Value = new String( {value: this.ViewModel.get('Value'), style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
-							this._setValueWatch('value');
-						}
-						else
-						{
-							this.Value.set('value', this.ViewModel.get('Value'));
-						}
-						
-						this.Value.placeAt(this.Node);
-					}
-					else
-					{
-						this._setNodeValue();
-					}
-					
-					break;
-					
-				case 'Aras.ViewModel.Cells.String':
-				
-					if (this.ViewModel.Editable)
-					{
-						if ((this.Value == null) || (this.Value.declaredClass != 'Aras.View.Fields.String'))
-						{
-							this._destroyNode();
-							this.Value = new String( {value: this.ViewModel.get('Value'), style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
-							this._setValueWatch('value');
-						}
-						else
-						{
-							this.Value.set('value', this.ViewModel.get('Value'));
-						}
-						
-						this.Value.placeAt(this.Node);
-					}
-					else
-					{
-						this._setNodeValue();
-					}
-					
-					break;
-					
-				case 'Aras.ViewModel.Cells.List':
-				
-					if ((this.Value == null) || (this.Value.declaredClass != 'Aras.View.Fields.List'))
-					{							
-						this._destroyNode();
-							
-						// Build Options
-						var options = [];
-					
-						for (i=0; i<this.ViewModel.Values.length; i++)
-						{
-							options.push({label: this.ViewModel.Labels[i], value: this.ViewModel.Values[i]});
-						}
-					
-						this.Value = new List( {value: this.ViewModel.get('Value'), options: options, style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
-						this._setValueWatch('value');
-							
-						if (!this.ViewModel.Editable)
-						{
-							this.Value.set("readOnly", true); 
-						}
-						else
-						{
-							this.Value.set("readOnly", false); 
-						}
-					}
-					else
-					{	
-						this.Value.set('value', this.ViewModel.get('Value'));
-					}
-						
-					this.Value.placeAt(this.Node);
-
-					break;
-					
-				case 'Aras.ViewModel.Cells.Float':
-				
-					if (this.ViewModel.Editable)
-					{
-						if ((this.Value == null) || (this.Value.declaredClass != 'Aras.View.Fields.String'))
-						{
-							this._destroyNode();
-							this.Value = new String( {value: this.ViewModel.get('Value'), style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
-							this._setValueWatch('value');
-						}
-						else
-						{
-							this.Value.set('value', this.ViewModel.get('Value'));
-						}
-						
-						this.Value.placeAt(this.Node);
-					}
-					else
-					{
-						this._setNodeValue();
-					}
-					
-					break;
-					
-				default:
-					this._setNodeValue();
-					break;				
-			}
-		
-		},
-		
-		_setValueWatch: function(Property) {
-		
-			if (this._valueHandle)
-			{
-				this._valueHandle.unwatch();
-			}	
-
-			this._valueHandle = this.Value.watch(Property, lang.hitch(this, this.OnValueChange));
-		},
-		
-		OnValueChange: function(name, oldValue, newValue) {
+				// Create Control for Value
+				switch(this.ViewModel.Value.Type)
+				{
+					case 'Aras.ViewModel.Properties.Boolean':							
+						this.Value = new Boolean( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
+						break;
+					case 'Aras.ViewModel.Properties.String':							
+						this.Value = new String( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
+						break;
+					case 'Aras.ViewModel.Properties.List':							
+						this.Value = new List( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
+						break;
+					case 'Aras.ViewModel.Properties.Float':							
+						this.Value = new Float( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
+						break;								
+					default:
+						break;				
+				}
 			
-			if (newValue != this.ViewModel.get('Value'))
-			{
-				this.ViewModel.set('Value', newValue);
-				this.ViewModel.Write();
+				if (this.Value != null)
+				{
+					// Start Control
+					this.Value.startup();
+					
+					// Place Value Control in Node
+					this.Value.placeAt(this.Node);
+			
+					// Set ViewModel
+					this.Value.set("ViewModel", this.ViewModel.get("Value"));
+					
+					// Watch for changes in Value on ViewModel
+					this._viewModelValueHandle = this.ViewModel.watch("Value", lang.hitch(this, this.OnViewModelValueChange));
+				}
+				else
+				{
+					this.Node.innerHTML = "Error";
+				}
 			}
 		}
 		

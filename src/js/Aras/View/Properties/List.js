@@ -25,14 +25,25 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
-	'../Field',
-	'dijit/form/TextBox'
-], function(declare, lang, Field, TextBox) {
+	'../Property',
+	'dijit/form/Select'
+], function(declare, lang, Property, Select) {
 	
-	return declare('Aras.View.Fields.String', [Field, TextBox], {
+	return declare('Aras.View.Properties.List', [Select, Property], {
 								
 		constructor: function() {
 		
+			
+		},
+		
+		startup: function() {
+			this.inherited(arguments);
+			
+		},
+		
+		OnViewModelLoaded: function() {
+			this.inherited(arguments);
+
 			
 		}
 
