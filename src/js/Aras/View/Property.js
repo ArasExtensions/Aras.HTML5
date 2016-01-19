@@ -44,7 +44,7 @@ define([
 		OnViewModelLoaded: function() {
 			this.inherited(arguments);
 			
-			this.set("readOnly", this.ViewModel.Enabled);
+			this.set("readOnly", !this.ViewModel.Enabled);
 		}
 
 	});
