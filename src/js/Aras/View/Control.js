@@ -49,28 +49,39 @@ define([
 		
 		_onViewModelChange: function(name, oldValue, newValue) {
 
-			// Watch ViewModel Loaded
-			if (this._viewModelLoadedHandle)
+			if (newValue == null)
 			{
-				this._viewModelLoadedHandle.unwatch();
-			}
-			
-			if (this.ViewModel != null)
-			{
-				if (this.ViewModel.Loaded)
+				// Unwatch ViewModel Loaded
+				if (this._viewModelLoadedHandle)
 				{
-					this.OnViewModelLoaded();
+					this._viewModelLoadedHandle.unwatch();
 				}
-				else
-				{
-					this.__viewModelLoadedHandle = this.ViewModel.watch('Loaded', lang.hitch(this, function(name, oldValue, newValue) {
+			}
+			else
+			{
+				if ((oldValue == null) || (oldValue.ID != newValue.ID))
+				{					
+					// Unwatch current ViewModel Loaded
+					if (this._viewModelLoadedHandle)
+					{
+						this._viewModelLoadedHandle.unwatch();
+					}	
+			
+					if (this.ViewModel.Loaded)
+					{
+						this.OnViewModelLoaded();
+					}
+					else
+					{
+						this.__viewModelLoadedHandle = this.ViewModel.watch('Loaded', lang.hitch(this, function(name, oldValue, newValue) {
 					
-						if (newValue)
-						{
-							this.OnViewModelLoaded();
-						}
+							if (newValue)
+							{
+								this.OnViewModelLoaded();
+							}
 					
-					}));
+						}));
+					}
 				}
 			}
 		},

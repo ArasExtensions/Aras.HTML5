@@ -94,67 +94,67 @@ define([
 		},
 		
 		OnViewModelValueChange: function(name, oldValue, newValue) {
-	
-			if (oldValue != newValue)
+
+			if (this.Value != null)
 			{
-				if (this.Value != null)
-				{
-					// Update Value ViewModel
-					this.Value.set("ViewModel", newValue);
-				}
+				// Update Value ViewModel
+				this.Value.set("ViewModel", newValue);
 			}
 		},
 		
 		_renderCell: function() {
-
-			// Destroy Widget if Exists
-			if (this.Value != null)
+		
+			if ((this.ViewModel == null) || (this.ViewModel.Value == null))
 			{
-				this.Value.destroyRecursive();
-				this.Value = null;
-			}
-			
-			// Destroy all Node Children
-			construct.empty(this.Node);
-
-			if (this.ViewModel != null)
-			{
-				// Create Control for Value
-				switch(this.ViewModel.Value.Type)
-				{
-					case 'Aras.ViewModel.Properties.Boolean':							
-						this.Value = new Boolean( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
-						break;
-					case 'Aras.ViewModel.Properties.String':							
-						this.Value = new String( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
-						break;
-					case 'Aras.ViewModel.Properties.List':							
-						this.Value = new List( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
-						break;
-					case 'Aras.ViewModel.Properties.Float':							
-						this.Value = new Float( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
-						break;								
-					default:
-						break;				
-				}
-			
+				// Destroy Widget if Exists
 				if (this.Value != null)
 				{
+					this.Value.destroyRecursive(false);
+					this.Value = null;
+				}
+			}
+			else
+			{
+				if (this.Value == null)
+				{
+					// Need to create new Widget
+					switch(this.ViewModel.Value.Type)
+					{
+						case 'Aras.ViewModel.Properties.Boolean':							
+							this.Value = new Boolean( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
+							break;
+						case 'Aras.ViewModel.Properties.String':							
+							this.Value = new String( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
+							break;
+						case 'Aras.ViewModel.Properties.List':							
+							this.Value = new List( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
+							break;
+						case 'Aras.ViewModel.Properties.Float':							
+							this.Value = new Float( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
+							break;								
+						default:
+							break;				
+					}
+					
 					// Start Control
 					this.Value.startup();
-					
-					// Place Value Control in Node
-					this.Value.placeAt(this.Node);
 			
 					// Set ViewModel
-					this.Value.set("ViewModel", this.ViewModel.get("Value"));
+					this.Value.set("ViewModel", this.ViewModel.Value);
 					
 					// Watch for changes in Value on ViewModel
 					this._viewModelValueHandle = this.ViewModel.watch("Value", lang.hitch(this, this.OnViewModelValueChange));
+					
+					if (this.Node != null)
+					{
+						// Place Value Control in Node
+						this.Value.placeAt(this.Node);
+					}
 				}
 				else
 				{
-					this.Node.innerHTML = "Error";
+					// Update Value ViewModel
+					this.Value.set("ViewModel", this.ViewModel.Value);
 				}
 			}
 		}

@@ -108,8 +108,6 @@ define([
 		},
 
 		_updateRows: function() {
-			
-			this.VisibleRows = this.ViewModel.Rows.length;
 					
 			array.forEach(this.ViewModel.Rows, function(rowviewmodel, i) {
 
@@ -129,6 +127,12 @@ define([
 				}
 
 			}, this);
+			
+			if (this.VisibleRows != this.ViewModel.Rows.length)
+			{
+				this.VisibleRows = this.ViewModel.Rows.length;
+				this._refreshRows();
+			}
 		},
 
 		_refreshColumns: function() {
@@ -167,7 +171,13 @@ define([
 			if (object.id < this.Grid.Rows.length)
 			{				
 				// Set Cell Node
-				this.Grid.Rows[object.id].Cells[this.Index].set('Node', node);			
+				this.Grid.Rows[object.id].Cells[this.Index].set('Node', node);
+				
+				if (this.Grid.Rows[object.id].Cells[this.Index].Value != null)
+				{
+					// Place Value Control in Node
+					this.Grid.Rows[object.id].Cells[this.Index].Value.placeAt(node);
+				}
 			}			
 		},
 		
