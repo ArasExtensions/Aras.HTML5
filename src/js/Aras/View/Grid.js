@@ -109,30 +109,69 @@ define([
 
 		_updateRows: function() {
 					
-			array.forEach(this.ViewModel.Rows, function(rowviewmodel, i) {
-
-				if (!this.Rows[i])
+			if (this.ViewModel.Rows.length > this.Rows.length)
+			{
+				// Add additional Rows to Grid
+				var rowdata = [];
+				var rowdatacnt = 0;
+				var currentrowslength = this.Rows.length;
+				
+				for(i=currentrowslength; i<this.ViewModel.Rows.length; i++)
 				{
 					this.Rows[i] = new Row({ Grid: this });
 					this.Rows[i].startup();
 					this.Rows[i].set('Index', i);
-					this.Rows[i].set('ViewModel', rowviewmodel);
+					
+					rowdata[rowdatacnt] = new Object();
+					rowdata[rowdatacnt]['id'] = i;
+							
+					for (j=0; j<this.Rows[i].Cells.length; j++) 
+					{
+						rowdata[rowdatacnt][this.Columns[j].Name] = null;
+					}
+
+					rowdatacnt++;					
+				}
+				
+				// Add new Rows to Grid
+				var gridrows = this._grid.renderArray(rowdata);
+				
+				// Store Grid Rows in Row Object
+				for (i=0; i<gridrows.length; i++)
+				{
+					this.Rows[currentrowslength+i].GridRow = gridrows[i];
+				}
+			}
+			else if (this.ViewModel.Rows.length < this.Rows.length)
+			{
+				if (this.ViewModel.Rows.length == 0)
+				{
+					// Clear Rows
+					this.Rows = [];
+					this._grid.refresh();
 				}
 				else
-				{
-					if (this.Rows[i].ViewModel.ID != rowviewmodel.ID)
+				{					
+					// Remove Rows from Grid
+					for(i=this.ViewModel.Rows.length;i<this.Rows.length; i++)
 					{
-						this.Rows[i].set('ViewModel', rowviewmodel);
+						this._grid.removeRow(this.Rows[i].GridRow, false);
 					}
-				}
-
-			}, this);
-			
-			if (this.VisibleRows != this.ViewModel.Rows.length)
-			{
-				this.VisibleRows = this.ViewModel.Rows.length;
-				this._refreshRows();
+					
+					this.Rows = this.Rows.slice(0, this.ViewModel.Rows.length);
+				}		
 			}
+			
+			// Update ViewModel for each Row
+			array.forEach(this.ViewModel.Rows, function(rowviewmodel, i) {
+
+				if ((this.Rows[i].ViewModel == null) || (this.Rows[i].ViewModel.ID != rowviewmodel.ID))
+				{
+					this.Rows[i].set('ViewModel', rowviewmodel);
+				}
+				
+			}, this);
+
 		},
 
 		_refreshColumns: function() {
@@ -160,9 +199,6 @@ define([
 				this._grid._setColumns(gridcolumns);
 				
 				this.set('ColumnsLoaded', true);
-				
-				// Refresh Rows
-				this._refreshRows();
 			}
 		},
 		
@@ -179,36 +215,6 @@ define([
 					this.Grid.Rows[object.id].Cells[this.Index].Value.placeAt(node);	
 				}
 			}			
-		},
-		
-		_refreshRows: function() {
-			
-			if (this.ColumnsLoaded)
-			{		
-				if (this.VisibleRows > 0)
-				{
-					var rowdata = new Array(this.VisibleRows);
-							
-					for (i=0; i<this.VisibleRows; i++) {
-					
-						rowdata[i] = new Object();
-						rowdata[i]['id'] = i;
-							
-						for (j=0; j<this.Rows[i].Cells.length; j++) {
-							rowdata[i][this.Columns[j].Name] = null;
-						}		
-					}
-				
-					// Refresh Grid
-					this._grid.refresh();
-					this._grid.renderArray(rowdata);
-				}
-				else
-				{
-					// No Rows
-					this._grid.refresh();
-				}
-			}
 		}
 
 	});

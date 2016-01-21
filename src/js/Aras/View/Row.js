@@ -38,6 +38,8 @@ define([
 		
 		Index: null,
 		
+		GridRow: null,
+		
 		constructor: function() {
 			this.inherited(arguments);
 
