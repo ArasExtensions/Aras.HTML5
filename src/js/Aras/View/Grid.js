@@ -176,7 +176,7 @@ define([
 				if (this.Grid.Rows[object.id].Cells[this.Index].Value != null)
 				{
 					// Place Value Control in Node
-					this.Grid.Rows[object.id].Cells[this.Index].Value.placeAt(node);
+					this.Grid.Rows[object.id].Cells[this.Index].Value.placeAt(node);	
 				}
 			}			
 		},
