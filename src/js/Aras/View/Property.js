@@ -29,7 +29,9 @@ define([
 ], function(declare, lang, Control) {
 	
 	return declare('Aras.View.Property', [Control], {
-								
+			
+		_viewModelEnabledHandle: null,
+		
 		constructor: function() {
 	
 			
@@ -45,6 +47,18 @@ define([
 			this.inherited(arguments);
 			
 			this.set("readOnly", !this.ViewModel.Enabled);
+			
+			// Watch for changes in ViewModel
+			if (this._viewModelEnabledHandle != null)
+			{
+				this._viewModelEnabledHandle.unwatch();
+			}
+			
+			this._viewModelEnabledHandle = this.ViewModel.watch('Enabled', lang.hitch(this, function(name, oldValue, newValue) {
+					
+				// Set Value
+				this.set("readOnly", !this.ViewModel.Enabled);	
+			}));
 		}
 
 	});
