@@ -31,5 +31,9 @@ define([
 	
 	return declare('Aras.View._Grid', [Grid, DijitRegistry, ColumnResizer], {
 		
+		_applySort: function () {
+			
+		}
+		
 	});
 });
