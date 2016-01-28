@@ -65,7 +65,7 @@ define([
 			this.Toolbar.addChild(this.RefreshButton);
 
 			// Create BOM
-			this.BOM = new Grid({ style: 'width: 600px; height: 100%;', region: 'right' });
+			this.BOM = new Grid({ style: 'width: 500px; height: 100%;', region: 'right' });
 			this.addChild(this.BOM);
 			
 			// Create Configuration
