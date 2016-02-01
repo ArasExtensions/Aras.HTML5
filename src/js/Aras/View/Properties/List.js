@@ -47,7 +47,6 @@ define([
 			this.inherited(arguments);
 
 			// Remove existing watch handles
-			
 			if (this._viewModelValueLoadedHandles != null)
 			{
 				array.forEach(this._viewModelValueLoadedHandles, function(watchhandle, i) {
@@ -133,7 +132,15 @@ define([
 					
 				}));				
 				
-
+				// Watch for  change in ViewModel Value
+				this.ViewModel.watch('Value', lang.hitch(this, function(name, oldValue, newValue) {
+					
+					if (newValue !== this.get('value'))
+					{
+						this.set('value', newValue);
+					}
+					
+				}));
 			}
 		}
 
