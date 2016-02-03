@@ -26,79 +26,18 @@ define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
 	'dojo/when',
-	'dijit/ToolbarSeparator',
 	'../../Plugin',
-	'../../Grid',
-	'../../Toolbar',
-	'../../Button'
-], function(declare, lang, when, ToolbarSeparator, Plugin, Grid, Toolbar, Button) {
+	'../Order'
+], function(declare, lang, when, Plugin, OrderControl) {
 	
-	return declare('Aras.View.Design.Plugins.Order', [Plugin], {
-	
-		Configuration: null,
-		
-		BOM: null, 
-		
-		Toolbar: null,
-		
-		RefreshButton: null,
-		
-		SaveButton: null,
-		
+	return declare('Aras.View.Design.Plugins.Order', [Plugin, OrderControl], {
+			
 		startup: function() {
-			
-			// Run Plugin Startup
-			this.inherited(arguments);
-			
-			// Create Toolbar
-			this.Toolbar = new Toolbar({ region: 'top' });
-			this.addChild(this.Toolbar);
-		
-			// Create Save Button
-			this.SaveButton = new Button({ title: 'Save Configuraiton', iconClass: 'saveIcon'});
-			this.Toolbar.addChild(this.SaveButton);
-			
-			this.Toolbar.addChild(new ToolbarSeparator());
-			
-			// Create Refresh Button
-			this.RefreshButton = new Button({ title: 'Refresh', iconClass: 'refreshIcon'});
-			this.Toolbar.addChild(this.RefreshButton);
 
-			// Create BOM
-			this.BOM = new Grid({ style: 'width: 500px; height: 100%;', region: 'right' });
-			this.addChild(this.BOM);
-			
-			// Create Configuration
-			this.Configuration = new Grid({ region: 'center', style: 'width: 100%; height: 100%;', gutters: false });
-			this.addChild(this.Configuration);
-		},
-		
-		OnViewModelLoaded: function() {
 			this.inherited(arguments);
 			
-			if (this.ViewModel != null)
-			{
-				// Set Configuration ViewModel
-				this.Configuration.set("ViewModel", this.ViewModel.Configuration);
-	
-				// Set BOM ViewModel
-				this.BOM.set("ViewModel", this.ViewModel.BOM);	
-				
-				// Update Refresh
-				this.RefreshButton.set('ViewModel', this.ViewModel.Refresh);
-					
-				// Update Save
-				this.SaveButton.set('ViewModel', this.ViewModel.Save);
-			}
-		},
-		
-		Refresh: function() {
-			this.inherited(arguments);
-			
-			if (this.ViewModel != null)
-			{
-				this.ViewModel.Refresh.Execute();
-			}
+			// Initialise
+			this.Initialise();
 		}
 	});
 });

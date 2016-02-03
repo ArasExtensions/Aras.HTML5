@@ -26,12 +26,10 @@ define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
 	'dojo/_base/array',
-	'dijit/layout/BorderContainer',
-	'./Control',
 	'../ViewModel/Server'
-], function(declare, lang, array, BorderContainer, Control, Server) {
+], function(declare, lang, array, Server) {
 	
-	return declare('Aras.View.Plugin', [BorderContainer, Control], {
+	return declare('Aras.View.Plugin', null, {
 		
 		URL: null,
 		
@@ -51,8 +49,7 @@ define([
 			
 		},
 		
-		startup: function() {
-			this.inherited(arguments);
+		Initialise: function() {
 			
 			// Check for Top Aras and update connection parameters
 			
@@ -81,10 +78,6 @@ define([
 					}));
 				}));
 			}));
-		},
-		
-		Refresh: function () {
-			
 		}
 		
 	});
