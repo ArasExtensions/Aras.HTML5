@@ -53,9 +53,15 @@ define([
 			
 			// Update Controls
 			array.forEach(Response.ControlQueue, lang.hitch(this, function(control) {
-				this.Control(control.ID).set('Data', control);
+				
+				if (!this._controlCache[control.ID])
+				{
+					this._controlCache[control.ID] = new Control(this, control.ID);
+				}
+				
+				this._controlCache[control.ID].set('Data', control);
 			}));
-					
+		
 			// Update Commands
 			array.forEach(Response.CommandQueue, lang.hitch(this, function(command) {
 				this.Command(command.ID).set('Name', command.Name);
@@ -70,14 +76,19 @@ define([
 								 data: json.stringify({ Name: Name })
 							   }).then(
 				lang.hitch(this, function(result) {
-					
-					// Create Application
-					var ret = this.Control(result.Value.ID).set('Data', result.Value);	
-					
+			
 					// Process Response
 					this._processResponse(result);
 					
-					return ret;
+					// Create Application
+					if (!this._controlCache[result.Value.ID])
+					{
+						this._controlCache[result.Value.ID] = new Control(this, result.Value.ID);
+					}
+				
+					this._controlCache[result.Value.ID].set('Data', result.Value);
+					
+					return this._controlCache[result.Value.ID];
 				})
 			);
 		},
@@ -89,14 +100,19 @@ define([
 								 data: json.stringify({ Name: Name, Context: Context })
 							   }).then(
 				lang.hitch(this, function(result) {
-					
-					// Create Plugin
-					var ret = this.Control(result.Value.ID).set('Data', result.Value);	
-					
+				
 					// Process Response
 					this._processResponse(result);
 					
-					return ret;
+					// Create Plugin
+					if (!this._controlCache[result.Value.ID])
+					{
+						this._controlCache[result.Value.ID] = new Control(this, result.Value.ID);
+					}
+				
+					this._controlCache[result.Value.ID].set('Data', result.Value);
+					
+					return this._controlCache[result.Value.ID];
 				})
 			);
 		},

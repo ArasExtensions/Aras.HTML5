@@ -25,52 +25,44 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
+	'dojo/when',
 	'dijit/layout/BorderContainer',
-	'dijit/layout/ContentPane',
-	'./Control',
-	'./Toolbar',
-	'./Button',
-	'./Grid'
-], function(declare, lang, BorderContainer, ContentPane, Control, Toolbar, Button, Grid) {
+	'../Control',
+	'../Search'
+], function(declare, lang, when, BorderContainer, Control, Search) {
 	
-	return declare('Aras.View.Search', [BorderContainer, Control], {
+	return declare('Aras.View.Design.PartEditor', [BorderContainer, Control], {
 	
-		Toolbar: null,
+		Parts: null,
 		
-		SearchButton: null,
-				
-		Grid: null,
-		
-		constructor: function() {
-			this.inherited(arguments);
-		},
+		Relationships: null, 
 				
 		startup: function() {
+			
 			this.inherited(arguments);
-
-			// Create Toolbar
-			this.Toolbar = new Toolbar({ region: 'top' });
-			this.addChild(this.Toolbar);
 			
-			// Create Search Button
-			this.SearchButton = new Button({ iconClass: 'searchIcon'});
-			this.Toolbar.addChild(this.SearchButton);
-			
-			// Create Grid			
-			this.Grid = new Grid({style: 'height: 100%; width: 100%', region: 'center', gutters: false });		
-			this.addChild(this.Grid);
+			// Create Search Contorl
+			this.Parts = new Search({style: 'height: 100%; width: 100%', region: 'center', gutters: false });
+			this.addChild(this.Parts);
 		},
 		
 		OnViewModelLoaded: function() {
 			this.inherited(arguments);
-
+									
 			if (this.ViewModel != null)
 			{
-				// Set Grid ViewModel
-				this.Grid.set("ViewModel", this.ViewModel.Grid);
-				
-				// Set Search Button ViewModel			
-				this.SearchButton.set("ViewModel", this.ViewModel.Refresh);	
+				// Set Parts ViewModel
+				this.Parts.set("ViewModel", this.ViewModel.Parts);
+			}
+		},
+		
+		Refresh: function() {
+			
+			this.inherited(arguments);
+			
+			if (this.ViewModel != null)
+			{
+				this.ViewModel.Refresh.Execute();
 			}
 		}
 	});
