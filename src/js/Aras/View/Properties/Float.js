@@ -25,22 +25,21 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
+	'dojo/on',
 	'../Property',
-	'dijit/form/TextBox'
-], function(declare, lang, Property, TextBox) {
+	'dijit/form/NumberSpinner'
+], function(declare, lang, on, Property, NumberSpinner) {
 	
-	return declare('Aras.View.Properties.Float', [TextBox, Property], {
+	return declare('Aras.View.Properties.Float', [NumberSpinner, Property], {
 		
 		_viewModelValueHandle: null,
 		
 		constructor: function() {
-		
-			
+
 		},
 		
 		startup: function() {
-			this.inherited(arguments);
-			
+			this.inherited(arguments);			
 		},
 		
 		OnViewModelLoaded: function() {
