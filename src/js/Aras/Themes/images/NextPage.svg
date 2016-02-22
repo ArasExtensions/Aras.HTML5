@@ -1,0 +1,9 @@
+<svg width="64" xmlns="http://www.w3.org/2000/svg" height="64" viewBox="0 0 64 64" xmlns:xlink="http://www.w3.org/1999/xlink" enable-background="new 0 0 64 64">
+<path fill="#0072c6" d="M14,8v29H7l13,19l13-19h-7V8H14z"/>
+<g fill="#505050">
+<path d="m33,49h24v6h-24z"/>
+<path d="m39,35h18v6h-18z"/>
+<path d="m33,21h24v6h-24z"/>
+<path d="m33,8h24v6h-24z"/>
+</g>
+</svg>

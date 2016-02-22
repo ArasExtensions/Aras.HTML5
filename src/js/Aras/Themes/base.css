@@ -46,3 +46,19 @@
   filter: url('./images/GrayScale.svg#grayscale');
   opacity: 0.5;
 }
+
+.nextPageIcon 
+{
+  background-image:  url('./images/NextPage.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
+
+.previousPageIcon 
+{
+  background-image:  url('./images/PreviousPage.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
