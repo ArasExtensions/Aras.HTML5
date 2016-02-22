@@ -53,7 +53,7 @@ define([
 		
 		OnViewModelLoaded: function() {
 			this.inherited(arguments);
-						
+				
 			// Remove watch on ViewModel Value
 			if (this._viewModelValueHandle)
 			{

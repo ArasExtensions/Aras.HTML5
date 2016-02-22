@@ -68,7 +68,7 @@ define([
 			this.Toolbar.addChild(new ToolbarSeparator());
 			
 			// Create Page Size
-			this.PageSize = new NumberSpinner({ value:25, constraints: { min:5, max:100, places:0 }, style: 'width:40px; margin-left:5px;'});
+			this.PageSize = new NumberSpinner({ value:25, constraints: { min:5, max:100, places:0 }, style: 'width:40px; margin-left:5px; margin-right:5px;'});
 			this.Toolbar.addChild(this.PageSize);
 			
 			// Create Next Page Button
@@ -101,6 +101,12 @@ define([
 				// Set Page Size
 				this.PageSize.set("value", this.ViewModel.PageSize);
 
+				// Set PreviousPage Button ViewModel
+				this.PreviousButton.set("ViewModel", this.ViewModel.PreviousPage);	
+			
+				// Set NextPage Button ViewModel
+				this.NextButton.set("ViewModel", this.ViewModel.NextPage);	
+				
 				// Watch for changes in PageSize
 				this.PageSize.watch("value", lang.hitch(this, function(name, oldValue, newValue) {
 									

@@ -30,7 +30,9 @@ define([
 ], function(declare, lang, Property, TextBox) {
 	
 	return declare('Aras.View.Properties.String', [TextBox, Property], {
-								
+			
+		_viewModelValueHandle: null, 
+		
 		constructor: function() {
 			
 		},
@@ -43,7 +45,18 @@ define([
 		OnViewModelLoaded: function() {
 			this.inherited(arguments);
 
+			if (this._viewModelValueHandle != null)
+			{
+				this._viewModelValueHandle.unwatch();
+			}
+			
 			this.set("value", this.ViewModel.Value);
+			
+			this._viewModelValueHandle = this.ViewModel.watch('Value', lang.hitch(this, function(name, oldValue, newValue) {
+					
+				// Set Value
+				this.set("value", newValue);	
+			}));
 		}
 
 	});
