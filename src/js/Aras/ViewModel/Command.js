@@ -44,8 +44,16 @@ define([
 			this.set('ID', ID);
 		},
 		
-		Execute: function() {
-			this.Session.Execute(this);
+		Execute: function(Parameters) {
+			
+			if (Parameters)
+			{
+				this.Session.Execute(this, Parameters);
+			}
+			else
+			{
+				this.Session.Execute(this, []);
+			}
 		}
 		
 	});

@@ -153,12 +153,13 @@ define([
 			return this._commandCache[ID];
 		},
 		
-		Execute: function(Command) {
+		Execute: function(Command, Parameters) {
 			
 			// Execute Command
 			request.put(this.Database.Server.URL + '/commands/' + Command.ID + '/execute', 
 								{ headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, 
-								  handleAs: 'json'
+								  handleAs: 'json',
+								  data: json.stringify(Parameters)
 								}).then(lang.hitch(this, function(response){
 					this._processResponse(response);
 				})

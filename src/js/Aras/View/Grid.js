@@ -45,6 +45,8 @@ define([
 		
 		Rows: null,
 		
+		SelectedRows: null,
+		
 		VisibleRows: null,
 
 		_rowsHandle: null,
@@ -61,8 +63,27 @@ define([
 			this.inherited(arguments);
 			
 			// Create Grid
-			this._grid = new _Grid({ region: 'center', selectionMode: 'single' });
+			this._grid = new _Grid({ region: 'center', selectionMode: 'extended' });
 			this.addChild(this._grid);
+			
+			// Process Grid Select Event
+			this._grid.on('dgrid-select', lang.hitch(this, function(event) {
+				
+				if (this.ViewModel != null && this.ViewModel.Loaded)
+				{
+					var Parameters = [];
+				
+					for(i=0; i<event.rows.length; i++)
+					{
+						if (this.Rows[event.rows[i].data.id].ViewModel != null && this.Rows[event.rows[i].data.id].ViewModel.Loaded)
+						{
+							Parameters.push(this.Rows[event.rows[i].data.id].ViewModel.ID);
+						}
+					}
+
+					this.ViewModel.Select.Execute(Parameters);
+				}
+			}));
 		},
 
 		OnViewModelLoaded: function() {
