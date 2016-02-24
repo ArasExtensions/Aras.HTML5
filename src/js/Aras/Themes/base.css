@@ -62,3 +62,19 @@
   height: 24px;
   width: 24px;
 }
+
+.collapseAllIcon 
+{
+  background-image:  url('./images/CollapseAll.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
+
+.expandAllIcon 
+{
+  background-image:  url('./images/ExpandAll.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}

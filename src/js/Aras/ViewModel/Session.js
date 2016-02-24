@@ -134,13 +134,20 @@ define([
 		
 		Control: function(ID) {
 			
-			if (!this._controlCache[ID])
+			if (ID)
 			{
-				this._controlCache[ID] = new Control(this, ID);
-				this._readControl(this._controlCache[ID]);
-			}
+				if (!this._controlCache[ID])
+				{
+					this._controlCache[ID] = new Control(this, ID);
+					this._readControl(this._controlCache[ID]);
+				}
 	
-			return this._controlCache[ID];
+				return this._controlCache[ID];
+			}
+			else
+			{
+				return null;
+			}
 		},
 			
 		Command: function(ID) {

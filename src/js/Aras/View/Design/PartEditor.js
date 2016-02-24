@@ -28,22 +28,29 @@ define([
 	'dojo/when',
 	'dijit/layout/BorderContainer',
 	'../Control',
-	'../Search'
-], function(declare, lang, when, BorderContainer, Control, Search) {
+	'../Search',
+	'../RelationshipTree'
+], function(declare, lang, when, BorderContainer, Control, Search, RelationshipTree) {
 	
 	return declare('Aras.View.Design.PartEditor', [BorderContainer, Control], {
 	
 		Parts: null,
 		
 		Relationships: null, 
+		
+		RelationshipsModel: null,
 				
 		startup: function() {
 			
 			this.inherited(arguments);
 			
-			// Create Search Contorl
-			this.Parts = new Search({style: 'height: 100%; width: 100%', region: 'center', gutters: false });
-			this.addChild(this.Parts);
+			// Create Search Control
+			this.Parts = new Search({style: 'height: 100%; width: 400px', region: 'left', gutters: false});
+			this.addChild(this.Parts);	
+
+			// Create RelationshipTree Control	
+			this.Relationships = new RelationshipTree({style: 'height: 100%; width: 100%', region: 'center', gutters: false});
+			this.addChild(this.Relationships);		
 		},
 		
 		OnViewModelLoaded: function() {
@@ -53,6 +60,9 @@ define([
 			{
 				// Set Parts ViewModel
 				this.Parts.set("ViewModel", this.ViewModel.Parts);
+				
+				// Set Relationships ViewModel
+				this.Relationships.set("ViewModel", this.ViewModel.Relationships);		
 			}
 		},
 		
