@@ -45,6 +45,8 @@ define([
 		
 		TreeModel: null,
 		
+		CurrentNodeID: null,
+		
 		_nodeHandle: null,
 		
 		_nodeLoadedHandle: null,
@@ -89,45 +91,57 @@ define([
 					this._updateTree();
 				}));
 			}
-
 		},
 		
 		_updateTree: function() {
 			
-			console.debug('_updateTree', this.ViewModel.Node);
-			
 			if (this.ViewModel.Node != null)
-			{
-				if (this.ViewModel.Node.Loaded)
+			{						
+				if ((this.Tree == null) || (this.CurrentNodeID != this.ViewModel.Node.ID))
 				{
-					// Remove current Tree
-					this._removeTree();
+					if (this.ViewModel.Node.Loaded)
+					{
+						// Remove current Tree
+						this._removeTree();
 					
-					// Add Tree
-					this.TreeModel = new _TreeModel({ TreeControl: this.ViewModel });
-					this.Tree = new _Tree({style: 'height: 100%; width: 100%', region: 'center', gutters: false, model: this.TreeModel });
-					this.addChild(this.Tree);
+						// Add Tree
+						this.TreeModel = new _TreeModel({ TreeControl: this.ViewModel });
+						this.Tree = new _Tree({style: 'height: 100%; width: 100%', region: 'center', gutters: false, model: this.TreeModel });
+						this.addChild(this.Tree);
+						this.CurrentNodeID = this.ViewModel.Node.ID;
+					}
+					else
+					{
+						// Watch for when Node Loaded
+						this._nodeLoadedHandle = this.ViewModel.Node.watch('Loaded', lang.hitch(this, function(name, oldValue, newValue) {
+							this._updateTree();
+						}));
+					}
 				}
-				else
-				{
-					// Watch for when Node Loaded
-					this._nodeLoadedHandle = this.ViewModel.Node.watch('Loaded', lang.hitch(this, function(name, oldValue, newValue) {
-						this._updateTree();
-					}));
-				}
+			}
+			else
+			{
+				this._removeTree();
 			}
 		},
 				
 		_removeTree: function() {
 			
-			console.debug('_removeTree', this.Tree);
-			
 			if (this.Tree != null)
 			{
 				// Remove Tree
 				this.removeChild(this.Tree);
+				
+				// Destroy Tree
 				this.Tree.destroy();
 				this.Tree = null;
+			}
+			
+			if (this.TreeModel != null)
+			{
+				// Destroy Tree Model
+				this.TreeModel.destroy();
+				this.TreeModel = null;
 			}
 		}
 		

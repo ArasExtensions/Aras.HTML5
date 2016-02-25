@@ -34,7 +34,9 @@ define([
 		constructor: function(args) {
 			
 			lang.mixin(this, args);
-
+			
+			// Watch for changes in the Root Node Name
+			//this.TreeControl.Node.watch('Name', lang.hitch(this, "_onChildrenChange", this.TreeControl.Node));
 		},
 		
 		destroy: function(){
@@ -63,9 +65,13 @@ define([
 			onComplete(parentItem.Children);
 		},
 		
+		_onChildrenChange: function(item) {
+			this.onChange(item);
+			this.onChildrenChange(item, item.Children);
+		},
+		
 		isItem: function(something){
-			console.debug('isItem', arguments);
-			
+
 			return true;
 		},
 		
@@ -95,15 +101,11 @@ define([
 		},
 		
 		onChange: function(item){
-	
-		},
-		
-		_onChildrenChange: function(item) {
-			this.onChildrenChange(item, item.Children);
+			
 		},
 		
 		onChildrenChange: function(item, children){
-		
+			
 		}
 		
 	});
