@@ -46,10 +46,10 @@ define([
 			this._savedIconClass = this.iconClass;
 			
 			// Disable Button
-			this._setEnabled(false);
+			this.SetEnabled(false);
 		},
 		
-		_setEnabled: function(Enabled) {
+		SetEnabled: function(Enabled) {
 		
 			if (Enabled)
 			{
@@ -68,16 +68,16 @@ define([
 			
 			// Link Click Event
 			this.set('onClick', lang.hitch(this, function() {
-				this._setEnabled(false);
+				this.SetEnabled(false);
 				this.ViewModel.Execute();
 			}));
 			
 			// Set Enabled
-			this._setEnabled(this.ViewModel.CanExecute);
+			this.SetEnabled(this.ViewModel.CanExecute);
 			
 			// Watch for changes in CanExecute
 			this.ViewModel.watch('CanExecute', lang.hitch(this, function(name, oldValue, newValue) {
-				this._setEnabled(newValue);
+				this.SetEnabled(newValue);
 			}));
 			
 		}

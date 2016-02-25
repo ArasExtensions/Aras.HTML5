@@ -66,10 +66,16 @@ define([
 			// Create ExpandAll Button
 			this.ExpandAllButton = new Button({ iconClass: 'expandAllIcon'});
 			this.Toolbar.addChild(this.ExpandAllButton);
+			this.ExpandAllButton.set('onClick', lang.hitch(this, function() {
+				this.Tree.expandAll();
+			}));
 			
 			// Create CollapseAll Button
 			this.CollapseAllButton = new Button({ iconClass: 'collapseAllIcon'});
 			this.Toolbar.addChild(this.CollapseAllButton);
+			this.CollapseAllButton.set('onClick', lang.hitch(this, function() {
+				this.Tree.collapseAll()();
+			}));
 		},
 		
 		OnViewModelLoaded: function() {
@@ -109,6 +115,8 @@ define([
 						this.Tree = new _Tree({style: 'height: 100%; width: 100%', region: 'center', gutters: false, model: this.TreeModel });
 						this.addChild(this.Tree);
 						this.CurrentNodeID = this.ViewModel.Node.ID;
+						this.ExpandAllButton.SetEnabled(true);
+						this.CollapseAllButton.SetEnabled(true);
 					}
 					else
 					{
@@ -143,6 +151,9 @@ define([
 				this.TreeModel.destroy();
 				this.TreeModel = null;
 			}
+
+			this.ExpandAllButton.SetEnabled(false);
+			this.CollapseAllButton.SetEnabled(false);
 		}
 		
 	});
