@@ -46,7 +46,7 @@
 		<script>
 			require(['Aras/View/Design/Applications/PartEditor', 'dojo/dom', 'dojo/domReady!'], function(PartEditor, dom) {
 				var target = dom.byId('main');			
-				var parteditor = new PartEditor({ URL: '../../../../../..', DatabaseID: 'VariantsDemo11SP1', Username: 'admin', Password: '607920b64fe136f9ab2389e371852af2', Name: 'Aras.ViewModel.Design.PartEditor', style: 'width: 1000px; height: 500px'}, target);
+				var parteditor = new PartEditor({ URL: '../../../../../..', Name: 'Aras.ViewModel.Design.PartEditor', style: 'width: 1000px; height: 500px'}, target);
 				parteditor.startup();
 			});
 		</script>

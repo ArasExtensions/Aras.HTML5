@@ -138,7 +138,7 @@ define([
 					
 						// Add Tree
 						this.TreeModel = new _TreeModel({ TreeControl: this.ViewModel });
-						this.Tree = new _Tree({style: 'height: 100%; width: 100%', region: 'center', gutters: false, model: this.TreeModel, getIconClass: this.getIconClass });
+						this.Tree = new _Tree({style: 'height: 100%; width: 100%', region: 'center', gutters: false, persist: false, model: this.TreeModel, getIconClass: this.getIconClass });
 						this.addChild(this.Tree);
 						this.CurrentNodeID = this.ViewModel.Node.ID;
 						this.ExpandAllButton.SetEnabled(true);

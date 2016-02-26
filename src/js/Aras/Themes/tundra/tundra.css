@@ -1,6 +1,7 @@
 @import '../../../dgrid/css/skins/tundra.css';
 @import '../../../dijit/themes/tundra/tundra.css';
 @import '../../../dgrid/css/dgrid.css';
+@import '../../../dojox/layout/resources/GridContainer.css';
 @import '../../../dojo/resources/dojo.css';
 @import '../base.css';
 

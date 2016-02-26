@@ -26,20 +26,25 @@ define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
 	'dojo/_base/array',
+	'./Login',
 	'../ViewModel/Server'
-], function(declare, lang, array, Server) {
+], function(declare, lang, array, Login, Server) {
 	
 	return declare('Aras.View.Application', null, {
 		
 		URL: null,
 		
-		DatabaseID: null,
+		Database: null,
 		
 		Username: null,
 		
 		Password: null,
 		
 		Name: null,
+		
+		Server: null,
+		
+		Login: null,
 				
 		constructor: function(args) {
 			
@@ -48,23 +53,38 @@ define([
 		Initialise: function() {
 			
 			// Create Server
-			var server = new Server({ URL: this.URL });
+			this.Server = new Server({ URL: this.URL });
 			
-			// Get Database
-			server.Database(this.DatabaseID).then(lang.hitch(this, function(database) {
+			if ((this.Database != null) && (this.Username != null) && (this.Password != null))
+			{				
+				// Get Database
+				this.Server.Database(this.Database).then(lang.hitch(this, function(database) {
 		
-				// Login
-				database.Login(this.Username, this.Password).then(lang.hitch(this, function(session){
+					// Login
+					database.Login(this.Username, this.Password).then(lang.hitch(this, function(session){
 
-					// Get Application ViewModel
-					session.Application(this.Name).then(lang.hitch(this, function(application){ 
+						// Get Application ViewModel
+						session.Application(this.Name).then(lang.hitch(this, function(application){ 
 								
-						// Set ViewModel
-						this.set("ViewModel", application);
+							// Set ViewModel
+							this.set("ViewModel", application);
 										
+						}));
 					}));
 				}));
-			}));
+			}
+			else
+			{
+				// Interactive Login
+				
+				if (this.Login == null)
+				{
+					this.Login = new Login({Application: this, title: 'Aras Innovator Login'});
+					this.Login.startup();
+				}
+				
+				this.Login.show();
+			}
 		}
 		
 	});

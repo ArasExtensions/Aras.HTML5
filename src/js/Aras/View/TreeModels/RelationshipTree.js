@@ -55,8 +55,6 @@ define([
 		
 		getChildren: function(parentItem, onComplete, onError){
 			
-			console.debug('getChildren', parentItem.ChildrenLoaded);
-			
 			// Load Children
 			if (!parentItem.ChildrenLoaded)
 			{
@@ -91,6 +89,7 @@ define([
 			else
 			{
 				item.watch('Name', lang.hitch(this, 'onChange', item));
+				return null;
 			}
 		},
 		
