@@ -74,7 +74,7 @@ define([
 			this.CollapseAllButton = new Button({ iconClass: 'collapseAllIcon'});
 			this.Toolbar.addChild(this.CollapseAllButton);
 			this.CollapseAllButton.set('onClick', lang.hitch(this, function() {
-				this.Tree.collapseAll()();
+				this.Tree.collapseAll();
 			}));
 		},
 		
@@ -99,6 +99,32 @@ define([
 			}
 		},
 		
+		getIconClass: function(item, opened) {
+					
+			if (item)
+			{
+				if (opened)
+				{
+					return 'small' + item.OpenIcon + 'Icon';
+				}
+				else
+				{
+					return 'small' + item.ClosedIcon + 'Icon';
+				}
+			}
+			else
+			{
+				if (opened)
+				{
+					return 'dijitFolderOpened';
+				}
+				else
+				{
+					return 'dijitFolderClosed';
+				}
+			}
+		},
+		
 		_updateTree: function() {
 			
 			if (this.ViewModel.Node != null)
@@ -112,7 +138,7 @@ define([
 					
 						// Add Tree
 						this.TreeModel = new _TreeModel({ TreeControl: this.ViewModel });
-						this.Tree = new _Tree({style: 'height: 100%; width: 100%', region: 'center', gutters: false, model: this.TreeModel });
+						this.Tree = new _Tree({style: 'height: 100%; width: 100%', region: 'center', gutters: false, model: this.TreeModel, getIconClass: this.getIconClass });
 						this.addChild(this.Tree);
 						this.CurrentNodeID = this.ViewModel.Node.ID;
 						this.ExpandAllButton.SetEnabled(true);

@@ -78,3 +78,19 @@
   height: 24px;
   width: 24px;
 }
+
+.smallPartIcon 
+{
+  background-image:  url('./images/Part.svg');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}
+
+.largePartIcon 
+{
+  background-image:  url('./images/Part.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}

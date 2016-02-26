@@ -55,6 +55,8 @@ define([
 		
 		getChildren: function(parentItem, onComplete, onError){
 			
+			console.debug('getChildren', parentItem.ChildrenLoaded);
+			
 			// Load Children
 			if (!parentItem.ChildrenLoaded)
 			{
