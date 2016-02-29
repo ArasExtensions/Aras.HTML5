@@ -28,10 +28,13 @@ define([
 	'./_Tree',
 	'./TreeModels/RelationshipTree',
 	'dijit/layout/BorderContainer',
+	'dijit/Menu',
+	'dijit/MenuItem',
+	'dijit/MenuSeparator',
 	'./Control',
 	'./Toolbar',
 	'./Button'
-], function(declare, lang, _Tree, _TreeModel, BorderContainer, Control, Toolbar, Button) {
+], function(declare, lang, _Tree, _TreeModel, BorderContainer, Menu, MenuItem, MenuSeparator, Control, Toolbar, Button) {
 	
 	return declare('Aras.View.RelationshipTree', [BorderContainer, Control], {
 	
@@ -44,6 +47,8 @@ define([
 		Tree: null,
 		
 		TreeModel: null,
+		
+		ContextMenu: null,
 		
 		CurrentNodeID: null,
 		
@@ -143,6 +148,42 @@ define([
 						this.CurrentNodeID = this.ViewModel.Node.ID;
 						this.ExpandAllButton.SetEnabled(true);
 						this.CollapseAllButton.SetEnabled(true);
+						
+						// Add Context Menu
+						this.ContextMenu = new Menu({ targetNodeIds: [this.Tree.id]});
+						
+						// Add Cut
+						this.ContextMenu.addChild(new MenuItem({label: 'Cut', iconClass: 'smallCutIcon', onClick: lang.hitch(this, function() {
+						
+							console.debug('cut', arguments);
+							
+						})}));
+	
+						// Add Copy
+						this.ContextMenu.addChild(new MenuItem({label: 'Copy', iconClass: 'smallCopyIcon', onClick: lang.hitch(this, function() {
+						
+							console.debug('copy', arguments);
+							
+						})}));
+						
+						this.ContextMenu.addChild(new MenuSeparator());
+						
+						// Add Paste
+						this.ContextMenu.addChild(new MenuItem({label: 'Paste', iconClass: 'smallPasteIcon', onClick: lang.hitch(this, function() {
+						
+							console.debug('paste', arguments);
+							
+						})}));
+						
+						this.ContextMenu.addChild(new MenuSeparator());
+						
+						// Add Delete
+						this.ContextMenu.addChild(new MenuItem({label: 'Delete', iconClass: 'smallDeleteIcon', onClick: lang.hitch(this, function() {
+						
+							console.debug('delete', this.Tree.get("selectedItems")[0]);
+							
+						})}));
+						
 					}
 					else
 					{
@@ -178,6 +219,12 @@ define([
 				this.TreeModel = null;
 			}
 
+			if (this.ContextMenu != null)
+			{
+				this.ContextMenu.destroy();
+				this.ContextMenu = null;
+			}
+			
 			this.ExpandAllButton.SetEnabled(false);
 			this.CollapseAllButton.SetEnabled(false);
 		}

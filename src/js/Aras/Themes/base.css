@@ -94,3 +94,67 @@
   height: 24px;
   width: 24px;
 }
+
+.copyIcon 
+{
+  background-image:  url('./images/Copy.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
+
+.cutIcon 
+{
+  background-image:  url('./images/Cut.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
+
+.pasteIcon 
+{
+  background-image:  url('./images/Paste.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
+
+.deleteIcon 
+{
+  background-image:  url('./images/Delete.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
+
+.smallCopyIcon 
+{
+  background-image:  url('./images/Copy.svg');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}
+
+.smallCutIcon 
+{
+  background-image:  url('./images/Cut.svg');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}
+
+.smallPasteIcon 
+{
+  background-image:  url('./images/Paste.svg');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}
+
+.smallDeleteIcon 
+{
+  background-image:  url('./images/Delete.svg');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}
