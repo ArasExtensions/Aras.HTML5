@@ -27,13 +27,14 @@ define([
 	'dojo/_base/lang',
 	'dojo/dom',
 	'dojo/dom-construct',
+	'dojox/encoding/digests/MD5',
 	'dijit/Dialog',
 	'dijit/form/ComboBox',
 	'dijit/form/TextBox',
 	'dijit/layout/ContentPane',
-	'dijit/layout/BorderContainer',
-	'dojo/store/Memory'
-], function(declare, lang, dom, domconstruct, Dialog, ComboBox, TextBox, ContentPane, BorderContainer, Memory) {
+	'dojo/store/Memory',
+	'./Button'
+], function(declare, lang, dom, domconstruct, MD5, Dialog, ComboBox, TextBox, ContentPane, Memory, Button) {
 	
 	return declare('Aras.View.Login', [Dialog], {
 		
@@ -45,6 +46,10 @@ define([
 		
 		Password: null,
 		
+		LoginButton: null,
+		
+		CancelButton: null,
+		
 		constructor: function(args) {
 			
 			lang.mixin(this, args);
@@ -52,14 +57,66 @@ define([
 		
 		startup: function() {
 			this.inherited(arguments);
-									
+		
+			// Create Layout
+			var layout = new ContentPane({content: '<table><tr><td>Database:</td><td id="logindatabase"></td></tr><tr><td>Username:</td><td id="loginusername"></td></tr><tr><td>Password:</td><td id="loginpassword"></td></tr><tr><td></td><td align="right"><div id="logincancel"></div><div id="loginlogin"></div></td></tr></table>'});
+			this.addChild(layout);
+				
+			// Add Database 
+			var databasetarget = dom.byId('logindatabase');	
+			var dataStore = Memory({data: []});
+			this.Database = new ComboBox({store: dataStore}, databasetarget);
+			this.Database.startup();
+				
+			// Add Username
+			var usernametarget = dom.byId('loginusername');	
+			this.Username = new TextBox({}, usernametarget);
+			this.Username.startup();
+			
+			// Add Password
+			var passwordtarget = dom.byId('loginpassword');	
+			this.Password = new TextBox({type: 'password'}, passwordtarget);
+			this.Password.startup();
+			
+			// Add Cancel Button
+			var cancelbuttontarget = dom.byId('logincancel');
+			this.CancelButton = new Button({label: 'Cancel'}, cancelbuttontarget);
+			this.CancelButton.startup();
+			
+			this.CancelButton.set('onClick', lang.hitch(this, function() {
+				this.hide();	
+			}));
+			
+			
+			// Add Login Button
+			var loginbuttontarget = dom.byId('loginlogin');
+			this.LoginButton = new Button({label: 'Login'}, loginbuttontarget);
+			this.LoginButton.startup();
+			
+			this.LoginButton.set('onClick', lang.hitch(this, function() {
+				
+				// Get Database
+				this.Application.Server.Database(this.Database.item.name).then(lang.hitch(this, function(database) {
+		
+					// Login
+					database.Login(this.Username.value, MD5(this.Password.value, 1)).then(lang.hitch(this, function(session){
+
+						// Get Application ViewModel
+						session.Application(this.Application.Name).then(lang.hitch(this, function(application){ 
+								
+							// Set ViewModel
+							this.Application.set("ViewModel", application);
+							
+							// Close Dialog
+							this.hide();
+						}));
+					}));
+				}));
+			}));
+			
 			// Get Database
 			this.Application.Server.Databases().then(lang.hitch(this, function(databases) {
 				
-				// Create Layout
-				var layout = new ContentPane({content: '<table><tr><td>Database:</td><td id="logindatabase"></td></tr><tr><td>Username:</td><td id="loginusername"></td></tr><tr><td>Password:</td><td id="loginpassword"></td></tr></table>'});
-				this.addChild(layout);
-
 				// Add Databases
 				var data = [];
 				
@@ -70,30 +127,19 @@ define([
 				
 				var databasetarget = dom.byId('logindatabase');	
 				var dataStore = Memory({data: data});
-				this.Database = new ComboBox({store: dataStore}, databasetarget);
-				this.Database.startup();
+				this.Database.set('store', dataStore);
+
+				if (data.length > 0)
+				{	
+					this.Database.set('item', data[0]);
+				}
 				
-				// Add Username
-				var usernametarget = dom.byId('loginusername');	
-				this.Username = new TextBox({}, usernametarget);
-				this.Username.startup();
-			
-				// Add Password
-				var passwordtarget = dom.byId('loginpassword');	
-				this.Password = new TextBox({type: 'password'}, passwordtarget);
-				this.Password.startup();	
-			
+				// Enable Buttons
+				this.CancelButton.SetEnabled(true);
+				this.LoginButton.SetEnabled(true);
 			}));
-				
 
-			
-
-		
-			
-
-			
 		}
-		
 
 	});
 });
