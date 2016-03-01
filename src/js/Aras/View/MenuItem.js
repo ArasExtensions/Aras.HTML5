@@ -25,24 +25,19 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
-	'dijit/form/Button',
+	'dijit/MenuItem',
 	'./Command'
-], function(declare, lang, Button, Command) {
+], function(declare, lang, MenuItem, Command) {
 	
-	return declare('Aras.View.Button', [Button, Command], {
-		
-		_savedIconClass: null,
-		
+	return declare('Aras.View.MenuItem', [MenuItem, Command], {
+	
 		constructor: function(args) {
 			
 		},
 		
 		startup: function() {
 			this.inherited(arguments);
-			
-			// Store IconClass
-			this._savedIconClass = this.iconClass;
-			
+	
 			// Disable Button
 			this.SetEnabled(false);
 		},
@@ -52,32 +47,33 @@ define([
 			if (Enabled)
 			{
 				this.set('disabled', false);
-				this.set('iconClass', this._savedIconClass);
 			}
 			else
 			{
 				this.set('disabled', true);
-				this.set('iconClass', this._savedIconClass + ' disableIcon');
 			}
 		},
 		
 		OnViewModelLoaded: function() {
 			this.inherited(arguments);
 			
-			// Link Click Event
-			this.set('onClick', lang.hitch(this, function() {
-				this.SetEnabled(false);
-				this.ViewModel.Execute();
-			}));
+			if (this.ViewModel != null)
+			{
+				// Link Click Event
+				this.set('onClick', lang.hitch(this, function() {
+					this.SetEnabled(false);
+					this.ViewModel.Execute();
+				}));
 			
-			// Set Enabled
-			this.SetEnabled(this.ViewModel.CanExecute);
+				// Set Enabled
+				this.SetEnabled(this.ViewModel.CanExecute);
 			
-			// Watch for changes in CanExecute
-			this.ViewModel.watch('CanExecute', lang.hitch(this, function(name, oldValue, newValue) {
-				this.SetEnabled(newValue);
-			}));
-			
+				// Watch for changes in CanExecute
+				this.ViewModel.watch('CanExecute', lang.hitch(this, function(name, oldValue, newValue) {
+					this.SetEnabled(newValue);
+				}));
+			}
 		}
+	
 	});
 });

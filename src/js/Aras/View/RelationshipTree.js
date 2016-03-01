@@ -28,13 +28,15 @@ define([
 	'./_Tree',
 	'./TreeModels/RelationshipTree',
 	'dijit/layout/BorderContainer',
-	'dijit/Menu',
-	'dijit/MenuItem',
+	'./Menu',
+	'./MenuItem',
 	'dijit/MenuSeparator',
+	'dijit/ToolbarSeparator',
+	'dijit/Tooltip',
 	'./Control',
 	'./Toolbar',
 	'./Button'
-], function(declare, lang, _Tree, _TreeModel, BorderContainer, Menu, MenuItem, MenuSeparator, Control, Toolbar, Button) {
+], function(declare, lang, _Tree, _TreeModel, BorderContainer, Menu, MenuItem, MenuSeparator, ToolbarSeparator, Tooltip, Control, Toolbar, Button) {
 	
 	return declare('Aras.View.RelationshipTree', [BorderContainer, Control], {
 	
@@ -43,6 +45,16 @@ define([
 		ExpandAllButton: null,
 		
 		CollapseAllButton: null,
+		
+		SaveButton: null,
+		
+		CutButton: null,
+		
+		CopyButton: null,
+		
+		PasteButton: null,
+		
+		DeleteButton: null,
 		
 		Tree: null,
 		
@@ -64,6 +76,8 @@ define([
 		startup: function() {
 			this.inherited(arguments);
 			
+			dijit.Tooltip.defaultPosition = ['above', 'below'];
+			
 			// Create Toolbar
 			this.Toolbar = new Toolbar({ region: 'top' });
 			this.addChild(this.Toolbar);
@@ -75,12 +89,48 @@ define([
 				this.Tree.expandAll();
 			}));
 			
+			var expandalltooltip = new Tooltip({connectId: this.ExpandAllButton.id, label: 'Expand All Tree Nodes'});
+			
 			// Create CollapseAll Button
 			this.CollapseAllButton = new Button({ iconClass: 'collapseAllIcon'});
 			this.Toolbar.addChild(this.CollapseAllButton);
 			this.CollapseAllButton.set('onClick', lang.hitch(this, function() {
 				this.Tree.collapseAll();
 			}));
+			
+			var collapsealltooltip = new Tooltip({connectId: this.CollapseAllButton.id, label: 'Collapse All Tree Nodes'});
+			
+			this.Toolbar.addChild(new ToolbarSeparator());
+			
+			// Create Save Button
+			this.SaveButton = new Button({ iconClass: 'saveIcon'});
+			this.Toolbar.addChild(this.SaveButton);
+			var savetooltip = new Tooltip({connectId: this.SaveButton.id, label: 'Save All Changes'});
+			
+			this.Toolbar.addChild(new ToolbarSeparator());
+			
+			// Create Cut Button
+			this.CutButton = new Button({ iconClass: 'cutIcon'});
+			this.Toolbar.addChild(this.CutButton);
+			var cuttooltip = new Tooltip({connectId: this.CutButton.id, label: 'Cut Selected Tree Node'});
+			
+			// Create Copy Button
+			this.CopyButton = new Button({ iconClass: 'copyIcon'});
+			this.Toolbar.addChild(this.CopyButton);
+
+			var copytooltip = new Tooltip({connectId: this.CopyButton.id, label: 'Copy Selected Tree Node'});
+			
+			// Create Paste Button
+			this.PasteButton = new Button({ iconClass: 'pasteIcon'});
+			this.Toolbar.addChild(this.PasteButton);
+			var pastetooltip = new Tooltip({connectId: this.PasteButton.id, label: 'Paste as a Child of the Selected Tree Node'});
+			
+			// Create Delete Button
+			this.DeleteButton = new Button({ iconClass: 'deleteIcon'});
+			this.Toolbar.addChild(this.DeleteButton);
+			var deletetooltip = new Tooltip({connectId: this.DeleteButton.id, label: 'Delete Selected Tree Node'});
+			
+			this.Toolbar.addChild(new ToolbarSeparator());
 		},
 		
 		OnViewModelLoaded: function() {
@@ -94,6 +144,13 @@ define([
 				
 			if (this.ViewModel != null)
 			{
+				// Connect Commands
+				this.SaveButton.set('ViewModel', this.ViewModel.Save);
+				this.CutButton.set('ViewModel', this.ViewModel.Cut);
+				this.CopyButton.set('ViewModel', this.ViewModel.Copy);
+				this.PasteButton.set('ViewModel', this.ViewModel.Paste);
+				this.DeleteButton.set('ViewModel', this.ViewModel.Delete);
+				
 				// Add Tree
 				this._updateTree();
 								
@@ -146,6 +203,17 @@ define([
 						this.Tree = new _Tree({style: 'height: 100%; width: 100%', region: 'center', gutters: false, persist: false, model: this.TreeModel, getIconClass: this.getIconClass });
 						this.addChild(this.Tree);
 						this.CurrentNodeID = this.ViewModel.Node.ID;
+						
+						// Watch for changes in SelectedItems
+						this.Tree.watch('selectedItems', lang.hitch(this, function(name, oldValue, newValue) {
+
+							if ((newValue != null) && (newValue.length > 0))
+							{
+								this.ViewModel.Select.Execute([newValue[0].ID]);
+							}
+						}));
+						
+						// Switch on ExpandAll and CollapseAll Buttons
 						this.ExpandAllButton.SetEnabled(true);
 						this.CollapseAllButton.SetEnabled(true);
 						
@@ -153,37 +221,28 @@ define([
 						this.ContextMenu = new Menu({ targetNodeIds: [this.Tree.id]});
 						
 						// Add Cut
-						this.ContextMenu.addChild(new MenuItem({label: 'Cut', iconClass: 'smallCutIcon', onClick: lang.hitch(this, function() {
-						
-							console.debug('cut', arguments);
-							
-						})}));
-	
+						var cutmenuitem = new MenuItem({label: 'Cut', iconClass: 'smallCutIcon'});
+						this.ContextMenu.addChild(cutmenuitem);
+						cutmenuitem.set('ViewModel', this.ViewModel.Cut);
+			
 						// Add Copy
-						this.ContextMenu.addChild(new MenuItem({label: 'Copy', iconClass: 'smallCopyIcon', onClick: lang.hitch(this, function() {
-						
-							console.debug('copy', arguments);
-							
-						})}));
+						var copymenuitem = new MenuItem({label: 'Copy', iconClass: 'smallCopyIcon'});
+						this.ContextMenu.addChild(copymenuitem);
+						copymenuitem.set('ViewModel', this.ViewModel.Copy);
 						
 						this.ContextMenu.addChild(new MenuSeparator());
 						
 						// Add Paste
-						this.ContextMenu.addChild(new MenuItem({label: 'Paste', iconClass: 'smallPasteIcon', onClick: lang.hitch(this, function() {
-						
-							console.debug('paste', arguments);
-							
-						})}));
+						var pastemenuitem = new MenuItem({label: 'Paste', iconClass: 'smallPasteIcon'});
+						this.ContextMenu.addChild(pastemenuitem);
+						pastemenuitem.set('ViewModel', this.ViewModel.Paste);
 						
 						this.ContextMenu.addChild(new MenuSeparator());
 						
 						// Add Delete
-						this.ContextMenu.addChild(new MenuItem({label: 'Delete', iconClass: 'smallDeleteIcon', onClick: lang.hitch(this, function() {
-						
-							console.debug('delete', this.Tree.get("selectedItems")[0]);
-							
-						})}));
-						
+						var deletemenuitem = new MenuItem({label: 'Delete', iconClass: 'smallDeleteIcon'});
+						this.ContextMenu.addChild(deletemenuitem);
+						deletemenuitem.set('ViewModel', this.ViewModel.Delete);
 					}
 					else
 					{

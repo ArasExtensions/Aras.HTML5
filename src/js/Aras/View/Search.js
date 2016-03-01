@@ -29,11 +29,12 @@ define([
 	'dijit/layout/ContentPane',
 	'dijit/ToolbarSeparator',
 	'dijit/form/NumberSpinner',
+	'dijit/Tooltip',
 	'./Control',
 	'./Toolbar',
 	'./Button',
 	'./Grid'
-], function(declare, lang, BorderContainer, ContentPane, ToolbarSeparator, NumberSpinner, Control, Toolbar, Button, Grid) {
+], function(declare, lang, BorderContainer, ContentPane, ToolbarSeparator, NumberSpinner, Tooltip, Control, Toolbar, Button, Grid) {
 	
 	return declare('Aras.View.Search', [BorderContainer, Control], {
 	
@@ -56,6 +57,8 @@ define([
 		startup: function() {
 			this.inherited(arguments);
 
+			dijit.Tooltip.defaultPosition = ['above', 'below'];
+			
 			// Create Toolbar
 			this.Toolbar = new Toolbar({ region: 'top' });
 			this.addChild(this.Toolbar);
@@ -63,21 +66,25 @@ define([
 			// Create Search Button
 			this.SearchButton = new Button({ iconClass: 'searchIcon'});
 			this.Toolbar.addChild(this.SearchButton);
-	
+			var searchtooltip = new Tooltip({connectId: this.SearchButton.id, label: 'Run Search'});
+			
 			// Add Separator
 			this.Toolbar.addChild(new ToolbarSeparator());
 			
 			// Create Page Size
 			this.PageSize = new NumberSpinner({ value:25, constraints: { min:5, max:100, places:0 }, style: 'width:40px; margin-left:5px; margin-right:5px;'});
 			this.Toolbar.addChild(this.PageSize);
+			var pagesizetooltip = new Tooltip({connectId: this.PageSize.id, label: 'Page Size'});
 			
 			// Create Next Page Button
 			this.NextButton = new Button({ iconClass: 'nextPageIcon'});
 			this.Toolbar.addChild(this.NextButton);
-		
+			var nextpagetooltip = new Tooltip({connectId: this.NextButton.id, label: 'Next Page'});
+			
 			// Create Previous Page Button
 			this.PreviousButton = new Button({ iconClass: 'previousPageIcon'});
 			this.Toolbar.addChild(this.PreviousButton);
+			var prevpagetooltip = new Tooltip({connectId: this.PreviousButton.id, label: 'Previous Page'});
 			
 			// Add Separator
 			this.Toolbar.addChild(new ToolbarSeparator());
