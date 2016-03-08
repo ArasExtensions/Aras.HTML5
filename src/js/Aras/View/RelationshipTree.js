@@ -56,6 +56,10 @@ define([
 		
 		DeleteButton: null,
 		
+		IndentButton: null,
+		
+		OutdentButton: null,
+		
 		Tree: null,
 		
 		TreeModel: null,
@@ -131,6 +135,18 @@ define([
 			var deletetooltip = new Tooltip({connectId: this.DeleteButton.id, label: 'Delete Selected Tree Node'});
 			
 			this.Toolbar.addChild(new ToolbarSeparator());
+			
+			// Create Indent Button
+			this.IndentButton = new Button({ iconClass: 'arrowLeftIcon'});
+			this.Toolbar.addChild(this.IndentButton);
+			var indenttooltip = new Tooltip({connectId: this.IndentButton.id, label: 'Indent the Selected Tree Node'});
+			
+			// Create Outdent Button
+			this.OutdentButton = new Button({ iconClass: 'arrowRightIcon'});
+			this.Toolbar.addChild(this.OutdentButton);
+			var outdenttooltip = new Tooltip({connectId: this.OutdentButton.id, label: 'Outdent the Selected Tree Node'});
+			
+			this.Toolbar.addChild(new ToolbarSeparator());
 		},
 		
 		OnViewModelLoaded: function() {
@@ -150,6 +166,8 @@ define([
 				this.CopyButton.set('ViewModel', this.ViewModel.Copy);
 				this.PasteButton.set('ViewModel', this.ViewModel.Paste);
 				this.DeleteButton.set('ViewModel', this.ViewModel.Delete);
+				this.IndentButton.set('ViewModel', this.ViewModel.Indent);
+				this.OutdentButton.set('ViewModel', this.ViewModel.Outdent);
 				
 				// Add Tree
 				this._updateTree();
