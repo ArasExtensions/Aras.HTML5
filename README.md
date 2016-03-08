@@ -33,10 +33,8 @@ must enter into a commercial licence agreement with Processwall Limited.
  * [dojo/dijit 1.10.4](https://github.com/dojo/dijit/releases/tag/1.10.4)
  * [dojo/dojox 1.10.4](https://github.com/dojo/dojox/releases/tag/1.10.4)
  * [dojo/util 1.10.4](https://github.com/dojo/util/releases/tag/1.10.4)
- * [SitePen/dgrid 0.4.0](https://github.com/SitePen/dgrid/releases/tag/v0.4.0)
- * [SitePen/dstore 1.1.0](https://github.com/SitePen/dstore/releases/tag/v1.1.0)
- * [kriszyp/put-selector 0.3.6](https://github.com/kriszyp/put-selector/releases/tag/v0.3.6)
- * [kriszyp/xstyle 0.3.1](https://github.com/kriszyp/xstyle/releases/tag/v0.3.1)
+ * [SitePen/dgrid 1.0.0](https://github.com/SitePen/dgrid/releases/tag/v1.0.0)
+ * [SitePen/dstore 1.1.1](https://github.com/SitePen/dstore/releases/tag/v1.1.1)
 
 #### Contact Details
 
