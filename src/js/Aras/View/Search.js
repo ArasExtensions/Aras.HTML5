@@ -29,12 +29,13 @@ define([
 	'dijit/layout/ContentPane',
 	'dijit/ToolbarSeparator',
 	'dijit/form/NumberSpinner',
+	'dijit/form/TextBox',
 	'dijit/Tooltip',
 	'./Control',
 	'./Toolbar',
 	'./Button',
 	'./Grid'
-], function(declare, lang, BorderContainer, ContentPane, ToolbarSeparator, NumberSpinner, Tooltip, Control, Toolbar, Button, Grid) {
+], function(declare, lang, BorderContainer, ContentPane, ToolbarSeparator, NumberSpinner, TextBox, Tooltip, Control, Toolbar, Button, Grid) {
 	
 	return declare('Aras.View.Search', [BorderContainer, Control], {
 	
@@ -47,6 +48,8 @@ define([
 		NextButton: null,
 		
 		PreviousButton: null,
+		
+		QueryString: null,
 				
 		Grid: null,
 		
@@ -85,6 +88,14 @@ define([
 			this.PreviousButton = new Button({ iconClass: 'previousPageIcon'});
 			this.Toolbar.addChild(this.PreviousButton);
 			var prevpagetooltip = new Tooltip({connectId: this.PreviousButton.id, label: 'Previous Page'});
+			
+			// Add Separator
+			this.Toolbar.addChild(new ToolbarSeparator());
+			
+			// Create QueryString
+			this.QueryString = new TextBox({style: 'width:150px; margin-left:5px; margin-right:5px;'});
+			this.Toolbar.addChild(this.QueryString);
+			var querystringtooltip = new Tooltip({connectId: this.QueryString.id, label: 'Search String'});
 			
 			// Add Separator
 			this.Toolbar.addChild(new ToolbarSeparator());
@@ -133,6 +144,21 @@ define([
 							this.ViewModel.Write();
 						}
 					}
+				}));
+				
+				// Set QueryString
+				this.QueryString.set("value", this.ViewModel.QueryString);
+				
+				// Watch for changes in QueryString
+				this.QueryString.watch("value", lang.hitch(this, function(name, oldValue, newValue) {
+									
+					if (oldValue !== newValue)
+					{						
+						// Update ViewModel Value
+						this.ViewModel.set('QueryString', newValue);
+						this.ViewModel.Write();
+					}
+					
 				}));
 			}
 		}
