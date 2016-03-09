@@ -66,11 +66,19 @@ define([
 		
 		ContextMenu: null,
 		
-		CurrentNodeID: null,
+		CutMenuItem: null,
 		
-		_nodeHandle: null,
+		CopyMenuItem: null,
 		
-		_nodeLoadedHandle: null,
+		PasteMenuItem: null,
+		
+		DeleteMenuItem: null,
+		
+		IndentMenuItem: null,
+		
+		OutdentMenuItem: null,
+		
+		_viewModelID: null,
 		
 		constructor: function(args) {
 			
@@ -147,20 +155,60 @@ define([
 			var outdenttooltip = new Tooltip({connectId: this.OutdentButton.id, label: 'Outdent the Selected Tree Node'});
 			
 			this.Toolbar.addChild(new ToolbarSeparator());
+			
+			// Create Tree Model
+			this.TreeModel = new _TreeModel();
+			
+			// Create Tree
+			this.Tree = new _Tree({style: 'height: 100%; width: 100%', region: 'center', gutters: false, persist: false, model: this.TreeModel, getIconClass: this.getIconClass, showRoot: false });
+			this.addChild(this.Tree);
+			
+			// Create Context Menu
+			this.ContextMenu = new Menu({ targetNodeIds: [this.Tree.id]});
+						
+			// Create Cut Menu Item
+			this.CutMenuItem = new MenuItem({label: 'Cut', iconClass: 'smallCutIcon'});
+			this.ContextMenu.addChild(this.CutMenuItem);
+						
+			// Create Copy Menu Item
+			this.CopyMenuItem = new MenuItem({label: 'Copy', iconClass: 'smallCopyIcon'});
+			this.ContextMenu.addChild(this.CopyMenuItem);
+			
+			this.ContextMenu.addChild(new MenuSeparator());
+						
+			// Create Paste Menu Item
+			this.PasteMenuItem = new MenuItem({label: 'Paste', iconClass: 'smallPasteIcon'});
+			this.ContextMenu.addChild(this.PasteMenuItem);
+						
+			this.ContextMenu.addChild(new MenuSeparator());
+						
+			// Add Delete
+			this.DeleteMenuItem = new MenuItem({label: 'Delete', iconClass: 'smallDeleteIcon'});
+			this.ContextMenu.addChild(this.DeleteMenuItem);
+						
+			this.ContextMenu.addChild(new MenuSeparator());
+
+			// Add Indent
+			this.IndentMenuItem = new MenuItem({label: 'Indent', iconClass: 'smallArrowLeftIcon'});
+			this.ContextMenu.addChild(this.IndentMenuItem);
+
+			// Add Outdent
+			this.OutdentMenuItem = new MenuItem({label: 'Outdent', iconClass: 'smallArrowRightIcon'});
+			this.ContextMenu.addChild(this.OutdentMenuItem);
+			
 		},
 		
 		OnViewModelLoaded: function() {
 			this.inherited(arguments);
-
-			// Unwatch current ViewModel
-			if (this._nodeHandle != null)
-			{
-				this._nodeHandle.unwatch();
-			}
 				
-			if (this.ViewModel != null)
+			if ((this.ViewModel != null) && (this.ViewModel.ID != this._viewModelID))
 			{
-				// Connect Commands
+				this._viewModelID = this.ViewModel.ID;
+				
+				// Update Tree Model
+				this.TreeModel.set('TreeControl', this.ViewModel);
+				
+				// Connect Buttons
 				this.SaveButton.set('ViewModel', this.ViewModel.Save);
 				this.CutButton.set('ViewModel', this.ViewModel.Cut);
 				this.CopyButton.set('ViewModel', this.ViewModel.Copy);
@@ -169,13 +217,26 @@ define([
 				this.IndentButton.set('ViewModel', this.ViewModel.Indent);
 				this.OutdentButton.set('ViewModel', this.ViewModel.Outdent);
 				
-				// Add Tree
-				this._updateTree();
-								
-				// Watch for changes in root Node
-				this._nodeHandle = this.ViewModel.watch('Node', lang.hitch(this, function(name, oldValue, newValue) {
-					this._updateTree();
+				// Connect Menu Items
+				this.CutMenuItem.set('ViewModel', this.ViewModel.Cut);
+				this.CopyMenuItem.set('ViewModel', this.ViewModel.Copy);
+				this.PasteMenuItem.set('ViewModel', this.ViewModel.Paste);
+				this.DeleteMenuItem.set('ViewModel', this.ViewModel.Delete);
+				this.IndentMenuItem.set('ViewModel', this.ViewModel.Indent);
+				this.OutdentMenuItem.set('ViewModel', this.ViewModel.Outdent);
+			
+				// Watch for changes in SelectedItems
+				this.Tree.watch('selectedItems', lang.hitch(this, function(name, oldValue, newValue) {
+
+					if ((newValue != null) && (newValue.length > 0))
+					{
+						this.ViewModel.Select.Execute([newValue[0].ID]);
+					}
 				}));
+						
+				// Switch on ExpandAll and CollapseAll Buttons
+				this.ExpandAllButton.SetEnabled(true);
+				this.CollapseAllButton.SetEnabled(true);				
 			}
 		},
 		
@@ -203,109 +264,8 @@ define([
 					return 'dijitFolderClosed';
 				}
 			}
-		},
-		
-		_updateTree: function() {
-			
-			if (this.ViewModel.Node != null)
-			{						
-				if ((this.Tree == null) || (this.CurrentNodeID != this.ViewModel.Node.ID))
-				{
-					if (this.ViewModel.Node.Loaded)
-					{
-						// Remove current Tree
-						this._removeTree();
-					
-						// Add Tree
-						this.TreeModel = new _TreeModel({ TreeControl: this.ViewModel });
-						this.Tree = new _Tree({style: 'height: 100%; width: 100%', region: 'center', gutters: false, persist: false, model: this.TreeModel, getIconClass: this.getIconClass });
-						this.addChild(this.Tree);
-						this.CurrentNodeID = this.ViewModel.Node.ID;
-						
-						// Watch for changes in SelectedItems
-						this.Tree.watch('selectedItems', lang.hitch(this, function(name, oldValue, newValue) {
-
-							if ((newValue != null) && (newValue.length > 0))
-							{
-								this.ViewModel.Select.Execute([newValue[0].ID]);
-							}
-						}));
-						
-						// Switch on ExpandAll and CollapseAll Buttons
-						this.ExpandAllButton.SetEnabled(true);
-						this.CollapseAllButton.SetEnabled(true);
-						
-						// Add Context Menu
-						this.ContextMenu = new Menu({ targetNodeIds: [this.Tree.id]});
-						
-						// Add Cut
-						var cutmenuitem = new MenuItem({label: 'Cut', iconClass: 'smallCutIcon'});
-						this.ContextMenu.addChild(cutmenuitem);
-						cutmenuitem.set('ViewModel', this.ViewModel.Cut);
-			
-						// Add Copy
-						var copymenuitem = new MenuItem({label: 'Copy', iconClass: 'smallCopyIcon'});
-						this.ContextMenu.addChild(copymenuitem);
-						copymenuitem.set('ViewModel', this.ViewModel.Copy);
-						
-						this.ContextMenu.addChild(new MenuSeparator());
-						
-						// Add Paste
-						var pastemenuitem = new MenuItem({label: 'Paste', iconClass: 'smallPasteIcon'});
-						this.ContextMenu.addChild(pastemenuitem);
-						pastemenuitem.set('ViewModel', this.ViewModel.Paste);
-						
-						this.ContextMenu.addChild(new MenuSeparator());
-						
-						// Add Delete
-						var deletemenuitem = new MenuItem({label: 'Delete', iconClass: 'smallDeleteIcon'});
-						this.ContextMenu.addChild(deletemenuitem);
-						deletemenuitem.set('ViewModel', this.ViewModel.Delete);
-					}
-					else
-					{
-						// Watch for when Node Loaded
-						this._nodeLoadedHandle = this.ViewModel.Node.watch('Loaded', lang.hitch(this, function(name, oldValue, newValue) {
-							this._updateTree();
-						}));
-					}
-				}
-			}
-			else
-			{
-				this._removeTree();
-			}
-		},
-				
-		_removeTree: function() {
-			
-			if (this.Tree != null)
-			{
-				// Remove Tree
-				this.removeChild(this.Tree);
-				
-				// Destroy Tree
-				this.Tree.destroy();
-				this.Tree = null;
-			}
-			
-			if (this.TreeModel != null)
-			{
-				// Destroy Tree Model
-				this.TreeModel.destroy();
-				this.TreeModel = null;
-			}
-
-			if (this.ContextMenu != null)
-			{
-				this.ContextMenu.destroy();
-				this.ContextMenu = null;
-			}
-			
-			this.ExpandAllButton.SetEnabled(false);
-			this.CollapseAllButton.SetEnabled(false);
 		}
-		
+
 	});
 	
 });

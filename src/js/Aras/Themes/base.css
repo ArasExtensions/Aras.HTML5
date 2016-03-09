@@ -174,3 +174,19 @@
   height: 16px;
   width: 16px;
 }
+
+.smallArrowRightIcon 
+{
+  background-image:  url('./images/ArrowRight.svg');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}
+
+.smallArrowLeftIcon 
+{
+  background-image:  url('./images/ArrowLeft.svg');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}

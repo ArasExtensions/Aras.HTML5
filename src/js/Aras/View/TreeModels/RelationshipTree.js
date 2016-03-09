@@ -24,19 +24,86 @@
 
 define([
 	'dojo/_base/declare',
-	'dojo/_base/lang'
-], function(declare, lang) {
+	'dojo/_base/lang',
+	'dojo/Stateful'
+], function(declare, lang, Stateful) {
 	
-	return declare('Aras.View.TreeModels.RelationshipTree', null, {
+	return declare('Aras.View.TreeModels.RelationshipTree', [Stateful], {
 		
 		TreeControl: null,
+		
+		RootNode: null,
 
 		constructor: function(args) {
 			
 			lang.mixin(this, args);
 			
-			// Watch for changes in the Root Node Name
-			//this.TreeControl.Node.watch('Name', lang.hitch(this, "_onChildrenChange", this.TreeControl.Node));
+			// Create Dummy Item
+			this.RootNode = {ID: '-1', Name: 'Root', Loaded: true, ChildrenLoaded: true, Children: [] };
+			
+			// Watch for Changes in TreeControl
+			this.watch('TreeControl', lang.hitch(this, function() {
+				
+				if (this.TreeControl == null)
+				{
+					// Remove Children from RootNode
+					this.RootNode.Children = [];
+					
+					// Signal Change
+					this.onChange(this.RootNode);
+					this.onChildrenChange(this.RootNode, this.RootNode.Children);
+				}
+				else
+				{
+					if (this.TreeControl.Node != null)
+					{
+						// Add Node as Child of RootNode
+						this.RootNode.Children = [];
+						this.RootNode.Children.push(this.TreeControl.Node);
+					
+						// Signal Change
+						this.onChange(this.RootNode);
+						this.onChildrenChange(this.RootNode, this.RootNode.Children);
+						this.onChange(this.TreeControl.Node);
+					}
+					else
+					{
+						// Remove Children from RootNode
+						this.RootNode.Children = [];
+					
+						// Signal Change
+						this.onChange(this.RootNode);
+						this.onChildrenChange(this.RootNode, this.RootNode.Children);
+					}
+					
+					// Watch for Changes in Node
+					this.TreeControl.watch('Node', lang.hitch(this, function() {
+						
+						if (this.TreeControl.Node != null)
+						{
+							// Add Node as Child of RootNode
+							this.RootNode.Children = [];
+							this.RootNode.Children.push(this.TreeControl.Node);
+					
+							// Signal Change
+							this.onChange(this.RootNode);
+							this.onChildrenChange(this.RootNode, this.RootNode.Children);
+							this.onChange(this.TreeControl.Node);
+						}
+						else
+						{
+							// Remove Children from RootNode
+							this.RootNode.Children = [];
+					
+							// Signal Change
+							this.onChange(this.RootNode);
+							this.onChildrenChange(this.RootNode, this.RootNode.Children);
+						}
+						
+					}));
+				}
+				
+			}));
 		},
 		
 		destroy: function(){
@@ -44,8 +111,8 @@ define([
 		},
 		
 		getRoot: function(onItem, onError){
-			
-			onItem(this.TreeControl.Node);
+		
+			onItem(this.RootNode);
 		},
 				
 		mayHaveChildren: function(item){
@@ -55,13 +122,16 @@ define([
 		
 		getChildren: function(parentItem, onComplete, onError){
 			
-			// Load Children
-			if (!parentItem.ChildrenLoaded)
+			if (parentItem.ID != '-1')
 			{
-				parentItem.Load.Execute();
-				parentItem.watch('ChildrenLoaded', lang.hitch(this, "_onChildrenChange", parentItem));
+				// Load Children
+				if (!parentItem.ChildrenLoaded)
+				{
+					parentItem.Load.Execute();
+					parentItem.watch('ChildrenLoaded', lang.hitch(this, "_onChildrenChange", parentItem));
+				}
 			}
-			
+
 			onComplete(parentItem.Children);
 		},
 		

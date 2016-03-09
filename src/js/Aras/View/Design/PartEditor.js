@@ -62,7 +62,7 @@ define([
 				this.Parts.set("ViewModel", this.ViewModel.Parts);
 				
 				// Set Relationships ViewModel
-				this.Relationships.set("ViewModel", this.ViewModel.Relationships);		
+				this.Relationships.set("ViewModel", this.ViewModel.Relationships);			
 			}
 		},
 		
