@@ -69,8 +69,8 @@ define([
 			// Process Grid Select Event
 			this._grid.on('dgrid-select', lang.hitch(this, function(event) {
 				
-				if (this.ViewModel != null && this.ViewModel.Loaded)
-				{
+				if (this.ViewModel != null && this.ViewModel.Loaded && this.ViewModel.Select.CanExecute)
+				{					
 					var Parameters = [];
 				
 					for(i=0; i<event.rows.length; i++)
