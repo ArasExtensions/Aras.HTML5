@@ -34,7 +34,6 @@ must enter into a commercial licence agreement with Processwall Limited.
  * [dojo/dojox 1.10.4](https://github.com/dojo/dojox/releases/tag/1.10.4)
  * [dojo/util 1.10.4](https://github.com/dojo/util/releases/tag/1.10.4)
  * [SitePen/dgrid 1.0.0](https://github.com/SitePen/dgrid/releases/tag/v1.0.0)
- * [SitePen/dstore 1.1.1](https://github.com/SitePen/dstore/releases/tag/v1.1.1)
 
 #### Contact Details
 
