@@ -143,6 +143,14 @@
   width: 24px;
 }
 
+.undoIcon 
+{
+  background-image:  url('./images/Undo.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
+
 .smallCopyIcon 
 {
   background-image:  url('./images/Copy.svg');
@@ -186,6 +194,14 @@
 .smallArrowLeftIcon 
 {
   background-image:  url('./images/ArrowLeft.svg');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}
+
+.smallUndoIcon 
+{
+  background-image:  url('./images/Undo.svg');
   background-size: 16px 16px;
   height: 16px;
   width: 16px;

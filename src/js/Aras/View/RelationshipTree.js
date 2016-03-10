@@ -60,6 +60,8 @@ define([
 		
 		OutdentButton: null,
 		
+		UndoButton: null,
+		
 		Tree: null,
 		
 		TreeModel: null,
@@ -75,8 +77,8 @@ define([
 		DeleteMenuItem: null,
 		
 		IndentMenuItem: null,
-		
-		OutdentMenuItem: null,
+				
+		UndoMenuItem: null,
 		
 		_viewModelID: null,
 		
@@ -118,6 +120,13 @@ define([
 			this.SaveButton = new Button({ iconClass: 'saveIcon'});
 			this.Toolbar.addChild(this.SaveButton);
 			var savetooltip = new Tooltip({connectId: this.SaveButton.id, label: 'Save All Changes'});
+			
+			this.Toolbar.addChild(new ToolbarSeparator());
+		
+			// Create Undo Button
+			this.UndoButton = new Button({ iconClass: 'undoIcon'});
+			this.Toolbar.addChild(this.UndoButton);
+			var undotooltip = new Tooltip({connectId: this.UndoButton.id, label: 'Undo All Changes'});
 			
 			this.Toolbar.addChild(new ToolbarSeparator());
 			
@@ -210,6 +219,7 @@ define([
 				
 				// Connect Buttons
 				this.SaveButton.set('ViewModel', this.ViewModel.Save);
+				this.UndoButton.set('ViewModel', this.ViewModel.Undo);
 				this.CutButton.set('ViewModel', this.ViewModel.Cut);
 				this.CopyButton.set('ViewModel', this.ViewModel.Copy);
 				this.PasteButton.set('ViewModel', this.ViewModel.Paste);

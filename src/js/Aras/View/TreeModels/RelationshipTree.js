@@ -33,10 +33,18 @@ define([
 		TreeControl: null,
 		
 		RootNode: null,
+		
+		ChildrenWatch: null,
+		
+		LabelWatch: null,
 
 		constructor: function(args) {
 			
 			lang.mixin(this, args);
+			
+			this.ChildrenWatch = {};
+			
+			this.LabelWatch = {};
 			
 			// Create Dummy Item
 			this.RootNode = {ID: '-1', Name: 'Root', Loaded: true, ChildrenLoaded: true, Children: [] };
@@ -124,11 +132,16 @@ define([
 			
 			if (parentItem.ID != '-1')
 			{
+				// Watch for Changes
+				if (!this.ChildrenWatch[parentItem.ID])
+				{
+					this.ChildrenWatch[parentItem.ID] = parentItem.watch('Children', lang.hitch(this, "_onChildrenChange", parentItem));
+				}
+				
 				// Load Children
 				if (!parentItem.ChildrenLoaded)
 				{
 					parentItem.Load.Execute();
-					parentItem.watch('ChildrenLoaded', lang.hitch(this, "_onChildrenChange", parentItem));
 				}
 			}
 
@@ -136,8 +149,7 @@ define([
 		},
 		
 		_onChildrenChange: function(item) {
-			this.onChange(item);
-			this.onChildrenChange(item, item.Children);
+			this.onChildrenChange(item, item.Children);				
 		},
 		
 		isItem: function(something){
@@ -152,13 +164,18 @@ define([
 		
 		getLabel: function(item){
 
+			// Watch for chnages in Name
+			if (!this.LabelWatch[item.ID])
+			{
+				this.LabelWatch[item.ID] = item.watch('Name', lang.hitch(this, 'onChange', item));
+			}
+			
 			if (item.Loaded)
 			{
 				return item.Name;
 			}
 			else
 			{
-				item.watch('Name', lang.hitch(this, 'onChange', item));
 				return null;
 			}
 		},

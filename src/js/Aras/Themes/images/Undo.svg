@@ -1,0 +1,13 @@
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 64 64" enable-background="new 0 0 64 64" width="64" xmlns="http://www.w3.org/2000/svg" height="64">
+<defs>
+<clipPath id="SVGID_2_UND">
+<use xlink:href="#SVGID_1_UND"/>
+</clipPath>
+<path id="SVGID_1_UND" d="m56,55.917-20,0 0-29.917-2,0 0-13 22,.125z"/>
+</defs>
+<g fill="#0072c6">
+<path d="m16,36c0-10.006 18-20 18-20h2c11.045,0 20,8.954 20,20 0,11.045-8.955,20-20,20-11.046,0-20-8.955-20-20zm20.167-11h-2.167c0,0-8.833,5.514-8.833,11.084 0,6.074 4.925,10.999 11,10.999s11-4.925 11-10.999c0-6.076-4.925-11.084-11-11.084z" clip-path="url(#SVGID_2_UND)"/>
+<path d="m16.5,16h19v9h-19z"/>
+<path d="m22.75,7.938 0,25.437-14.833-12.875z"/>
+</g>
+</svg>
