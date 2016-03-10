@@ -165,9 +165,12 @@ define([
 		getLabel: function(item){
 
 			// Watch for chnages in Name
-			if (!this.LabelWatch[item.ID])
+			if (item.ID != '-1')
 			{
-				this.LabelWatch[item.ID] = item.watch('Name', lang.hitch(this, 'onChange', item));
+				if (!this.LabelWatch[item.ID])
+				{
+					this.LabelWatch[item.ID] = item.watch('Name', lang.hitch(this, 'onChange', item));
+				}	
 			}
 			
 			if (item.Loaded)
