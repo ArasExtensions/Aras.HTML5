@@ -90,15 +90,6 @@ define([
 				// Update Save
 				this.SaveButton.set('ViewModel', this.ViewModel.Save);
 			}
-		},
-		
-		Refresh: function() {
-			this.inherited(arguments);
-			
-			if (this.ViewModel != null)
-			{
-				this.ViewModel.Refresh.Execute();
-			}
 		}
 	});
 });

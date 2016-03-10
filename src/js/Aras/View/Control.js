@@ -86,6 +86,24 @@ define([
 		
 		OnViewModelLoaded: function() {
 			
+		},
+		
+		Refresh: function() {
+			this.inherited(arguments);
+			
+			if (this.ViewModel != null)
+			{
+				this.ViewModel.Refresh.Execute();
+			}
+		},
+		
+		Close: function() {
+			this.inherited(arguments);
+			
+			if (this.ViewModel != null)
+			{
+				this.ViewModel.Close.Execute();
+			}
 		}
 
 	});
