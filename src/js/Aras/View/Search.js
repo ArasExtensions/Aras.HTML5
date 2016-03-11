@@ -69,7 +69,7 @@ define([
 			// Create Search Button
 			this.SearchButton = new Button({ iconClass: 'searchIcon'});
 			this.Toolbar.addChild(this.SearchButton);
-			var searchtooltip = new Tooltip({connectId: this.SearchButton.id, label: 'Run Search'});
+			var searchtooltip = new Tooltip({connectId: this.SearchButton.id, label: 'Refresh'});
 			
 			// Add Separator
 			this.Toolbar.addChild(new ToolbarSeparator());
@@ -93,7 +93,7 @@ define([
 			this.Toolbar.addChild(new ToolbarSeparator());
 			
 			// Create QueryString
-			this.QueryString = new TextBox({style: 'width:150px; margin-left:5px; margin-right:5px;'});
+			this.QueryString = new TextBox({intermediateChanges: true, style: 'width:150px; margin-left:5px; margin-right:5px;'});
 			this.Toolbar.addChild(this.QueryString);
 			var querystringtooltip = new Tooltip({connectId: this.QueryString.id, label: 'Search String'});
 			
