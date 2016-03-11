@@ -125,7 +125,7 @@ define([
 				// Set NextPage Button ViewModel
 				this.NextButton.set("ViewModel", this.ViewModel.NextPage);	
 				
-				// Watch for changes in PageSize
+				// Watch for changes in PageSize Control
 				this.PageSize.watch("value", lang.hitch(this, function(name, oldValue, newValue) {
 									
 					if (isNaN(newValue))
@@ -144,6 +144,20 @@ define([
 							this.ViewModel.Write();
 						}
 					}
+				}));
+				
+				// Watch for changes in PageSize Model
+				this.ViewModel.watch('PageSize', lang.hitch(this, function(name, oldValue, newValue) {
+					
+					var newnumber = Number(newValue);
+					var oldnumber = Number(oldValue);
+				
+					if (oldnumber !== newnumber)
+					{	
+						// Update Control
+						this.PageSize.set("value", newnumber);
+					}
+					
 				}));
 				
 				// Set QueryString

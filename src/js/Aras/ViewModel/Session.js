@@ -54,7 +54,7 @@ define([
 			// Update Controls
 			array.forEach(Response.ControlQueue, lang.hitch(this, function(control) {
 				
-				if (!this._controlCache[control.ID])
+				if (this._controlCache[control.ID] === undefined)
 				{
 					this._controlCache[control.ID] = new Control(this, control.ID);
 				}
@@ -81,7 +81,7 @@ define([
 					this._processResponse(result);
 					
 					// Create Application
-					if (!this._controlCache[result.Value.ID])
+					if (this._controlCache[result.Value.ID] === undefined)
 					{
 						this._controlCache[result.Value.ID] = new Control(this, result.Value.ID);
 					}
@@ -105,7 +105,7 @@ define([
 					this._processResponse(result);
 					
 					// Create Plugin
-					if (!this._controlCache[result.Value.ID])
+					if (this._controlCache[result.Value.ID] === undefined)
 					{
 						this._controlCache[result.Value.ID] = new Control(this, result.Value.ID);
 					}
@@ -135,8 +135,8 @@ define([
 		Control: function(ID) {
 			
 			if (ID)
-			{
-				if (!this._controlCache[ID])
+			{		
+				if (this._controlCache[ID] === undefined)
 				{
 					this._controlCache[ID] = new Control(this, ID);
 					this._readControl(this._controlCache[ID]);
@@ -152,7 +152,7 @@ define([
 			
 		Command: function(ID) {
 			
-			if (!this._commandCache[ID])
+			if (this._commandCache[ID] === undefined)
 			{
 				this._commandCache[ID] = new Command(this, ID);
 			}

@@ -33,10 +33,12 @@ define([
 	'dijit/MenuSeparator',
 	'dijit/ToolbarSeparator',
 	'dijit/Tooltip',
+	'dijit/Dialog',
+	'./Search',
 	'./Control',
 	'./Toolbar',
 	'./Button'
-], function(declare, lang, _Tree, _TreeModel, BorderContainer, Menu, MenuItem, MenuSeparator, ToolbarSeparator, Tooltip, Control, Toolbar, Button) {
+], function(declare, lang, _Tree, _TreeModel, BorderContainer, Menu, MenuItem, MenuSeparator, ToolbarSeparator, Tooltip, Dialog, Search, Control, Toolbar, Button) {
 	
 	return declare('Aras.View.RelationshipTree', [BorderContainer, Control], {
 	
@@ -47,6 +49,8 @@ define([
 		CollapseAllButton: null,
 		
 		SaveButton: null,
+		
+		AddButton: null,
 		
 		CutButton: null,
 		
@@ -80,6 +84,10 @@ define([
 				
 		UndoMenuItem: null,
 		
+		SearchDialog: null,
+		
+		SearchControl: null,
+		
 		_viewModelID: null,
 		
 		constructor: function(args) {
@@ -89,6 +97,13 @@ define([
 		
 		startup: function() {
 			this.inherited(arguments);
+			
+			// Create Search Control
+			this.SearchControl = new Search({style: 'width:100%; height: 100%'});
+			this.SearchControl.startup();
+			
+			// Create Search Dialog
+			this.SearchDialog = new Dialog({content: this.SearchControl, title: 'Select Item', style: 'width: 500px; height: 600px;'});
 			
 			dijit.Tooltip.defaultPosition = ['above', 'below'];
 			
@@ -129,6 +144,14 @@ define([
 			var undotooltip = new Tooltip({connectId: this.UndoButton.id, label: 'Undo All Changes'});
 			
 			this.Toolbar.addChild(new ToolbarSeparator());
+			
+			// Create Add Button
+			this.AddButton = new Button({ iconClass: 'newIcon'});
+			this.Toolbar.addChild(this.AddButton);
+			var addtooltip = new Tooltip({connectId: this.AddButton.id, label: 'Add Existing Item'});
+			this.AddButton.set('onClick', lang.hitch(this, function() {
+				this.SearchDialog.show();
+			}));
 			
 			// Create Cut Button
 			this.CutButton = new Button({ iconClass: 'cutIcon'});
@@ -204,7 +227,6 @@ define([
 			// Add Outdent
 			this.OutdentMenuItem = new MenuItem({label: 'Outdent', iconClass: 'smallArrowRightIcon'});
 			this.ContextMenu.addChild(this.OutdentMenuItem);
-			
 		},
 		
 		OnViewModelLoaded: function() {
@@ -213,6 +235,9 @@ define([
 			if ((this.ViewModel != null) && (this.ViewModel.ID != this._viewModelID))
 			{
 				this._viewModelID = this.ViewModel.ID;
+				
+				// Update Search Model
+				this.SearchControl.set('ViewModel', this.ViewModel.Search);
 				
 				// Update Tree Model
 				this.TreeModel.set('TreeControl', this.ViewModel);
@@ -241,6 +266,14 @@ define([
 					if ((newValue != null) && (newValue.length > 0))
 					{
 						this.ViewModel.Select.Execute([newValue[0].ID]);
+						
+						// Enable Add Button
+						this.AddButton.SetEnabled(true);
+					}
+					else
+					{
+						// Disable Add Button
+						this.AddButton.SetEnabled(false);
 					}
 				}));
 						

@@ -151,6 +151,14 @@
   width: 24px;
 }
 
+.newIcon 
+{
+  background-image:  url('./images/New.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
+
 .smallCopyIcon 
 {
   background-image:  url('./images/Copy.svg');
@@ -202,6 +210,14 @@
 .smallUndoIcon 
 {
   background-image:  url('./images/Undo.svg');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}
+
+.smallNewIcon 
+{
+  background-image:  url('./images/New.svg');
   background-size: 16px 16px;
   height: 16px;
   width: 16px;
