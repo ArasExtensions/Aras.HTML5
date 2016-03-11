@@ -103,7 +103,7 @@ define([
 			this.SearchControl.startup();
 			
 			// Create Search Dialog
-			this.SearchDialog = new Dialog({content: this.SearchControl, title: 'Select Item', style: 'width: 500px; height: 600px;'});
+			this.SearchDialog = new Dialog({onHide: lang.hitch(this, this._SearchDialogClosed), content: this.SearchControl, title: 'Select Item', style: 'width: 500px; height: 600px;'});
 			
 			dijit.Tooltip.defaultPosition = ['above', 'below'];
 			
@@ -149,9 +149,6 @@ define([
 			this.AddButton = new Button({ iconClass: 'newIcon'});
 			this.Toolbar.addChild(this.AddButton);
 			var addtooltip = new Tooltip({connectId: this.AddButton.id, label: 'Add Existing Item'});
-			this.AddButton.set('onClick', lang.hitch(this, function() {
-				this.SearchDialog.show();
-			}));
 			
 			// Create Cut Button
 			this.CutButton = new Button({ iconClass: 'cutIcon'});
@@ -229,6 +226,14 @@ define([
 			this.ContextMenu.addChild(this.OutdentMenuItem);
 		},
 		
+		_SearchDialogClosed: function() {
+		
+			if (this.ViewModel != null)
+			{
+				this.ViewModel.SearchClosed.Execute();
+			}
+		},
+		
 		OnViewModelLoaded: function() {
 			this.inherited(arguments);
 				
@@ -245,6 +250,7 @@ define([
 				// Connect Buttons
 				this.SaveButton.set('ViewModel', this.ViewModel.Save);
 				this.UndoButton.set('ViewModel', this.ViewModel.Undo);
+				this.AddButton.set('ViewModel', this.ViewModel.Add);
 				this.CutButton.set('ViewModel', this.ViewModel.Cut);
 				this.CopyButton.set('ViewModel', this.ViewModel.Copy);
 				this.PasteButton.set('ViewModel', this.ViewModel.Paste);
@@ -266,20 +272,26 @@ define([
 					if ((newValue != null) && (newValue.length > 0))
 					{
 						this.ViewModel.Select.Execute([newValue[0].ID]);
-						
-						// Enable Add Button
-						this.AddButton.SetEnabled(true);
 					}
-					else
-					{
-						// Disable Add Button
-						this.AddButton.SetEnabled(false);
-					}
+
 				}));
 						
 				// Switch on ExpandAll and CollapseAll Buttons
 				this.ExpandAllButton.SetEnabled(true);
-				this.CollapseAllButton.SetEnabled(true);				
+				this.CollapseAllButton.SetEnabled(true);	
+
+				// Watch for Changes in ShowSearch
+				this.ViewModel.watch('ShowSearch', lang.hitch(this, function(name, oldValue, newValue) {
+					
+					if (newValue)
+					{
+						this.SearchDialog.show();
+					}
+					else
+					{
+						this.SearchDialog.hide();
+					}
+				}));
 			}
 		},
 		
