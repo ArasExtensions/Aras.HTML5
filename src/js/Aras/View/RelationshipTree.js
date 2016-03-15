@@ -104,6 +104,7 @@ define([
 			
 			// Create Search Dialog
 			this.SearchDialog = new Dialog({onHide: lang.hitch(this, this._SearchDialogClosed), content: this.SearchControl, title: 'Select Item', style: 'width: 500px; height: 600px;'});
+			this.SearchDialog.startup();
 			
 			dijit.Tooltip.defaultPosition = ['above', 'below'];
 			
