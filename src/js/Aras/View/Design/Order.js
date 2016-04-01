@@ -56,19 +56,19 @@ define([
 			this.Toolbar = new Toolbar({ region: 'top' });
 			this.addChild(this.Toolbar);
 		
-			// Create Save Button
-			this.SaveButton = new Button({ title: 'Update BOM and Save', iconClass: 'saveIcon'});
-			this.Toolbar.addChild(this.SaveButton);
-			
-			// Create UpdateBOM Button
-			this.UpdateBOMButton = new Button({ title: 'Update BOM', iconClass: 'compileIcon'});
-			this.Toolbar.addChild(this.UpdateBOMButton);
-			
-			this.Toolbar.addChild(new ToolbarSeparator());
-			
 			// Create Refresh Button
 			this.RefreshButton = new Button({ title: 'Refresh', iconClass: 'refreshIcon'});
 			this.Toolbar.addChild(this.RefreshButton);
+			
+			this.Toolbar.addChild(new ToolbarSeparator());
+			
+			// Create UpdateBOM Button
+			this.UpdateBOMButton = new Button({ title: 'Update BOM', iconClass: 'partFamilyIcon'});
+			this.Toolbar.addChild(this.UpdateBOMButton);
+			
+			// Create Save Button
+			this.SaveButton = new Button({ title: 'Update BOM and Save', iconClass: 'saveIcon'});
+			this.Toolbar.addChild(this.SaveButton);
 
 			// Create BOM
 			this.BOM = new Grid({ style: 'width: 500px; height: 100%;', region: 'right' });

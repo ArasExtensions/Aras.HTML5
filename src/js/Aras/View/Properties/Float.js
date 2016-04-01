@@ -50,9 +50,10 @@ define([
 			
 			// Watch for changes in Control value
 			this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
-				
+		
 				if (isNaN(newValue))
 				{
+					// Not a valid number, reset to old value
 					this.set("value", oldValue);
 				}
 				else
@@ -61,28 +62,37 @@ define([
 					var oldnumber = Number(oldValue);
 				
 					if (oldnumber !== newnumber)
-					{						
-						// Update ViewModel Value
-						this.ViewModel.set('Value', newnumber);
-						this.set("value", newnumber);
-						this.ViewModel.Write();
+					{	
+						if (!this._updateFromViewModel)
+						{
+							// Update ViewModel Value
+							this.ViewModel.set('Value', newnumber);	
+							this.ViewModel.Write();
+						}
 					}
 				}
 					
 			}));
 			
-			// Watch for changes in ViewModel
+			// Unwatch current
 			if (this._viewModelValueHandle != null)
 			{
 				this._viewModelValueHandle.unwatch();
 			}
 			
+			// Watch for changes in ViewModel
 			this._viewModelValueHandle = this.ViewModel.watch('Value', lang.hitch(this, function(name, oldValue, newValue) {
-					
+				
 				if (newValue)
 				{
+					// Stop ViewModel Update
+					this._updateFromViewModel = true;
+
 					// Set Value
 					this.set("value", this.ViewModel.Value);
+					
+					// Start
+					this._updateFromViewModel = false;
 				}
 					
 			}));

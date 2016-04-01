@@ -32,6 +32,8 @@ define([
 			
 		_viewModelEnabledHandle: null,
 		
+		_updateFromViewModel: null,
+		
 		constructor: function() {
 
 		},
@@ -39,8 +41,10 @@ define([
 		startup: function() {
 			this.inherited(arguments);
 
-			// Prevent default dehaviour when Property is ReadOnly
+			// Default UpdateFromViewModel
+			this._updateFromViewModel = false;
 			
+			// Prevent default dehaviour when Property is ReadOnly
 			this.on('keydown', lang.hitch(this, function(event){
 				
 				if (this.readOnly)

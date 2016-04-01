@@ -45,17 +45,26 @@ define([
 		OnViewModelLoaded: function() {
 			this.inherited(arguments);
 
+			// Set Value from ViewModel
+			this.set("value", this.ViewModel.Value);
+			
+			// Remove Existing ViewModel watch
 			if (this._viewModelValueHandle != null)
 			{
 				this._viewModelValueHandle.unwatch();
 			}
 			
-			this.set("value", this.ViewModel.Value);
-			
+			// Watch for changes in the ViewModel
 			this._viewModelValueHandle = this.ViewModel.watch('Value', lang.hitch(this, function(name, oldValue, newValue) {
 					
+				// Stop ViewModel Update
+				this._updateFromViewModel = true;
+				
 				// Set Value
-				this.set("value", newValue);	
+				this.set("value", newValue);
+
+				// Stop ViewModel Update
+				this._updateFromViewModel = false;				
 			}));
 		}
 

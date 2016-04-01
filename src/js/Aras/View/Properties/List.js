@@ -126,8 +126,12 @@ define([
 					
 					if (newValue !== this.ViewModel.Value)
 					{
-						this.ViewModel.Value = newValue;
-						this.ViewModel.Write();
+						if (!this._updateFromViewModel)
+						{
+							// Update ViewModel
+							this.ViewModel.Value = newValue;
+							this.ViewModel.Write();
+						}
 					}
 					
 				}));				
@@ -137,7 +141,14 @@ define([
 					
 					if (newValue !== this.get('value'))
 					{
+						// Stop ViewModel Update
+						this._updateFromViewModel = true;
+					
+						// Set Value
 						this.set('value', newValue);
+						
+						// Start ViewModel Update
+						this._updateFromViewModel = false;
 					}
 					
 				}));

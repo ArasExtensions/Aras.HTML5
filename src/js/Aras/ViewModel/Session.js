@@ -51,21 +51,40 @@ define([
 		
 		_processResponse: function(Response) {
 			
-			// Update Controls
+			// Create Controls
 			array.forEach(Response.ControlQueue, lang.hitch(this, function(control) {
 				
 				if (this._controlCache[control.ID] === undefined)
 				{
-					this._controlCache[control.ID] = new Control(this, control.ID);
+					this._controlCache[control.ID] = new Control(this, control.ID);	
+				}
+
+			}));
+		
+			// Create Commands
+			array.forEach(Response.CommandQueue, lang.hitch(this, function(command) {
+		
+				if (this._commandCache[command.ID] === undefined)
+				{
+					this._commandCache[command.ID] = new Command(this, command.ID);
 				}
 				
+			}));
+			
+			// Update Controls
+			array.forEach(Response.ControlQueue, lang.hitch(this, function(control) {
+								
 				this._controlCache[control.ID].set('Data', control);
 			}));
 		
 			// Update Commands
 			array.forEach(Response.CommandQueue, lang.hitch(this, function(command) {
-				this.Command(command.ID).set('Name', command.Name);
-				this.Command(command.ID).set('CanExecute', command.CanExecute);
+				
+				// Set Name
+				this._commandCache[command.ID].set('Name', command.Name);
+				
+				// Set CanExecute
+				this._commandCache[command.ID].set('CanExecute', command.CanExecute);
 			}));	
 		},
 				
@@ -76,16 +95,17 @@ define([
 								 data: json.stringify({ Name: Name })
 							   }).then(
 				lang.hitch(this, function(result) {
-			
-					// Process Response
-					this._processResponse(result);
-					
+
 					// Create Application
 					if (this._controlCache[result.Value.ID] === undefined)
 					{
 						this._controlCache[result.Value.ID] = new Control(this, result.Value.ID);
 					}
-				
+					
+					// Process Response
+					this._processResponse(result);
+					
+					// Set Data for Application
 					this._controlCache[result.Value.ID].set('Data', result.Value);
 					
 					return this._controlCache[result.Value.ID];
@@ -101,15 +121,16 @@ define([
 							   }).then(
 				lang.hitch(this, function(result) {
 				
-					// Process Response
-					this._processResponse(result);
-					
 					// Create Plugin
 					if (this._controlCache[result.Value.ID] === undefined)
 					{
 						this._controlCache[result.Value.ID] = new Control(this, result.Value.ID);
 					}
-				
+					
+					// Process Response
+					this._processResponse(result);
+					
+					// Set Data for Plugin
 					this._controlCache[result.Value.ID].set('Data', result.Value);
 					
 					return this._controlCache[result.Value.ID];
@@ -168,6 +189,8 @@ define([
 								  handleAs: 'json',
 								  data: json.stringify(Parameters)
 								}).then(lang.hitch(this, function(response){
+									
+					// Process Response
 					this._processResponse(response);
 				})
 			);				
@@ -181,6 +204,8 @@ define([
 								  handleAs: 'json',
 								  data: json.stringify(Control.Data)
 								}).then(lang.hitch(this, function(response){
+									
+					// Process Response
 					this._processResponse(response);
 				})
 			);				
