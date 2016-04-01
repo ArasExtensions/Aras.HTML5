@@ -46,6 +46,8 @@ define([
 		
 		SaveButton: null,
 		
+		UpdateBOMButton: null,
+		
 		startup: function() {
 			
 			this.inherited(arguments);
@@ -55,8 +57,12 @@ define([
 			this.addChild(this.Toolbar);
 		
 			// Create Save Button
-			this.SaveButton = new Button({ title: 'Save Configuraiton', iconClass: 'saveIcon'});
+			this.SaveButton = new Button({ title: 'Update BOM and Save', iconClass: 'saveIcon'});
 			this.Toolbar.addChild(this.SaveButton);
+			
+			// Create UpdateBOM Button
+			this.UpdateBOMButton = new Button({ title: 'Update BOM', iconClass: 'compileIcon'});
+			this.Toolbar.addChild(this.UpdateBOMButton);
 			
 			this.Toolbar.addChild(new ToolbarSeparator());
 			
@@ -89,6 +95,9 @@ define([
 					
 				// Update Save
 				this.SaveButton.set('ViewModel', this.ViewModel.Save);
+								
+				// Update UpdateBOM
+				this.UpdateBOMButton.set('ViewModel', this.ViewModel.UpdateBOM);
 			}
 		}
 	});

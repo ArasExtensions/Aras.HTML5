@@ -1,0 +1,13 @@
+<svg width="64" xmlns="http://www.w3.org/2000/svg" height="64" viewBox="0 0 64 64" xmlns:xlink="http://www.w3.org/1999/xlink" enable-background="new 0 0 64 64">
+<g transform="translate(0 -924.36218)">
+<g fill="#edc87e">
+<path d="m51,966.362-38,0-8,12 54,0z"/>
+<path d="m51.5,961.362-38.5,0-8,12 54,0z"/>
+</g>
+<g fill="#76a797">
+<path d="m47,952.362l-15,18-15-18h30z"/>
+<path d="m24,934.362h16v20h-16z"/>
+</g>
+</g>
+<path fill="#fff" d="m57,51-50,0-2-2 54,0z"/>
+</svg>
