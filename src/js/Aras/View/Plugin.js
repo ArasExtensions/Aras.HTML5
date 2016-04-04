@@ -26,8 +26,9 @@ define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
 	'dojo/_base/array',
+	'./ErrorDialog',
 	'../ViewModel/Server'
-], function(declare, lang, array, Server) {
+], function(declare, lang, array, ErrorDialog, Server) {
 	
 	return declare('Aras.View.Plugin', null, {
 		
@@ -46,7 +47,18 @@ define([
 		Context: null,
 		
 		constructor: function(args) {
+		
 			
+		},
+		
+		_displayError: function() {
+			
+			if (this.ViewModel != null)
+			{
+				var errordialog = new ErrorDialog({ ErrorMessage: this.ViewModel.ErrorMessage });
+				errordialog.show();
+				this.ViewModel.InError = false;
+			}
 		},
 		
 		Initialise: function() {
@@ -74,6 +86,22 @@ define([
 								
 						// Set ViewModel
 						this.set("ViewModel", plugin);
+						
+						// Check if InError
+						if (plugin.InError)
+						{
+							this._displayError();
+						}
+				
+						// Watch for Errors
+						plugin.watch('InError', lang.hitch(this, function(name, oldValue, newValue) {
+							
+							if (newValue)
+							{
+								this.displayError();
+							}
+						}));
+						
 										
 					}));
 				}));

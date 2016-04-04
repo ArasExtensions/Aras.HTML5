@@ -1,4 +1,4 @@
-<!--
+/*
   Aras.HTML5 provides a HTML5 client library to build Aras Innovator Applications
 
   Copyright (C) 2015 Processwall Limited.
@@ -20,44 +20,36 @@
   Address: The Winnowing House, Mill Lane, Askham Richard, York, YO23 3NW, United Kingdom
   Tel:     +44 113 815 3440
   Email:   support@processwall.com
--->
+*/
 
-<html>
+define([
+	'dojo/_base/declare',
+	'dojo/_base/lang',
+	'dojo/dom',
+	'dijit/Dialog',
+	'dijit/layout/ContentPane'
+], function(declare, lang, dom, Dialog, ContentPane) {
+	
+	return declare('Aras.View.ErrorDialog', [Dialog], {
+			
+		ErrorMessage: null,
+		
+		constructor: function() {
+			this.inherited(arguments);
+		},
+				
+		startup: function() {
+			this.inherited(arguments);
 
-	<head>
-		<title>Variants Order Plugin</title>
+			// Create Layout
+			var layout = new ContentPane({content: '<table><tr><td class="errorIcon"></td><td>' + this.ErrorMessage + '</td></tr></table>'});
+			this.addChild(layout);
+						
+			// Set Title
+			this.set('title', 'Error Message');			
+		}
 		
-		<meta http-equiv="cache-control" content="no-cache" />
 		
-		<style>
-			@import "../../../../Themes/tundra/tundra.css";
-		</style>
 		
-		<script>
-			dojoConfig={
-				has: {"dojo-firebug": true},
-				parseOnLoad: false,
-				async: true
-			};
-		</script>
-		
-		<script type="text/javascript" src="../../../../../dojo/dojo.js"></script>
-		
-		<script>
-			require(['Aras/View/Design/Plugins/Order', 'dojo/dom', 'dojo/domReady!'], function(Order, dom) {
-				var target = dom.byId('main');			
-				var order = new Order({ URL: '../../../../../../..', DatabaseID: 'CMB', Username: 'cavem', Password: '607920b64fe136f9ab2389e371852af2', Name: 'Aras.ViewModel.Design.Order', Context: '422261BF716348E8B5DF0E1A550CE46E', style: 'width: 1000px; height: 500px'}, target);
-				order.startup();
-			});
-		</script>
-		
-	</head>
-	
-	<body class="tundra">
-	
-		<div id="main">
-		</div>
-		
-	</body>
-	
-</html>
+	});
+});

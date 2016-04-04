@@ -175,6 +175,14 @@
   width: 24px;
 }
 
+.errorIcon 
+{
+  background-image:  url('./images/Error.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
+
 .smallCopyIcon 
 {
   background-image:  url('./images/Copy.svg');
