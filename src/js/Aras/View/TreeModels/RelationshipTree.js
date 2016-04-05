@@ -37,6 +37,8 @@ define([
 		ChildrenWatch: null,
 		
 		LabelWatch: null,
+		
+		LoadedWatch: null,
 
 		constructor: function(args) {
 			
@@ -45,6 +47,8 @@ define([
 			this.ChildrenWatch = {};
 			
 			this.LabelWatch = {};
+			
+			this.LoadedWatch = {};
 			
 			// Create Dummy Item
 			this.RootNode = {ID: '-1', Name: 'Root', Loaded: true, ChildrenLoaded: true, Children: [] };
@@ -163,23 +167,34 @@ define([
 		},
 		
 		getLabel: function(item){
-
-			// Watch for chnages in Name
+			
 			if (item.ID != '-1')
 			{
-				if (!this.LabelWatch[item.ID])
+				if (item.Loaded)
 				{
-					this.LabelWatch[item.ID] = item.watch('Name', lang.hitch(this, 'onChange', item));
-				}	
-			}
-			
-			if (item.Loaded)
-			{
-				return item.Name;
+					// Watch for changes in Name	
+					if (!this.LabelWatch[item.ID])
+					{
+						this.LabelWatch[item.ID] = item.watch('Name', lang.hitch(this, 'onChange', item));
+					}	
+				
+					return item.Name;
+				}
+				else
+				{
+					// Watch for changes in Loaded
+					if (!this.LoadedWatch[item.ID])
+					{
+						this.LoadedWatch[item.ID] = item.watch('Loaded', lang.hitch(this, 'onChange', item));
+					}		
+				
+					return null;
+				}
 			}
 			else
 			{
-				return null;
+				// Root Node
+				return item.Name;
 			}
 		},
 		
@@ -192,7 +207,7 @@ define([
 		},
 		
 		onChange: function(item){
-			
+		
 		},
 		
 		onChildrenChange: function(item, children){
