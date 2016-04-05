@@ -51,16 +51,6 @@ define([
 			
 		},
 		
-		_displayError: function() {
-			
-			if (this.ViewModel != null)
-			{
-				var errordialog = new ErrorDialog({ ErrorMessage: this.ViewModel.ErrorMessage });
-				errordialog.show();
-				this.ViewModel.InError = false;
-			}
-		},
-		
 		Initialise: function() {
 			
 			// Check for Top Aras and update connection parameters
@@ -74,6 +64,9 @@ define([
 			
 			// Create Server
 			var server = new Server({ URL: this.URL });
+			
+			// Watch for Errors
+			this.Server.watch('InError', lang.hitch(this, this._displayServerError));
 			
 			// Get Database
 			server.Database(this.DatabaseID).then(lang.hitch(this, function(database) {
@@ -90,7 +83,7 @@ define([
 						// Check if InError
 						if (plugin.InError)
 						{
-							this._displayError();
+							this._displayPluginError();
 						}
 				
 						// Watch for Errors
@@ -98,7 +91,7 @@ define([
 							
 							if (newValue)
 							{
-								this.displayError();
+								this._displayPluginError();
 							}
 						}));
 						
@@ -106,6 +99,46 @@ define([
 					}));
 				}));
 			}));
+		},
+		
+		_displayServerError: function() {
+			
+			if (this.Server != null)
+			{
+				if (this.Server.InError)
+				{
+					// Prepare Message Text
+					var messagetext = this.Server.ErrorMessage;
+					
+					if (this.Server.ErrorCode == 0)
+					{
+						messagetext = 'Unable to connect to Innovator Server';
+					}
+					
+					// Display Error Message
+					var message = ErrorDialog({ErrorMessage: messagetext});
+					message.show();
+				
+					// Reset Error
+					this.Server.ResetError();
+				}
+			}
+		},
+		
+		_displayPluginError: function() {
+			
+			if (this.ViewModel != null)
+			{
+				if (this.ViewModel.InError)
+				{
+					// Display Error Message
+					var errordialog = new ErrorDialog({ ErrorMessage: this.ViewModel.ErrorMessage });
+					errordialog.show();
+					
+					// Reset Error
+					this.ViewModel.InError = false;
+				}
+			}
 		}
 		
 	});

@@ -26,7 +26,7 @@ define([
 	'dojo/_base/declare',
 	'dojo/_base/array',
 	'dojo/_base/lang',
-	'dojo/Stateful',
+	'dojo/Stateful'
 ], function(declare, array, lang, Stateful) {
 	
 	return declare('Aras.ViewModel.Control', [Stateful], {

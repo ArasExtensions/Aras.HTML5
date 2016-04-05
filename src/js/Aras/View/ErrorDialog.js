@@ -46,7 +46,7 @@ define([
 			this.addChild(layout);
 						
 			// Set Title
-			this.set('title', 'Error Message');			
+			this.set('title', 'Error');			
 		}
 		
 		

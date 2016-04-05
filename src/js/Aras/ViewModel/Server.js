@@ -27,17 +27,42 @@ define([
 	'dojo/request',
 	'dojo/_base/array',
 	'dojo/_base/lang',
+	'dojo/Stateful',
 	'./Database'
-], function(declare, request, array, lang, Database) {
+], function(declare, request, array, lang, Stateful, Database) {
 	
-	return declare('Aras.ViewModel.Server', null, {
+	return declare('Aras.ViewModel.Server', Stateful, {
 		
 		URL: null,
+		
+		InError: null,
+		
+		ErrorCode: null,
+		
+		ErrorMessage: null,
 		
 		_databaseCache: new Object(),
 		
 		constructor: function(args) {
+			
 			declare.safeMixin(this, args);
+		
+			this.ResetError();
+		},
+		
+		ResetError: function() {
+		
+			this.set('InError', false);
+			this.set('ErrorCode', null);
+			this.set('ErrorMessage', null);
+		},
+		
+		ProcessError: function(error) {
+						
+			this.set('ErrorCode', error.response.status);
+			this.set('ErrorMessage', error.response.text);
+			this.set('InError', true);
+			
 		},
 		
 		Databases: function() {
@@ -46,6 +71,7 @@ define([
 								 handleAs: 'json'
 							   }).then(
 				lang.hitch(this, function(result) {
+			
 					var ret = [];
 			
 					array.forEach(result, lang.hitch(this, function(entry) {
@@ -60,6 +86,10 @@ define([
 					}));
 					
 					return ret;
+				}),
+				lang.hitch(this, function(error) {
+					this.ProcessError(error);
+					return [];
 				})
 			);
 		},
@@ -78,6 +108,10 @@ define([
 					}
 
 					return this._databaseCache[entry.ID];
+				}),
+				lang.hitch(this, function(error) {
+					this.ProcessError(error);
+					return null;
 				})
 			);
 		}

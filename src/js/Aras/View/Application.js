@@ -27,8 +27,9 @@ define([
 	'dojo/_base/lang',
 	'dojo/_base/array',
 	'./Login',
+	'./ErrorDialog',
 	'../ViewModel/Server'
-], function(declare, lang, array, Login, Server) {
+], function(declare, lang, array, Login, ErrorDialog, Server) {
 	
 	return declare('Aras.View.Application', null, {
 		
@@ -54,6 +55,9 @@ define([
 			
 			// Create Server
 			this.Server = new Server({ URL: this.URL });
+			
+			// Watch for Errors
+			this.Server.watch('InError', lang.hitch(this, this._displayServerError));
 			
 			if ((this.Database != null) && (this.Username != null) && (this.Password != null))
 			{				
@@ -84,6 +88,36 @@ define([
 				}
 				
 				this.Login.show();
+			}
+		},
+		
+		_displayServerError: function() {
+			
+			if (this.Server != null)
+			{
+			if (this.Server.InError)
+			{
+					// Close Login Dialog
+					if (this.Login)
+					{
+						this.Login.hide();
+					}
+	
+					// Prepare Message Text
+					var messagetext = this.Server.ErrorMessage;
+					
+					if (this.Server.ErrorCode == 0)
+					{
+						messagetext = 'Unable to connect to Innovator Server';
+					}
+					
+					// Display Error Message
+					var message = ErrorDialog({ErrorMessage: messagetext});
+					message.show();
+				
+					// Reset Error
+					this.Server.ResetError();
+				}
 			}
 		}
 		

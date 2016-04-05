@@ -109,6 +109,10 @@ define([
 					this._controlCache[result.Value.ID].set('Data', result.Value);
 					
 					return this._controlCache[result.Value.ID];
+				}),
+				lang.hitch(this, function(error) {
+					this.Database.Server.ProcessError(error);
+					return null;
 				})
 			);
 		},
@@ -134,6 +138,10 @@ define([
 					this._controlCache[result.Value.ID].set('Data', result.Value);
 					
 					return this._controlCache[result.Value.ID];
+				}),
+				lang.hitch(this, function(error) {
+					this.Database.Server.ProcessError(error);
+					return null;
 				})
 			);
 		},
@@ -143,14 +151,18 @@ define([
 			request.get(this.Database.Server.URL + '/controls/' + Control.ID, 
 						{ headers: {'Accept': 'application/json'}, 
 						  handleAs: 'json'
-						}).then(lang.hitch(this, function(result) {
+						}).then(
+				lang.hitch(this, function(result) {
 								   
-				// Update Data on Control
-				Control.set("Data", result.Value);
+					// Update Data on Control
+					Control.set("Data", result.Value);
 						
-				// Process Response
-				this._processResponse(result);
-			}));	
+					// Process Response
+					this._processResponse(result);
+				}),
+				lang.hitch(this, function(error) {
+					this.Database.Server.ProcessError(error);
+				}));	
 		},
 		
 		Control: function(ID) {
@@ -188,10 +200,14 @@ define([
 								{ headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, 
 								  handleAs: 'json',
 								  data: json.stringify(Parameters)
-								}).then(lang.hitch(this, function(response){
+								}).then(
+				lang.hitch(this, function(response){
 									
 					// Process Response
 					this._processResponse(response);
+				}),
+				lang.hitch(this, function(error) {
+					this.Database.Server.ProcessError(error);
 				})
 			);				
 		},
@@ -203,10 +219,14 @@ define([
 								{ headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, 
 								  handleAs: 'json',
 								  data: json.stringify(Control.Data)
-								}).then(lang.hitch(this, function(response){
+								}).then(
+				lang.hitch(this, function(response){
 									
 					// Process Response
 					this._processResponse(response);
+				}),
+				lang.hitch(this, function(error) {
+					this.Database.Server.ProcessError(error);
 				})
 			);				
 		}
