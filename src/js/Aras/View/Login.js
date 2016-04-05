@@ -57,25 +57,25 @@ define([
 		
 		startup: function() {
 			this.inherited(arguments);
-		
+
 			// Create Layout
-			var layout = new ContentPane({content: '<table><tr><td>Database:</td><td id="logindatabase"></td></tr><tr><td>Username:</td><td id="loginusername"></td></tr><tr><td>Password:</td><td id="loginpassword"></td></tr><tr><td></td><td align="right"><div id="logincancel"></div><div id="loginlogin"></div></td></tr></table>'});
+			var layout = new ContentPane({content: '<table><tr><td>Database:</td><td id="logindatabase"></td></tr><tr><td>Username:</td><td id="loginusername"></td></tr><tr><td>Password:</td><td id="loginpassword"></td></tr><tr><td></td><td align="right"><div id="loginlogin"></div><div id="logincancel"></div></td></tr></table>'});
 			this.addChild(layout);
-				
+			
 			// Add Database 
 			var databasetarget = dom.byId('logindatabase');	
 			var dataStore = Memory({data: []});
-			this.Database = new ComboBox({store: dataStore}, databasetarget);
+			this.Database = new ComboBox({store: dataStore, disabled: true}, databasetarget);
 			this.Database.startup();
 				
 			// Add Username
 			var usernametarget = dom.byId('loginusername');	
-			this.Username = new TextBox({}, usernametarget);
+			this.Username = new TextBox({disabled: true}, usernametarget);
 			this.Username.startup();
 			
 			// Add Password
 			var passwordtarget = dom.byId('loginpassword');	
-			this.Password = new TextBox({type: 'password'}, passwordtarget);
+			this.Password = new TextBox({type: 'password', disabled: true}, passwordtarget);
 			this.Password.startup();
 			
 			// Add Cancel Button
@@ -86,8 +86,7 @@ define([
 			this.CancelButton.set('onClick', lang.hitch(this, function() {
 				this.hide();	
 			}));
-			
-			
+	
 			// Add Login Button
 			var loginbuttontarget = dom.byId('loginlogin');
 			this.LoginButton = new Button({label: 'Login'}, loginbuttontarget);
@@ -133,6 +132,11 @@ define([
 				{	
 					this.Database.set('item', data[0]);
 				}
+				
+				// Enable Controls
+				this.Database.set('disabled', false);
+				this.Username.set('disabled', false);
+				this.Password.set('disabled', false);
 				
 				// Enable Buttons
 				this.CancelButton.SetEnabled(true);
