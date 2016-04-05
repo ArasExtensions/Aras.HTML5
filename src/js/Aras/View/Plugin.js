@@ -46,6 +46,8 @@ define([
 		
 		Context: null,
 		
+		Server: null,
+		
 		constructor: function(args) {
 		
 			
@@ -63,13 +65,13 @@ define([
 			}
 			
 			// Create Server
-			var server = new Server({ URL: this.URL });
+			this.Server = new Server({ URL: this.URL });
 			
 			// Watch for Errors
 			this.Server.watch('InError', lang.hitch(this, this._displayServerError));
 			
 			// Get Database
-			server.Database(this.DatabaseID).then(lang.hitch(this, function(database) {
+			this.Server.Database(this.DatabaseID).then(lang.hitch(this, function(database) {
 		
 				// Login
 				database.Login(this.Username, this.Password).then(lang.hitch(this, function(session){

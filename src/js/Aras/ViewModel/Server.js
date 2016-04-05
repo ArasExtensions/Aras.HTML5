@@ -60,7 +60,16 @@ define([
 		ProcessError: function(error) {
 						
 			this.set('ErrorCode', error.response.status);
-			this.set('ErrorMessage', error.response.text);
+			
+			if (error.response.text.charAt(0) === '"' && error.response.text.charAt(error.response.text.length - 1) === '"')
+			{
+				this.set('ErrorMessage', error.response.text.substr(1, error.response.text.length - 2));
+			}
+			else
+			{
+				this.set('ErrorMessage', error.response.text);
+			}
+			
 			this.set('InError', true);
 			
 		},
