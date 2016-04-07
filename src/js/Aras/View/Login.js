@@ -33,8 +33,9 @@ define([
 	'dijit/form/TextBox',
 	'dijit/layout/ContentPane',
 	'dojo/store/Memory',
+	'dojox/widget/Standby',
 	'./Button'
-], function(declare, lang, dom, domconstruct, MD5, Dialog, ComboBox, TextBox, ContentPane, Memory, Button) {
+], function(declare, lang, dom, domconstruct, MD5, Dialog, ComboBox, TextBox, ContentPane, Memory, Standby, Button) {
 	
 	return declare('Aras.View.Login', [Dialog], {
 		
@@ -49,6 +50,8 @@ define([
 		LoginButton: null,
 		
 		CancelButton: null,
+		
+		Standby: null,
 		
 		constructor: function(args) {
 			
@@ -65,17 +68,23 @@ define([
 			// Add Database 
 			var databasetarget = dom.byId('logindatabase');	
 			var dataStore = Memory({data: []});
-			this.Database = new ComboBox({store: dataStore, disabled: true}, databasetarget);
+			this.Database = new ComboBox({store: dataStore}, databasetarget);
 			this.Database.startup();
-				
+			
+			// Add Standy for Database
+			this.Standby = new Standby({target: this.Database.id});
+			document.body.appendChild(this.Standby.domNode);
+			this.Standby.startup();
+			this.Standby.show();
+			
 			// Add Username
 			var usernametarget = dom.byId('loginusername');	
-			this.Username = new TextBox({disabled: true}, usernametarget);
+			this.Username = new TextBox({}, usernametarget);
 			this.Username.startup();
 			
 			// Add Password
 			var passwordtarget = dom.byId('loginpassword');	
-			this.Password = new TextBox({type: 'password', disabled: true}, passwordtarget);
+			this.Password = new TextBox({type: 'password'}, passwordtarget);
 			this.Password.startup();
 			
 			// Add Cancel Button
@@ -112,7 +121,7 @@ define([
 					}));
 				}));
 			}));
-			
+						
 			// Get Database
 			this.Application.Server.Databases().then(lang.hitch(this, function(databases) {
 				
@@ -133,14 +142,12 @@ define([
 					this.Database.set('item', data[0]);
 				}
 				
-				// Enable Controls
-				this.Database.set('disabled', false);
-				this.Username.set('disabled', false);
-				this.Password.set('disabled', false);
-				
 				// Enable Buttons
 				this.CancelButton.SetEnabled(true);
 				this.LoginButton.SetEnabled(true);
+				
+				// Remove Standby
+				this.Standby.hide();
 			}));
 
 		}
