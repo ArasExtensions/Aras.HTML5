@@ -99,11 +99,11 @@ define([
 			this.inherited(arguments);
 			
 			// Create Search Control
-			this.SearchControl = new Search({style: 'width:100%; height: 100%'});
+			this.SearchControl = new Search({style: 'width:500px; height: 600px;'});
 			this.SearchControl.startup();
 			
 			// Create Search Dialog
-			this.SearchDialog = new Dialog({onHide: lang.hitch(this, this._SearchDialogClosed), content: this.SearchControl, title: 'Select Item', style: 'width: 500px; height: 600px;'});
+			this.SearchDialog = new Dialog({onHide: lang.hitch(this, this._SearchDialogClosed), content: this.SearchControl, title: 'Select Item'});
 			this.SearchDialog.startup();
 			
 			dijit.Tooltip.defaultPosition = ['above', 'below'];
