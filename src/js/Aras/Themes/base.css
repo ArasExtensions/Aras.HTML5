@@ -1,4 +1,7 @@
-﻿html, body
+﻿@import '../../dojo/resources/dojo.css';
+@import '../../dgrid/css/dgrid.css';
+
+html, body
 {
     height: 100%;
 	width: 100%;
