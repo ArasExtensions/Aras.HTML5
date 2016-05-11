@@ -48,6 +48,8 @@ define([
 		
 		CollapseAllButton: null,
 		
+		RefreshButton: null,
+		
 		SaveButton: null,
 		
 		AddButton: null,
@@ -129,6 +131,13 @@ define([
 			}));
 			
 			var collapsealltooltip = new Tooltip({connectId: this.CollapseAllButton.id, label: 'Collapse All Tree Nodes'});
+			
+			this.Toolbar.addChild(new ToolbarSeparator());
+			
+			// Create Refresh Button
+			this.RefreshButton = new Button({ iconClass: 'refreshIcon'});
+			this.Toolbar.addChild(this.RefreshButton);
+			var refreshtooltip = new Tooltip({connectId: this.RefreshButton.id, label: 'Refresh'});
 			
 			this.Toolbar.addChild(new ToolbarSeparator());
 			
@@ -249,6 +258,7 @@ define([
 				this.TreeModel.set('TreeControl', this.ViewModel);
 				
 				// Connect Buttons
+				this.RefreshButton.set('ViewModel', this.ViewModel.Refresh);
 				this.SaveButton.set('ViewModel', this.ViewModel.Save);
 				this.UndoButton.set('ViewModel', this.ViewModel.Undo);
 				this.AddButton.set('ViewModel', this.ViewModel.Add);
