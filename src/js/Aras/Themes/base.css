@@ -20,6 +20,14 @@ html, body
 	width: 100%;
 }
 
+.checkMarkIcon 
+{
+  background-image:  url('./images/CheckMark.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
+
 .searchIcon 
 {
   background-image:  url('./images/Search.svg');
