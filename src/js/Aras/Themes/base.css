@@ -20,6 +20,14 @@ html, body
 	width: 100%;
 }
 
+.editItemIcon 
+{
+  background-image:  url('./images/EditItem.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
+
 .checkMarkIcon 
 {
   background-image:  url('./images/CheckMark.svg');
