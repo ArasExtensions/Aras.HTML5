@@ -61,6 +61,9 @@ define([
 				this._viewModelValueHandle.unwatch();
 			}
 
+			// Watch for changes in Value on ViewModel
+			this._viewModelValueHandle = this.ViewModel.watch("Value", lang.hitch(this, this.OnViewModelValueChange));
+					
 			// Render Cell
 			this._renderCell();		
 		},
@@ -92,47 +95,45 @@ define([
 			}
 			else
 			{
-				if (this.Value == null)
-				{
-					// Need to create new Widget
-					switch(this.ViewModel.Value.Type)
+				when(this.ViewModel.Value).then(lang.hitch(this, function(valueviewmodel) {
+					
+					if (this.Value == null)
 					{
-						case 'Aras.ViewModel.Properties.Boolean':							
-							this.Value = new Boolean( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
-							break;
-						case 'Aras.ViewModel.Properties.String':							
-							this.Value = new String( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
-							break;
-						case 'Aras.ViewModel.Properties.List':							
-							this.Value = new List( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
-							break;
-						case 'Aras.ViewModel.Properties.Float':							
-							this.Value = new Float( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
-							break;								
-						default:
-							break;				
+						// Need to create new Widget
+						switch(valueviewmodel.Type)
+						{
+							case 'Aras.ViewModel.Properties.Boolean':							
+								this.Value = new Boolean( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
+								break;
+							case 'Aras.ViewModel.Properties.String':							
+								this.Value = new String( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
+								break;
+							case 'Aras.ViewModel.Properties.List':							
+								this.Value = new List( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
+								break;
+							case 'Aras.ViewModel.Properties.Float':							
+								this.Value = new Float( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
+								break;								
+							default:
+								console.debug('ViewModel Type not supported: ' + valueviewmodel);
+								break;				
+						}
+					
+						// Start Control
+						this.Value.startup();
+					
+						if (this.Node != null)
+						{
+							// Place Value Control in Node
+							this.Value.placeAt(this.Node);
+						}
 					}
-					
-					// Start Control
-					this.Value.startup();
-			
-					// Set ViewModel
-					this.Value.set("ViewModel", this.ViewModel.Value);
-					
-					// Watch for changes in Value on ViewModel
-					this._viewModelValueHandle = this.ViewModel.watch("Value", lang.hitch(this, this.OnViewModelValueChange));
-					
-					if (this.Node != null)
-					{
-						// Place Value Control in Node
-						this.Value.placeAt(this.Node);
-					}
-				}
-				else
-				{
+		
 					// Update Value ViewModel
-					this.Value.set("ViewModel", this.ViewModel.Value);
-				}
+					this.Value.set("ViewModel", valueviewmodel);				
+				}));
+				
+
 			}
 		}
 		
