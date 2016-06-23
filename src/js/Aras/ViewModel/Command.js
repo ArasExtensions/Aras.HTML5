@@ -39,9 +39,11 @@ define([
 		
 		CanExecute: null,
 		
-		constructor: function(Session, ID) {
+		constructor: function(Session, ID, Name, CanExecute) {
 			this.set('Session', Session);
 			this.set('ID', ID);
+			this.set('Name', Name);
+			this.set('CanExecute', CanExecute);
 		},
 		
 		Execute: function(Parameters) {

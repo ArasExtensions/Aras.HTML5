@@ -38,20 +38,21 @@ define([
 		ID: null,
 		
 		Type: null,
-		
-		Loaded: null,
-		
-		constructor: function(Session, ID) {
-
+				
+		constructor: function(Session, ID, Data) {
+			
 			// Set Session
 			this.set('Session', Session);
 			
 			// Set ID
 			this.set('ID', ID);
+				
+			// Set Data
+			this.set('Data', Data);
 			
-			// Set Loaded
-			this.set('Loaded', false);
-			
+			// Read Data
+			this._readData();
+				
 			// Watch for Data Updates
 			this.watch('Data', lang.hitch(this, function(name, oldValue, newValue) {
 				this._readData();
@@ -183,9 +184,6 @@ define([
 			
 			// Delete Type, not needed by Server
 			delete this.Data.Type;
-			
-			// Set Loaded
-			this.set('Loaded', true);
 		},
 	
 		Read: function() {

@@ -29,9 +29,10 @@ define([
 	'dojo/_base/array',
 	'dojo/json',
 	'dojo/when',
+	'dojo/Deferred',
 	'./Control',
 	'./Command'
-], function(declare, request, lang, array, json, when, Control, Command) {
+], function(declare, request, lang, array, json, when, Deferred, Control, Command) {
 	
 	return declare('Aras.ViewModel.Session', null, {
 		
@@ -49,45 +50,67 @@ define([
 			declare.safeMixin(this, args);
 		},
 		
-		_processResponse: function(Response) {
-			
-			// Create Controls
-			array.forEach(Response.ControlQueue, lang.hitch(this, function(control) {
-				
-				if (this._controlCache[control.ID] === undefined)
-				{
-					this._controlCache[control.ID] = new Control(this, control.ID);	
-				}
-
-			}));
-		
-			// Create Commands
-			array.forEach(Response.CommandQueue, lang.hitch(this, function(command) {
-		
+		_processCommands: function(Commands)
+		{
+			array.forEach(Commands, lang.hitch(this, function(command) {
+					
 				if (this._commandCache[command.ID] === undefined)
 				{
-					this._commandCache[command.ID] = new Command(this, command.ID);
+					// Create new Command
+					this._commandCache[command.ID] = new Command(this, command.ID, command.Name, command.CanExecute);
 				}
+				else
+				{
+					// Set Name
+					this._commandCache[command.ID].set('Name', command.Name);
 				
-			}));
+					// Set CanExecute
+					this._commandCache[command.ID].set('CanExecute', command.CanExecute);	
+				}
+			}));		
+		},
+		
+		_processResponse: function(Response) {
+	
+			// Create a Deferred for each Controls that is not already in Cache
+			array.forEach(Response.ControlQueue, lang.hitch(this, function(control) {
+						
+				// Ensure Control is in Cache
+				if (this._controlCache[control.ID] === undefined)
+				{
+					this._controlCache[control.ID] = new Deferred();	
+				}
+
+				// Process attached Commands
+				this._processCommands(control.Commands);
+			}));	
+			
+			// Process Command Queue
+			this._processCommands(Response.CommandQueue);
 			
 			// Update Controls
 			array.forEach(Response.ControlQueue, lang.hitch(this, function(control) {
-								
-				this._controlCache[control.ID].set('Data', control);
+
+				if (this._controlCache[control.ID].declaredClass === undefined)
+				{
+					// Create new Control
+					var newcontrol = new Control(this, control.ID, control);
+					
+					// Resolve Deferred
+					this._controlCache[control.ID].resolve(newcontrol);
+					
+					// Store new Control in Cache
+					this._controlCache[control.ID] = newcontrol;
+				}
+				else
+				{
+					// Set new Data in existing Control
+					this._controlCache[control.ID].set('Data', control);
+				}
 			}));
-		
-			// Update Commands
-			array.forEach(Response.CommandQueue, lang.hitch(this, function(command) {
-				
-				// Set Name
-				this._commandCache[command.ID].set('Name', command.Name);
-				
-				// Set CanExecute
-				this._commandCache[command.ID].set('CanExecute', command.CanExecute);
-			}));	
+
 		},
-				
+		
 		Application: function(Name) {
 				return request.put(this.Database.Server.URL + '/applications', 
 							   { headers: {'Content-Type': 'application/json', 'Accept': 'application/json'}, 
@@ -96,18 +119,22 @@ define([
 							   }).then(
 				lang.hitch(this, function(result) {
 
-					// Create Application
-					if (this._controlCache[result.Value.ID] === undefined)
-					{
-						this._controlCache[result.Value.ID] = new Control(this, result.Value.ID);
-					}
-					
 					// Process Response
 					this._processResponse(result);
 					
-					// Set Data for Application
-					this._controlCache[result.Value.ID].set('Data', result.Value);
+					// Process Attached Commands
+					this._processCommands(result.Value.Commands);
 					
+					// Create Application
+					if (this._controlCache[result.Value.ID] === undefined)
+					{
+						this._controlCache[result.Value.ID] = new Control(this, result.Value.ID, result.Value);
+					}
+					else
+					{
+						this._controlCache[result.Value.ID].set('Data', result.Value);
+					}
+										
 					return this._controlCache[result.Value.ID];
 				}),
 				lang.hitch(this, function(error) {
@@ -125,17 +152,21 @@ define([
 							   }).then(
 				lang.hitch(this, function(result) {
 				
-					// Create Plugin
-					if (this._controlCache[result.Value.ID] === undefined)
-					{
-						this._controlCache[result.Value.ID] = new Control(this, result.Value.ID);
-					}
-					
 					// Process Response
 					this._processResponse(result);
 					
-					// Set Data for Plugin
-					this._controlCache[result.Value.ID].set('Data', result.Value);
+					// Process Attached Commands
+					this._processCommands(result.Value.Commands);
+					
+					// Create Plugin
+					if (this._controlCache[result.Value.ID] === undefined)
+					{
+						this._controlCache[result.Value.ID] = new Control(this, result.Value.ID, result.Value);
+					}
+					else
+					{
+						this._controlCache[result.Value.ID].set('Data', result.Value);
+					}
 					
 					return this._controlCache[result.Value.ID];
 				}),
@@ -153,12 +184,15 @@ define([
 						  handleAs: 'json'
 						}).then(
 				lang.hitch(this, function(result) {
-								   
-					// Update Data on Control
-					Control.set("Data", result.Value);
-						
+							
 					// Process Response
 					this._processResponse(result);
+					
+					// Process Attached Commands
+					this._processCommands(result.Value.Commands);
+					
+					// Update Data on Control
+					Control.set("Data", result.Value);
 				}),
 				lang.hitch(this, function(error) {
 					this.Database.Server.ProcessError(error);
@@ -168,13 +202,7 @@ define([
 		Control: function(ID) {
 			
 			if (ID)
-			{		
-				if (this._controlCache[ID] === undefined)
-				{
-					this._controlCache[ID] = new Control(this, ID);
-					this._readControl(this._controlCache[ID]);
-				}
-	
+			{			
 				return this._controlCache[ID];
 			}
 			else
@@ -185,12 +213,14 @@ define([
 			
 		Command: function(ID) {
 			
-			if (this._commandCache[ID] === undefined)
+			if (ID)
 			{
-				this._commandCache[ID] = new Command(this, ID);
+				return this._commandCache[ID];
 			}
-	
-			return this._commandCache[ID];
+			else
+			{
+				return null;
+			}
 		},
 		
 		Execute: function(Command, Parameters) {

@@ -27,11 +27,12 @@ define([
 	'dojo/_base/lang',
 	'dojo/dom-construct',
 	'dojo/_base/array',
+	'dojo/when',
 	'./Control',
 	'./Properties/String',
 	'./Properties/List',
 	'./Properties/Float'
-], function(declare, lang, construct, array, Control, String, List, Float) {
+], function(declare, lang, construct, array, when, Control, String, List, Float) {
 	
 	return declare('Aras.View.Cell', [Control], {
 		
@@ -53,53 +54,29 @@ define([
 		
 		OnViewModelLoaded: function() {
 			this.inherited(arguments);
-				
+			
 			// Remove watch on ViewModel Value
 			if (this._viewModelValueHandle)
 			{
 				this._viewModelValueHandle.unwatch();
 			}
-			
-			// Remove watch on ViewModel Value Loaded
-			if (this._viewModelValueLoadedHandle)
-			{
-				this._viewModelValueLoadedHandle.unwatch();
-			}
-						
-			if (this.ViewModel != null)
-			{
-				if (this.ViewModel.Value.Loaded)
-				{
-					// Render Cell
-					this._renderCell();
-				}
-				else
-				{
-					this._viewModelValueLoadedHandle = this.ViewModel.Value.watch('Loaded', lang.hitch(this, function(name, oldValue, newValue) {
-					
-						if (newValue)
-						{
-							// Render Cell
-							this._renderCell();
-						}
-					
-					}));					
-				}
-			}
-			else
-			{				
-				// Render Cell
-				this._renderCell();
-			}
+
+			// Render Cell
+			this._renderCell();		
 		},
 		
 		OnViewModelValueChange: function(name, oldValue, newValue) {
 
-			if (this.Value != null)
-			{
-				// Update Value ViewModel
-				this.Value.set("ViewModel", newValue);
-			}
+			when(newValue, lang.hitch(this, function(viewmodel) {
+			
+				if (this.Value != null)
+				{
+					// Update Value ViewModel
+					this.Value.set("ViewModel", viewmodel);
+				}
+				
+			}));
+
 		},
 		
 		_renderCell: function() {

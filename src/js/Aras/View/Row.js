@@ -26,9 +26,10 @@ define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
 	'dojo/_base/array',
+	'dojo/when',
 	'./Control',
 	'./Cell',
-], function(declare, lang, array, Control, Cell) {
+], function(declare, lang, array, when, Control, Cell) {
 	
 	return declare('Aras.View.Row', [Control], {
 
@@ -64,11 +65,15 @@ define([
 			// Set ViewModel for each Cell
 			array.forEach(this.ViewModel.Cells, function(cellviewmodel, i) {	
 
-				if (this.Cells[i].ID != cellviewmodel.ID)
-				{
-					this.Cells[i].set('ViewModel', cellviewmodel);
-				}
-				
+				when(cellviewmodel, lang.hitch(this, function(viewmodel) {
+					
+					if (this.Cells[i].ID != viewmodel.ID)
+					{
+						this.Cells[i].set('ViewModel', viewmodel);
+					}			
+					
+				}));
+
 			}, this);			
 		}
 		

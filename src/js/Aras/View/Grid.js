@@ -26,12 +26,13 @@ define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
 	'dojo/_base/array',
+	'dojo/promise/all',
 	'./_Grid',
 	'dijit/layout/BorderContainer',
 	'./Control',
 	'./Column',
 	'./Row'
-], function(declare, lang, array, _Grid, BorderContainer, Control, Column, Row) {
+], function(declare, lang, array, all, _Grid, BorderContainer, Control, Column, Row) {
 	
 	return declare('Aras.View.Grid', [BorderContainer, Control], {
 			
@@ -39,24 +40,24 @@ define([
 		
 		Columns: null,
 		
-		ColumnsLoaded: null,
-		
+		NoColumns: null,
+			
 		_columnsHandle: null,
-		
+			
 		Rows: null,
+		
+		NoRows: null,
+		
+		_rowsHandle: null,
 		
 		SelectedRows: null,
 		
-		VisibleRows: null,
-
-		_rowsHandle: null,
-				
 		constructor: function() {
-			
-			this.ColumnsLoaded = false;
+
 			this.Columns = [];
+			this.NoColumns = 0;
 			this.Rows = [];
-			this.VisibleRows = 0;
+			this.NoRows = 0;
 		},
 		
 		startup: function() {
@@ -69,13 +70,13 @@ define([
 			// Process Grid Select Event
 			this._grid.on('dgrid-select', lang.hitch(this, function(event) {
 				
-				if (this.ViewModel != null && this.ViewModel.Loaded && this.ViewModel.Select.CanExecute)
+				if (this.ViewModel != null && this.ViewModel.Select.CanExecute)
 				{					
 					var Parameters = [];
 				
 					for(i=0; i<event.rows.length; i++)
 					{
-						if (this.Rows[event.rows[i].data.id].ViewModel != null && this.Rows[event.rows[i].data.id].ViewModel.Loaded)
+						if (this.Rows[event.rows[i].data.id].ViewModel != null)
 						{
 							Parameters.push(this.Rows[event.rows[i].data.id].ViewModel.ID);
 						}
@@ -88,111 +89,109 @@ define([
 
 		OnViewModelLoaded: function() {
 			this.inherited(arguments);
-	
+
 			// Watch for changes in Columns
-			if (!this._columnsHandle)
+			if (this._columnsHandle)
 			{
-				this._columnsHandle = this.ViewModel.watch("Columns", lang.hitch(this, this._updateColumns));
+				this._columnsHandle.unwatch();
 			}
+			
+			this._columnsHandle = this.ViewModel.watch("Columns", lang.hitch(this, this._updateColumns));
 	
 			// Watch for Changes in Rows
-			if (!this._rowsHandle)
+			if (this._rowsHandle)
 			{
-				this._rowsHandle = this.ViewModel.watch("Rows", lang.hitch(this, this._updateRows));
+				this._rowsHandle.unwatch();
 			}
+
+			this._rowsHandle = this.ViewModel.watch("Rows", lang.hitch(this, this._updateRows));
 			
 			// Update Columns
 			this._updateColumns();
-			
-			// Update Rows
-			this._updateRows();
 		},
 		
 		_updateColumns: function() {
-
-			if (this.Columns.length > this.ViewModel.Columns.length)
-			{
-				this.Columns = this.Columns.slice(0, this.ViewModel.Columns.length);
-			}
 		
-			array.forEach(this.ViewModel.Columns, function(columnviewmodel, i) {
-					
-				if (!this.Columns[i])
-				{
-					this.Columns[i] = new Column({ Grid: this });
-					this.Columns[i].startup();
-				}
-					
-				this.Columns[i].set('Index', i);
-				this.Columns[i].set('ViewModel', columnviewmodel);
-			}, this);
+			all(this.ViewModel.Columns).then(lang.hitch(this, function(columns) {
+	
+				array.forEach(columns, function(columnviewmodel, i) {
+				
+					// Ensure Column Exists
+					if (!this.Columns[i])
+					{
+						this.Columns[i] = new Column({ Grid: this });
+						this.Columns[i].startup();
+					}
+			
+					// Update Column
+					this.Columns[i].set('Index', i);
+					this.Columns[i].set('ViewModel', columnviewmodel);			
+	
+				}, this);
+			
+				// Update NoColumns
+				this.NoColumns = columns.length;
+			
+				// Update Rows
+				this._updateRows();
+				
+			}));
+
 		},
 
 		_updateRows: function() {
-					
-			if (this.ViewModel.Rows.length > this.Rows.length)
-			{
-				// Add additional Rows to Grid
-				var rowdata = [];
-				var rowdatacnt = 0;
-				var currentrowslength = this.Rows.length;
 				
-				for(i=currentrowslength; i<this.ViewModel.Rows.length; i++)
-				{
-					this.Rows[i] = new Row({ Grid: this });
-					this.Rows[i].startup();
-					this.Rows[i].set('Index', i);
+			all(this.ViewModel.Rows).then(lang.hitch(this, function(rows) {
+				
+				array.forEach(rows, function(rowviewmodel, i) {
 					
-					rowdata[rowdatacnt] = new Object();
-					rowdata[rowdatacnt]['id'] = i;
-							
-					for (j=0; j<this.Rows[i].Cells.length; j++) 
+					// Ensure Row Exists
+					if (!this.Rows[i])
 					{
-						rowdata[rowdatacnt][this.Columns[j].Name] = null;
+						this.Rows[i] = new Row({ Grid: this });
+						this.Rows[i].startup();
+						this.Rows[i].set('Index', i);
 					}
-
-					rowdatacnt++;					
-				}
 				
-				// Add new Rows to Grid
-				var gridrows = this._grid.renderArray(rowdata);
-				
-				// Store Grid Rows in Row Object
-				for (i=0; i<gridrows.length; i++)
-				{
-					this.Rows[currentrowslength+i].GridRow = gridrows[i];
-				}
-			}
-			else if (this.ViewModel.Rows.length < this.Rows.length)
-			{
-				if (this.ViewModel.Rows.length == 0)
-				{
-					// Clear Rows
-					this.Rows = [];
-					this._grid.refresh();
-				}
-				else
-				{					
-					// Remove Rows from Grid
-					for(i=this.ViewModel.Rows.length;i<this.Rows.length; i++)
-					{
-						this._grid.removeRow(this.Rows[i].GridRow, false);
-					}
-					
-					this.Rows = this.Rows.slice(0, this.ViewModel.Rows.length);
-				}		
-			}
-			
-			// Update ViewModel for each Row
-			array.forEach(this.ViewModel.Rows, function(rowviewmodel, i) {
-
-				if ((this.Rows[i].ViewModel == null) || (this.Rows[i].ViewModel.ID != rowviewmodel.ID))
-				{
+					// Set ViewModel
 					this.Rows[i].set('ViewModel', rowviewmodel);
+			
+				}, this);	
+
+				if (this.NoRows != rows.length)
+				{
+					// Update NoRows
+					this.NoRows = rows.length;
+				
+					// Render Grid
+					var rowdata = [];
+					
+					for(i=0; i<this.NoRows; i++)
+					{
+						rowdata[i] = new Object();
+						rowdata[i]['id'] = i;
+						
+						for (j=0; j<this.Columns.length; j++) 
+						{
+							rowdata[i][this.Columns[j].Name] = null;
+						}
+					}
+					
+					// Clear Grid
+					this._grid.refresh();
+					
+					// Render Grid
+					var gridrows = this._grid.renderArray(rowdata);
+				
+					// Store Grid Rows in Row Object
+					for (i=0; i<gridrows.length; i++)
+					{
+						this.Rows[i].GridRow = gridrows[i];
+					}
 				}
 				
-			}, this);
-
+			}));
+				
 		},
 
 		_refreshColumns: function() {

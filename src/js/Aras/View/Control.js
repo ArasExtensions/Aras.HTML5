@@ -25,14 +25,13 @@
 define([
 	'dojo/_base/declare',
 	'dojo/Stateful',
-	'dojo/_base/lang'
-], function(declare, Stateful, lang) {
+	'dojo/_base/lang',
+	'dojo/when'
+], function(declare, Stateful, lang, when) {
 	
 	return declare('Aras.View.Control', [Stateful], {
 		
 		ViewModel: null, 
-		
-		_viewModelLoadedHandle: null,
 		
 		constructor: function() {
 
@@ -47,41 +46,11 @@ define([
 		
 		_onViewModelChange: function(name, oldValue, newValue) {
 
-			if (newValue == null)
-			{
-				// Unwatch ViewModel Loaded
-				if (this._viewModelLoadedHandle)
-				{
-					this._viewModelLoadedHandle.unwatch();
-				}
-			}
-			else
-			{
-				if ((oldValue == null) || (oldValue.ID != newValue.ID))
-				{					
-					// Unwatch current ViewModel Loaded
-					if (this._viewModelLoadedHandle)
-					{
-						this._viewModelLoadedHandle.unwatch();
-					}	
-			
-					if (this.ViewModel.Loaded)
-					{
-						this.OnViewModelLoaded();
-					}
-					else
-					{
-						this.__viewModelLoadedHandle = this.ViewModel.watch('Loaded', lang.hitch(this, function(name, oldValue, newValue) {
-					
-							if (newValue)
-							{
-								this.OnViewModelLoaded();
-							}
-					
-						}));
-					}
-				}
-			}
+			when(newValue, lang.hitch(this, function(viewmodel) {
+
+				this.OnViewModelLoaded();			
+			}));
+
 		},
 		
 		OnViewModelLoaded: function() {
