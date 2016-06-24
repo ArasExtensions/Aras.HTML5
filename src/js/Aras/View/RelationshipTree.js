@@ -25,6 +25,7 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
+	'dojo/when',
 	'./_Tree',
 	'./TreeModels/RelationshipTree',
 	'dijit/layout/BorderContainer',
@@ -38,7 +39,7 @@ define([
 	'./Control',
 	'./Toolbar',
 	'./Button'
-], function(declare, lang, _Tree, _TreeModel, BorderContainer, Menu, MenuItem, MenuSeparator, ToolbarSeparator, Tooltip, Dialog, Search, Control, Toolbar, Button) {
+], function(declare, lang, when, _Tree, _TreeModel, BorderContainer, Menu, MenuItem, MenuSeparator, ToolbarSeparator, Tooltip, Dialog, Search, Control, Toolbar, Button) {
 	
 	return declare('Aras.View.RelationshipTree', [BorderContainer, Control], {
 	
@@ -252,7 +253,9 @@ define([
 				this._viewModelID = this.ViewModel.ID;
 				
 				// Update Search Model
-				this.SearchControl.set('ViewModel', this.ViewModel.Search);
+				when(this.ViewModel.Search, lang.hitch(this, function(viewmodel) {
+					this.SearchControl.set('ViewModel', viewmodel);
+				}));
 				
 				// Update Tree Model
 				this.TreeModel.set('TreeControl', this.ViewModel);

@@ -25,8 +25,10 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
+	'dojo/when',
+	'dojo/promise/all',
 	'dojo/Stateful'
-], function(declare, lang, Stateful) {
+], function(declare, lang, when, all, Stateful) {
 	
 	return declare('Aras.View.TreeModels.RelationshipTree', [Stateful], {
 		
@@ -38,8 +40,6 @@ define([
 		
 		LabelWatch: null,
 		
-		LoadedWatch: null,
-
 		constructor: function(args) {
 			
 			lang.mixin(this, args);
@@ -48,15 +48,13 @@ define([
 			
 			this.LabelWatch = {};
 			
-			this.LoadedWatch = {};
-			
 			// Create Dummy Item
-			this.RootNode = {ID: '-1', Name: 'Root', Loaded: true, ChildrenLoaded: true, Children: [] };
+			this.RootNode = {ID: '-1', Name: 'Root', ChildrenLoaded: true, Children: [] };
 			
 			// Watch for Changes in TreeControl
-			this.watch('TreeControl', lang.hitch(this, function() {
+			this.watch('TreeControl', lang.hitch(this, function(name, oldTreeControl, newTreeControl) {
 				
-				if (this.TreeControl == null)
+				if (newTreeControl == null)
 				{
 					// Remove Children from RootNode
 					this.RootNode.Children = [];
@@ -67,54 +65,44 @@ define([
 				}
 				else
 				{
-					if (this.TreeControl.Node != null)
-					{
-						// Add Node as Child of RootNode
-						this.RootNode.Children = [];
-						this.RootNode.Children.push(this.TreeControl.Node);
-					
-						// Signal Change
-						this.onChange(this.RootNode);
-						this.onChildrenChange(this.RootNode, this.RootNode.Children);
-						this.onChange(this.TreeControl.Node);
-					}
-					else
-					{
-						// Remove Children from RootNode
-						this.RootNode.Children = [];
-					
-						// Signal Change
-						this.onChange(this.RootNode);
-						this.onChildrenChange(this.RootNode, this.RootNode.Children);
-					}
-					
 					// Watch for Changes in Node
-					this.TreeControl.watch('Node', lang.hitch(this, function() {
+					newTreeControl.watch('Node', lang.hitch(this, function(name, oldNode, newNode) {
 						
-						if (this.TreeControl.Node != null)
-						{
-							// Add Node as Child of RootNode
-							this.RootNode.Children = [];
-							this.RootNode.Children.push(this.TreeControl.Node);
-					
-							// Signal Change
-							this.onChange(this.RootNode);
-							this.onChildrenChange(this.RootNode, this.RootNode.Children);
-							this.onChange(this.TreeControl.Node);
-						}
-						else
-						{
-							// Remove Children from RootNode
-							this.RootNode.Children = [];
-					
-							// Signal Change
-							this.onChange(this.RootNode);
-							this.onChildrenChange(this.RootNode, this.RootNode.Children);
-						}
+						this._addRootNode(newNode);
 						
 					}));
+			
+					// Add Root Node
+					this._addRootNode(newTreeControl.Node);
 				}
 				
+			}));
+		},
+		
+		_addRootNode: function(Node) {
+		
+			when(Node, lang.hitch(this, function(LoadedNode) {
+
+				if (LoadedNode != null)
+				{
+					// Add Node as Child of RootNode
+					this.RootNode.Children = [];
+					this.RootNode.Children.push(LoadedNode);
+					
+					// Signal Change
+					this.onChange(this.RootNode);
+					this.onChildrenChange(this.RootNode, this.RootNode.Children);
+					this.onChange(LoadedNode);
+				}
+				else
+				{
+					// Remove Children from RootNode
+					this.RootNode.Children = [];
+					
+					// Signal Change
+					this.onChange(this.RootNode);
+					this.onChildrenChange(this.RootNode, this.RootNode.Children);
+				}
 			}));
 		},
 		
@@ -153,7 +141,16 @@ define([
 		},
 		
 		_onChildrenChange: function(item) {
-			this.onChildrenChange(item, item.Children);				
+			
+			var allitems = item.Children.slice();
+			allitems.push(item);
+			
+			all(allitems).then(lang.hitch(this, function(loadeditems) {
+
+				var loadeditem = loadeditems.pop();
+				
+				this.onChildrenChange(loadeditem, loadeditems);
+			}));			
 		},
 		
 		isItem: function(something){
@@ -170,26 +167,14 @@ define([
 			
 			if (item.ID != '-1')
 			{
-				if (item.Loaded)
+				// Watch for changes in Name	
+				if (!this.LabelWatch[item.ID])
 				{
-					// Watch for changes in Name	
-					if (!this.LabelWatch[item.ID])
-					{
-						this.LabelWatch[item.ID] = item.watch('Name', lang.hitch(this, 'onChange', item));
-					}	
+					this.LabelWatch[item.ID] = item.watch('Name', lang.hitch(this, 'onChange', item));
+				}	
 				
-					return item.Name;
-				}
-				else
-				{
-					// Watch for changes in Loaded
-					if (!this.LoadedWatch[item.ID])
-					{
-						this.LoadedWatch[item.ID] = item.watch('Loaded', lang.hitch(this, 'onChange', item));
-					}		
-				
-					return null;
-				}
+				return item.Name;
+	
 			}
 			else
 			{
