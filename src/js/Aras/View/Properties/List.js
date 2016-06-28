@@ -26,14 +26,13 @@ define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
 	'dojo/_base/array',
+	'dojo/promise/all',
 	'../Property',
 	'dijit/form/Select'
-], function(declare, lang, array, Property, Select) {
+], function(declare, lang, array, all, Property, Select) {
 	
 	return declare('Aras.View.Properties.List', [Select, Property], {
-		
-		_viewModelValueLoadedHandles : null,
-		
+				
 		constructor: function() {
 			
 		},
@@ -46,112 +45,48 @@ define([
 		OnViewModelLoaded: function() {
 			this.inherited(arguments);
 
-			// Remove existing watch handles
-			if (this._viewModelValueLoadedHandles != null)
-			{
-				array.forEach(this._viewModelValueLoadedHandles, function(watchhandle, i) {
-					watchhandle.unwatch();
-				}, this);
-				
-				this._viewModelValueLoadedHandles.destroy();
-			}
-			
 			if (this.ViewModel != null)
 			{
-				// Check if values are loaded
-				var allloaded = true;
-				this._viewModelValueLoadedHandles = [];
-				
-				array.forEach(this.ViewModel.Values, function(valueviewmodel, i) {
-					
-					if (!valueviewmodel.Loaded)
-					{
-						allloaded = false;
-						
-						this._viewModelValueLoadedHandles[i] = valueviewmodel.watch('Loaded', lang.hitch(this, function(name, oldValue, newValue) {
-					
-							if (newValue)
-							{
-								// Add Options
-								this._addOptions();
-							}
-					
-						}));
-					}
-					
-				}, this);
+				all(this.ViewModel.Values).then(lang.hitch(this, function(values) {
 
-				if (allloaded)
-				{
-					// Add Options
-					this._addOptions();
-				}
-			}
-		},
-		
-		_addOptions: function()
-		{
-			// Load List Values if all loaded
-			var allloaded = true;
-			var options = [];
-			
-			array.forEach(this.ViewModel.Values, function(valueviewmodel, i) {
-			
-				if (valueviewmodel.Loaded)
-				{
-					if (this.ViewModel.Value == valueviewmodel.Value)
-					{
-						options[i] = { label: valueviewmodel.Label, value: valueviewmodel.Value, selected: true };
-					}
-					else
-					{
-						options[i] = { label: valueviewmodel.Label, value: valueviewmodel.Value };
-					}
-				}
-				else
-				{
-					allloaded = false;
-					options[i] = null;
-				}
-
-			}, this);
-			
-			if (allloaded)
-			{				
-				// Add Options
-				this.addOption(options);
-				
-				// Watch for change in Select Value
-				this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
+					// Load Options
+					var options = [];
 					
-					if (newValue !== this.ViewModel.Value)
-					{
-						if (!this._updateFromViewModel)
+					array.forEach(values, function(valueviewmodel, i) {
+			
+						if (this.ViewModel.Value == valueviewmodel.Value)
 						{
-							// Update ViewModel
-							this.ViewModel.Value = newValue;
-							this.ViewModel.Write();
+							options[i] = { label: valueviewmodel.Label, value: valueviewmodel.Value, selected: true };
 						}
-					}
+						else
+						{
+							options[i] = { label: valueviewmodel.Label, value: valueviewmodel.Value };
+						}
+	
+
+					}, this);					
 					
-				}));				
-				
-				// Watch for  change in ViewModel Value
-				this.ViewModel.watch('Value', lang.hitch(this, function(name, oldValue, newValue) {
+					this.addOption(options);
 					
-					if (newValue !== this.get('value'))
-					{
-						// Stop ViewModel Update
-						this._updateFromViewModel = true;
+					// Watch for  change in ViewModel Value
+					this.ViewModel.watch('Value', lang.hitch(this, function(name, oldValue, newValue) {
 					
-						// Set Value
-						this.set('value', newValue);
+						if (newValue !== this.get('value'))
+						{
+							// Stop ViewModel Update
+							this._updateFromViewModel = true;
+					
+							// Set Value
+							this.set('value', newValue);
 						
-						// Start ViewModel Update
-						this._updateFromViewModel = false;
-					}
+							// Start ViewModel Update
+							this._updateFromViewModel = false;
+						}
 					
+					}));
+				
 				}));
+
 			}
 		}
 
