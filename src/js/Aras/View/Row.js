@@ -26,10 +26,10 @@ define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
 	'dojo/_base/array',
-	'dojo/when',
+	'dojo/promise/all',
 	'./Control',
 	'./Cell',
-], function(declare, lang, array, when, Control, Cell) {
+], function(declare, lang, array, all, Control, Cell) {
 	
 	return declare('Aras.View.Row', [Control], {
 
@@ -38,9 +38,7 @@ define([
 		Cells: null,
 		
 		Index: null,
-		
-		GridRow: null,
-		
+
 		constructor: function() {
 			this.inherited(arguments);
 
@@ -63,18 +61,19 @@ define([
 			this.inherited(arguments);
 			
 			// Set ViewModel for each Cell
-			array.forEach(this.ViewModel.Cells, function(cellviewmodel, i) {	
-
-				when(cellviewmodel, lang.hitch(this, function(viewmodel) {
-					
-					if (this.Cells[i].ID != viewmodel.ID)
+			all(this.ViewModel.Cells).then(lang.hitch(this, function(cellviewmodels) {
+				
+				array.forEach(cellviewmodels, function(cellviewmodel, i) {	
+				
+					if (this.Cells[i].ID != cellviewmodel.ID)
 					{
-						this.Cells[i].set('ViewModel', viewmodel);
+						this.Cells[i].set('ViewModel', cellviewmodel);
 					}			
 					
-				}));
+				}, this);				
+				
+			}));
 
-			}, this);			
 		}
 		
 	});

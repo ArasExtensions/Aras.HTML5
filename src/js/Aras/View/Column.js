@@ -39,12 +39,8 @@ define([
 		
 		Editable: null,
 		
-		Loaded: null,
-		
 		constructor: function() {
 			this.inherited(arguments);
-			
-			this.set('Loaded', false);
 		},
 		
 		startup: function() {
@@ -59,9 +55,12 @@ define([
 				this.set('Name', this.ViewModel.Name);
 				this.set('Label', this.ViewModel.Label);
 				this.set('Editable', this.ViewModel.Editable);
-				this.set('Loaded', true);
-			
-				this.Grid._refreshColumns();
+			}
+			else
+			{
+				this.set('Name', null);
+				this.set('Label', null);
+				this.set('Editable', null);			
 			}
 		}
 		

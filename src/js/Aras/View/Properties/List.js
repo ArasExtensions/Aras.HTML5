@@ -32,8 +32,6 @@ define([
 ], function(declare, lang, array, all, Property, Select) {
 	
 	return declare('Aras.View.Properties.List', [Select, Property], {
-			
-		_updateFromViewModel: null,
 		
 		constructor: function() {
 			

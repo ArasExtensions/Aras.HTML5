@@ -44,8 +44,6 @@ define([
 		
 		Node: null,
 		
-		_viewModelValueLoadedHandle: null,
-		
 		_viewModelValueHandle: null,
 								
 		constructor: function() {
@@ -54,25 +52,24 @@ define([
 		
 		OnViewModelLoaded: function() {
 			this.inherited(arguments);
-			
-			// Remove watch on ViewModel Value
+
+			// Watch for changes in ViewModel Value
 			if (this._viewModelValueHandle)
 			{
 				this._viewModelValueHandle.unwatch();
 			}
 
-			// Watch for changes in Value on ViewModel
 			this._viewModelValueHandle = this.ViewModel.watch("Value", lang.hitch(this, this.OnViewModelValueChange));
 					
 			// Render Cell
-			this._renderCell();		
+			this._renderCell();
 		},
 		
 		OnViewModelValueChange: function(name, oldValue, newValue) {
 
 			when(newValue, lang.hitch(this, function(viewmodel) {
 			
-				if (this.Value != null)
+				if (this.Value)
 				{
 					// Update Value ViewModel
 					this.Value.set("ViewModel", viewmodel);
@@ -81,22 +78,13 @@ define([
 			}));
 
 		},
-		
+				
 		_renderCell: function() {
 		
-			if ((this.ViewModel == null) || (this.ViewModel.Value == null))
-			{
-				// Destroy Widget if Exists
-				if (this.Value != null)
-				{
-					this.Value.destroyRecursive(false);
-					this.Value = null;
-				}
-			}
-			else
-			{
+			if ((this.ViewModel != null) && (this.ViewModel.Value != null))
+			{	
 				when(this.ViewModel.Value).then(lang.hitch(this, function(valueviewmodel) {
-					
+
 					if (this.Value == null)
 					{
 						// Need to create new Widget
@@ -122,17 +110,18 @@ define([
 						// Start Control
 						this.Value.startup();
 					
-						if (this.Node != null)
-						{
-							// Place Value Control in Node
-							this.Value.placeAt(this.Node);
-						}
 					}
-		
+
 					// Update Value ViewModel
-					this.Value.set("ViewModel", valueviewmodel);				
-				}));
+					this.Value.set("ViewModel", valueviewmodel);
 				
+					// Place Control
+					if (this.Node)
+					{
+						this.Value.placeAt(this.Node);
+					}
+					
+				}));
 
 			}
 		}

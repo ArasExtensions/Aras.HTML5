@@ -44,7 +44,7 @@ define([
 		
 		OnViewModelLoaded: function() {
 			this.inherited(arguments);
-
+			
 			// Set Value
 			this.set("value", this.ViewModel.Value);
 			

@@ -46,11 +46,7 @@ define([
 		
 		_onViewModelChange: function(name, oldValue, newValue) {
 
-			when(newValue, lang.hitch(this, function(viewmodel) {
-
-				this.OnViewModelLoaded();			
-			}));
-
+			this.OnViewModelLoaded();
 		},
 		
 		OnViewModelLoaded: function() {

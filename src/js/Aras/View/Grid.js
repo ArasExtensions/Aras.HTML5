@@ -132,9 +132,21 @@ define([
 				// Update NoColumns
 				this.NoColumns = columns.length;
 			
+				// Refresh Columns
+				var gridcolumns = {};
+			
+				array.forEach(this.Columns, function(column, i) {
+					gridcolumns[this.Columns[i].Name] = {};
+					gridcolumns[this.Columns[i].Name].label = this.Columns[i].Label;
+					gridcolumns[this.Columns[i].Name].renderCell = lang.hitch(column, this._renderCell);
+
+				}, this);
+			
+				// Set Grid Columns
+				this._grid._setColumns(gridcolumns);
+
 				// Update Rows
-				this._updateRows();
-				
+				this._updateRows();				
 			}));
 
 		},
@@ -176,50 +188,16 @@ define([
 							rowdata[i][this.Columns[j].Name] = null;
 						}
 					}
-					
+										
 					// Clear Grid
 					this._grid.refresh();
 					
 					// Render Grid
-					var gridrows = this._grid.renderArray(rowdata);
-				
-					// Store Grid Rows in Row Object
-					for (i=0; i<gridrows.length; i++)
-					{
-						this.Rows[i].GridRow = gridrows[i];
-					}
+					this._grid.renderArray(rowdata);
 				}
 				
 			}));
 				
-		},
-
-		_refreshColumns: function() {
-		
-			var gridcolumns = {};
-			var loaded = true;
-			
-			array.forEach(this.Columns, function(column, i) {
-				
-				if (column.Loaded)
-				{
-					gridcolumns[this.Columns[i].Name] = {};
-					gridcolumns[this.Columns[i].Name].label = this.Columns[i].Label;
-					gridcolumns[this.Columns[i].Name].renderCell = lang.hitch(column, this._renderCell);
-				}
-				else
-				{
-					loaded = false;
-				}
-			}, this);
-			
-			if (loaded)
-			{
-				// Set Grid Columns
-				this._grid._setColumns(gridcolumns);
-				
-				this.set('ColumnsLoaded', true);
-			}
 		},
 		
 		_renderCell: function(object, value, node, options) {
@@ -228,12 +206,7 @@ define([
 			{				
 				// Set Cell Node
 				this.Grid.Rows[object.id].Cells[this.Index].set('Node', node);
-				
-				if (this.Grid.Rows[object.id].Cells[this.Index].Value != null)
-				{
-					// Place Value Control in Node
-					this.Grid.Rows[object.id].Cells[this.Index].Value.placeAt(node);	
-				}
+				this.Grid.Rows[object.id].Cells[this.Index]._renderCell();
 			}			
 		}
 
