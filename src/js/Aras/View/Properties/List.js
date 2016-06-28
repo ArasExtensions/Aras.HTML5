@@ -32,7 +32,9 @@ define([
 ], function(declare, lang, array, all, Property, Select) {
 	
 	return declare('Aras.View.Properties.List', [Select, Property], {
-				
+			
+		_updateFromViewModel: null,
+		
 		constructor: function() {
 			
 		},
@@ -68,7 +70,22 @@ define([
 					
 					this.addOption(options);
 					
-					// Watch for  change in ViewModel Value
+					// Watch for change in Select Value
+					this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
+					
+						if (newValue !== this.ViewModel.Value)
+						{
+							if (!this._updateFromViewModel)
+							{
+								// Update ViewModel
+								this.ViewModel.Value = newValue;
+								this.ViewModel.Write();
+							}
+						}
+					
+					}));
+				
+					// Watch for change in ViewModel Value
 					this.ViewModel.watch('Value', lang.hitch(this, function(name, oldValue, newValue) {
 					
 						if (newValue !== this.get('value'))
