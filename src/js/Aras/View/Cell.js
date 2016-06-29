@@ -41,7 +41,7 @@ define([
 		Row: null,
 		
 		Value: null,
-		
+
 		Node: null,
 		
 		_viewModelValueHandle: null,
@@ -60,9 +60,6 @@ define([
 			}
 
 			this._viewModelValueHandle = this.ViewModel.watch("Value", lang.hitch(this, this.OnViewModelValueChange));
-					
-			// Render Cell
-			this._renderCell();
 		},
 		
 		OnViewModelValueChange: function(name, oldValue, newValue) {
@@ -79,12 +76,21 @@ define([
 
 		},
 				
-		_renderCell: function() {
+		RenderCell: function() {
 		
 			if ((this.ViewModel != null) && (this.ViewModel.Value != null))
 			{	
-				when(this.ViewModel.Value).then(lang.hitch(this, function(valueviewmodel) {
+				return when(this.ViewModel.Value).then(lang.hitch(this, function(valueviewmodel) {
 
+					
+					if ( dojo.isIE)
+					{						
+						if (this.Value != null)
+						{
+							this.Value = null;
+						}
+					}
+					
 					if (this.Value == null)
 					{
 						// Need to create new Widget
@@ -111,18 +117,17 @@ define([
 						this.Value.startup();
 					
 					}
-
+	
 					// Update Value ViewModel
 					this.Value.set("ViewModel", valueviewmodel);
 				
-					// Place Control
-					if (this.Node)
-					{
-						this.Value.placeAt(this.Node);
-					}
-					
+					return this.Value;	
 				}));
 
+			}
+			else
+			{
+				return null;
 			}
 		}
 		

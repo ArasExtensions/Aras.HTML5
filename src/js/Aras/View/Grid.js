@@ -27,12 +27,13 @@ define([
 	'dojo/_base/lang',
 	'dojo/_base/array',
 	'dojo/promise/all',
+	'dojo/when',
 	'./_Grid',
 	'dijit/layout/BorderContainer',
 	'./Control',
 	'./Column',
 	'./Row'
-], function(declare, lang, array, all, _Grid, BorderContainer, Control, Column, Row) {
+], function(declare, lang, array, all, when, _Grid, BorderContainer, Control, Column, Row) {
 	
 	return declare('Aras.View.Grid', [BorderContainer, Control], {
 			
@@ -114,6 +115,9 @@ define([
 		
 			all(this.ViewModel.Columns).then(lang.hitch(this, function(columns) {
 	
+				// Refresh Columns
+				var gridcolumns = {};
+				
 				array.forEach(columns, function(columnviewmodel, i) {
 				
 					// Ensure Column Exists
@@ -127,20 +131,14 @@ define([
 					this.Columns[i].set('Index', i);
 					this.Columns[i].set('ViewModel', columnviewmodel);			
 	
+					gridcolumns[this.Columns[i].Name] = {};
+					gridcolumns[this.Columns[i].Name].label = this.Columns[i].Label;
+					gridcolumns[this.Columns[i].Name].renderCell = lang.hitch(this.Columns[i], this._renderCell);
+					
 				}, this);
 			
 				// Update NoColumns
 				this.NoColumns = columns.length;
-			
-				// Refresh Columns
-				var gridcolumns = {};
-			
-				array.forEach(this.Columns, function(column, i) {
-					gridcolumns[this.Columns[i].Name] = {};
-					gridcolumns[this.Columns[i].Name].label = this.Columns[i].Label;
-					gridcolumns[this.Columns[i].Name].renderCell = lang.hitch(column, this._renderCell);
-
-				}, this);
 			
 				// Set Grid Columns
 				this._grid._setColumns(gridcolumns);
@@ -164,10 +162,10 @@ define([
 						this.Rows[i].startup();
 						this.Rows[i].set('Index', i);
 					}
-				
+					
 					// Set ViewModel
 					this.Rows[i].set('ViewModel', rowviewmodel);
-			
+
 				}, this);	
 
 				if (this.NoRows != rows.length)
@@ -201,14 +199,21 @@ define([
 		},
 		
 		_renderCell: function(object, value, node, options) {
-			
-			if (object.id < this.Grid.Rows.length)
-			{				
-				// Set Cell Node
-				this.Grid.Rows[object.id].Cells[this.Index].set('Node', node);
-				this.Grid.Rows[object.id].Cells[this.Index]._renderCell();
-			}			
-		}
 
+			// Store Node in Cell
+			this.Grid.Rows[object.id].Cells[this.Index].Node = node;
+		
+			// Place Widget in Cell Node
+			when(this.Grid.Rows[object.id].Cells[this.Index].RenderCell(), lang.hitch(this, function(widget) {
+			
+				if (widget)
+				{
+					widget.placeAt(this.Grid.Rows[object.id].Cells[this.Index].Node);
+				}
+			
+			}));
+
+		}
+		
 	});
 });
