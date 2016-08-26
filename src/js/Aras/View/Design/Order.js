@@ -41,9 +41,7 @@ define([
 		BOM: null, 
 		
 		Toolbar: null,
-		
-		RefreshButton: null,
-		
+				
 		SaveButton: null,
 		
 		UpdateBOMButton: null,
@@ -55,15 +53,9 @@ define([
 			// Create Toolbar
 			this.Toolbar = new Toolbar({ region: 'top' });
 			this.addChild(this.Toolbar);
-		
-			// Create Refresh Button
-			this.RefreshButton = new Button({ title: 'Refresh', iconClass: 'refreshIcon'});
-			this.Toolbar.addChild(this.RefreshButton);
-			
-			this.Toolbar.addChild(new ToolbarSeparator());
-			
+					
 			// Create UpdateBOM Button
-			this.UpdateBOMButton = new Button({ title: 'Update BOM', iconClass: 'partFamilyIcon'});
+			this.UpdateBOMButton = new Button({ title: 'Update BOM', iconClass: 'refreshIcon'});
 			this.Toolbar.addChild(this.UpdateBOMButton);
 			
 			// Create Save Button
@@ -89,9 +81,6 @@ define([
 	
 				// Set BOM ViewModel
 				this.BOM.set("ViewModel", this.ViewModel.BOM);	
-				
-				// Update Refresh
-				this.RefreshButton.set('ViewModel', this.ViewModel.Refresh);
 					
 				// Update Save
 				this.SaveButton.set('ViewModel', this.ViewModel.Save);
