@@ -42,6 +42,13 @@ define([
 			this.inherited(arguments);			
 		},
 		
+		_mouseWheeled: function(evt){
+			
+			// Disable change on scroll wheel
+			evt.stopPropagation();
+			evt.preventDefault();
+		},
+		
 		OnViewModelLoaded: function() {
 			this.inherited(arguments);
 
