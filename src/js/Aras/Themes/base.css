@@ -20,6 +20,16 @@ html, body
 	width: 100%;
 }
 
+.dgrid-column-quantity
+{
+	width: 50px;
+}
+
+.dgrid-column-value
+{
+	width: 150px;
+}
+
 .editItemIcon 
 {
   background-image:  url('./images/EditItem.svg');
