@@ -52,6 +52,9 @@ define([
 		OnViewModelLoaded: function() {
 			this.inherited(arguments);
 			
+			// Set Min and Max Values
+			this.set("constraints", {min: this.ViewModel.MinValue, max: this.ViewModel.MaxValue});
+			
 			// Set Value
 			this.set("value", this.ViewModel.Value);
 			
