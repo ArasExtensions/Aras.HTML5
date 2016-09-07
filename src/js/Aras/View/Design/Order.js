@@ -54,7 +54,7 @@ define([
 			this.Toolbar = new Toolbar({ region: 'top' });
 			this.addChild(this.Toolbar);
 					
-			// Create UpdateBOM Button
+			// Create Update BOM Button
 			this.UpdateBOMButton = new Button({ title: 'Update BOM', iconClass: 'refreshIcon'});
 			this.Toolbar.addChild(this.UpdateBOMButton);
 			
@@ -86,7 +86,7 @@ define([
 				this.SaveButton.set('ViewModel', this.ViewModel.Save);
 								
 				// Update UpdateBOM
-				this.UpdateBOMButton.set('ViewModel', this.ViewModel.UpdateBOM);
+				this.UpdateBOMButton.set('ViewModel', this.ViewModel.Update);
 			}
 		}
 	});
