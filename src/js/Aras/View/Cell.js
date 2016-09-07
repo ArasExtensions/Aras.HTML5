@@ -102,8 +102,7 @@ define([
 							case 'Aras.ViewModel.Properties.String':							
 								this.Value = new String( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
 								break;
-							case 'Aras.ViewModel.Properties.List':	
-							case 'Aras.ViewModel.Design.Properties.OrderContextList':							
+							case 'Aras.ViewModel.Properties.List':							
 								this.Value = new List( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
 								break;
 							case 'Aras.ViewModel.Properties.Float':							
