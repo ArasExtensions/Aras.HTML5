@@ -86,7 +86,7 @@ define([
 				this.SaveButton.set('ViewModel', this.ViewModel.Save);
 								
 				// Update UpdateBOM
-				this.UpdateBOMButton.set('ViewModel', this.ViewModel.Update);
+				this.UpdateBOMButton.set('ViewModel', this.ViewModel.Process);
 			}
 		}
 	});
