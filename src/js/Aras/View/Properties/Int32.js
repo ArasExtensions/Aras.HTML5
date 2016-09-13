@@ -65,9 +65,9 @@ define([
 				else
 				{
 					var newnumber = Number(newValue);
-					var oldnumber = Number(oldValue);
+					var currentnumber = Number(this.ViewModel.get('Value'));
 				
-					if (oldnumber !== newnumber)
+					if (currentnumber !== newnumber)
 					{										
 						if (!this._updateFromViewModel)
 						{
