@@ -25,11 +25,11 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
-	'dijit/Menu',
+	'dijit/PopupMenuBarItem',
 	'./Control',
-], function(declare, lang, Menu, Control) {
+], function(declare, lang, PopupMenuBarItem, Control) {
 	
-	return declare('Aras.View.Menu', [Menu, Control], {
+	return declare('Aras.View.PopupMenuBarItem', [PopupMenuBarItem, Control], {
 
 	});
 });

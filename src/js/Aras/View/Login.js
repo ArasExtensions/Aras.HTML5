@@ -39,7 +39,7 @@ define([
 	
 	return declare('Aras.View.Login', [Dialog], {
 		
-		Application: null,
+		ApplicationContainer: null,
 		
 		Database: null,
 		
@@ -71,7 +71,7 @@ define([
 			this.Database = new ComboBox({store: dataStore}, databasetarget);
 			this.Database.startup();
 			
-			// Add Standy for Database
+			// Add Standby for Database
 			this.Standby = new Standby({target: this.Database.id});
 			document.body.appendChild(this.Standby.domNode);
 			this.Standby.startup();
@@ -104,26 +104,23 @@ define([
 			this.LoginButton.set('onClick', lang.hitch(this, function() {
 				
 				// Get Database
-				this.Application.Server.Database(this.Database.item.name).then(lang.hitch(this, function(database) {
+				this.ApplicationContainer.Server.Database(this.Database.item.name).then(lang.hitch(this, function(database) {
 		
 					// Login
 					database.Login(this.Username.value, MD5(this.Password.value, 1)).then(lang.hitch(this, function(session){
 
-						// Get Application ViewModel
-						session.Application(this.Application.Name).then(lang.hitch(this, function(application){ 
-								
-							// Set ViewModel
-							this.Application.set("ViewModel", application);
+						// Set Session
+						this.ApplicationContainer.set("Session", session);
 							
-							// Close Dialog
-							this.hide();
-						}));
+						// Close Dialog
+						this.hide();
+					
 					}));
 				}));
 			}));
 						
 			// Get Database
-			this.Application.Server.Databases().then(lang.hitch(this, function(databases) {
+			this.ApplicationContainer.Server.Databases().then(lang.hitch(this, function(databases) {
 				
 				// Add Databases
 				var data = [];
