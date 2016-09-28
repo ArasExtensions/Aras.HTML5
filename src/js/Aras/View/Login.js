@@ -127,7 +127,7 @@ define([
 				
 				for(i=0; i<databases.length; i++)
 				{
-					data.push({id: databases[i].ID, name: databases[i].Name});
+					data.push({id: databases[i].ID, name: databases[i].ID});
 				}
 				
 				var databasetarget = dom.byId('logindatabase');	
