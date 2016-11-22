@@ -96,8 +96,6 @@ define([
 								this._displayPluginError();
 							}
 						}));
-						
-										
 					}));
 				}));
 			}));
