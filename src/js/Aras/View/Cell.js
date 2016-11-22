@@ -96,16 +96,16 @@ define([
 						// Need to create new Widget
 						switch(valueviewmodel.Type)
 						{
-							case 'Aras.ViewModel.Properties.Boolean':							
+							case 'Aras.View.Properties.Boolean':							
 								this.Value = new Boolean( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
 								break;
-							case 'Aras.ViewModel.Properties.String':							
+							case 'Aras.View.Properties.String':							
 								this.Value = new String( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
 								break;
-							case 'Aras.ViewModel.Properties.List':							
+							case 'Aras.View.Properties.List':							
 								this.Value = new List( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
 								break;
-							case 'Aras.ViewModel.Properties.Float':							
+							case 'Aras.View.Properties.Float':							
 								this.Value = new Float( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
 								break;								
 							default:
