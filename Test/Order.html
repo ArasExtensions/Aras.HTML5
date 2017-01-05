@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <!--
   Aras.HTML5 provides a HTML5 client library to build Aras Innovator Applications
 
@@ -21,16 +22,16 @@
   Tel:     +44 113 815 3440
   Email:   support@processwall.com
 -->
-
 <html>
 
 	<head>
-		<title>Variants Order Plugin</title>
-		
+		<title>Variants Order Test Harness</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE10"/>
+
 		<meta http-equiv="cache-control" content="no-cache" />
 		
 		<style>
-			@import "../../../../Themes/tundra/tundra.css";
+			@import "../js/Aras/Themes/tundra/tundra.css";
 		</style>
 		
 		<script>
@@ -41,12 +42,12 @@
 			};
 		</script>
 		
-		<script type="text/javascript" src="../../../../../dojo/dojo.js"></script>
+		<script type="text/javascript" src="../js/dojo/dojo.js"></script>
 		
 		<script>
 			require(['Aras/View/Design/Plugins/Order', 'dojo/dom', 'dojo/domReady!'], function(Order, dom) {
 				var target = dom.byId('main');			
-				var order = new Order({ URL: '../../../../../../..', DatabaseID: 'CMB', Username: 'admin', Password: '607920b64fe136f9ab2389e371852af2', Name: 'Aras.ViewModel.Design.Order', Context: 'D2F760CC3F9E4CA18E825BEAC170AFAF', style: 'width: 1000px; height: 500px'}, target);
+				var order = new Order({ URL: '../..', DatabaseID: 'CMB', Username: 'admin', Password: '607920b64fe136f9ab2389e371852af2', Name: 'Aras.ViewModel.Design.Order', Context: 'D2F760CC3F9E4CA18E825BEAC170AFAF', style: 'width: 100%; height: 100%'}, target);
 				order.startup();
 			});
 		</script>

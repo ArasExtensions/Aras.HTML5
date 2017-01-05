@@ -31,8 +31,9 @@ define([
 	'dojo/when',
 	'dojo/Deferred',
 	'./Control',
-	'./Command'
-], function(declare, request, lang, array, json, when, Deferred, Control, Command) {
+	'./Command',
+	'./ApplicationType'
+], function(declare, request, lang, array, json, when, Deferred, Control, Command, ApplicationType) {
 	
 	return declare('Aras.ViewModel.Session', null, {
 		
@@ -45,6 +46,8 @@ define([
 		_controlCache: new Object(),
 		
 		_commandCache: new Object(),
+		
+		_applicationTypeCache: new Object(),
 		
 		constructor: function(args) {
 			declare.safeMixin(this, args);
@@ -109,6 +112,35 @@ define([
 				}
 			}));
 
+		},
+		
+		ApplicationTypes: function() {
+			return request.get(this.Database.Server.URL + '/applicationtypes',
+							   { headers: {'Accept': 'application/json'}, 
+								 handleAs: 'json'
+							   }).then(
+				lang.hitch(this, function(result) {
+			
+					var ret = [];
+			
+					array.forEach(result, lang.hitch(this, function(entry) {
+						
+						if (!this._applicationTypeCache[entry.Name])
+						{
+							entry['Session'] = this;
+							this._applicationTypeCache[entry.Name] = new ApplicationType(entry);
+						}
+
+						ret.push(this._applicationTypeCache[entry.Name]);
+					}));
+					
+					return ret;
+				}),
+				lang.hitch(this, function(error) {
+					this.ProcessError(error);
+					return [];
+				})
+			);
 		},
 		
 		Application: function(Name) {

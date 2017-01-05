@@ -24,19 +24,12 @@
 
 define([
 	'dojo/_base/declare',
-	'dojo/_base/lang',
-	'dijit/layout/BorderContainer',
-	'../Layout'
-], function(declare, lang, BorderContainer, Layout) {
+	'./BorderContainer',
+], function(declare, BorderContainer) {
 	
-	return declare('Aras.View.Layouts.BorderContainer', [BorderContainer, Layout], {
-		
+	return declare('Aras.View.Containers.Plugin', [BorderContainer], {
+				
 		constructor: function(args) {
-			
-		},
-		
-		startup: function() {
-			this.inherited(arguments);
 			
 		}
 

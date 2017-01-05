@@ -24,20 +24,24 @@
 
 define([
 	'dojo/_base/declare',
+	'dojo/request',
 	'dojo/_base/lang',
-	'dijit/layout/TabContainer',
-	'../Layout'
-], function(declare, lang, TabContainer, Layout) {
+	'dojo/json',
+	'./Session'
+], function(declare, request, lang, json, Session) {
 	
-	return declare('Aras.View.Layouts.TabContainer', [TabContainer, Layout], {
+	return declare('Aras.ViewModel.ApplicationType', null, {
+		
+		Session: null,
+		
+		Name: null,
+		
+		Label: null,
+		
+		Icon: null,
 		
 		constructor: function(args) {
-			
-		},
-		
-		startup: function() {
-			this.inherited(arguments);
-			
+			declare.safeMixin(this, args);
 		}
 
 	});

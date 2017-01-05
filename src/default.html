@@ -22,16 +22,16 @@
   Tel:     +44 113 815 3440
   Email:   support@processwall.com
 -->
+
 <html>
 
 	<head>
-		<title>Variants Order Test Harness</title>
-		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE10"/>
-
-		<meta http-equiv="cache-control" content="no-cache" />
+		<title>AAD</title>
+		
+		<link href="favicon.ico" rel="icon" type="image/x-icon" />
 		
 		<style>
-			@import "../js/Aras/Themes/tundra/tundra.css";
+			@import "./js/Aras/Themes/claro/claro.css";
 		</style>
 		
 		<script>
@@ -42,19 +42,19 @@
 			};
 		</script>
 		
-		<script type="text/javascript" src="../js/dojo/dojo.js"></script>
+		<script type="text/javascript" src="./js/dojo/dojo.js"></script>
 		
 		<script>
-			require(['Aras/View/Design/Plugins/Order', 'dojo/dom', 'dojo/domReady!'], function(Order, dom) {
+			require(['Aras/View/ApplicationContainer', 'dojo/dom', 'dojo/domReady!'], function(ApplicationContainer, dom) {
 				var target = dom.byId('main');			
-				var order = new Order({ URL: '../..', DatabaseID: 'CMB', Username: 'admin', Password: '607920b64fe136f9ab2389e371852af2', Name: 'Aras.ViewModel.Design.Order', Context: 'D2F760CC3F9E4CA18E825BEAC170AFAF', style: 'width: 100%; height: 100%'}, target);
-				order.startup();
+				var applicationcontainer = new ApplicationContainer({ URL: '..', style: 'width: 100%; height: 100%'}, target);
+				applicationcontainer.startup();
 			});
 		</script>
 		
 	</head>
 	
-	<body class="tundra">
+	<body class="claro">
 	
 		<div id="main">
 		</div>

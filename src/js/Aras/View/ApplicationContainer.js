@@ -26,14 +26,12 @@ define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
 	'dijit/layout/BorderContainer',
+	'dijit/layout/ContentPane',
+	'dijit/form/Button',
 	'./Login',
 	'./ErrorDialog',
-	'./MenuBar',
-	'./PopupMenuBarItem',
-	'./DropDownMenu',
-	'./MenuItem',
 	'../ViewModel/Server'
-], function(declare, lang, BorderContainer, Login, ErrorDialog, MenuBar, PopupMenuBarItem, DropDownMenu, MenuItem, Server) {
+], function(declare, lang, BorderContainer, ContentPane, Button, Login, ErrorDialog, Server) {
 	
 	return declare('Aras.View.ApplicationContainer', [BorderContainer], {
 		
@@ -47,10 +45,6 @@ define([
 		
 		Menu: null,
 		
-		LoginMenu: null,
-		
-		LogoutMenu: null,
-		
 		constructor: function() {
 			this.inherited(arguments);
 			
@@ -59,62 +53,79 @@ define([
 		startup: function() {
 			this.inherited(arguments);
 			
-			// Create MenuBar
-			this.Menu = new MenuBar({ region: 'top'});
-			this.addChild(this.Menu);
-			
-			// Create File Menu
-			var filemenu = new DropDownMenu({});
-			var filepopupmenu = new PopupMenuBarItem({ label: 'File', popup: filemenu });
-			this.Menu.addChild(filepopupmenu);
-			
-			// Add Login Menu Item
-			this.LoginMenu = new MenuItem({ label: 'Login' });
-			filemenu.addChild(this.LoginMenu);
-			this.LoginMenu.set('onClick', lang.hitch(this, function() {
-				this.Login.show();
-			}));
-			this.LoginMenu.SetEnabled(true);
-			
-			// Add Logout Menu Item
-			this.LogoutMenu = new MenuItem({ label: 'Logout' });
-			filemenu.addChild(this.LogoutMenu);
-			this.LogoutMenu.set('onClick', lang.hitch(this, function() {
-				this.set('Session', null);
-			}));
-			this.LogoutMenu.SetEnabled(false);
-			
 			// Create Server
 			this.Server = new Server({ URL: this.URL });
 			
 			// Watch for Errors
 			this.Server.watch('InError', lang.hitch(this, this._displayServerError));
 			
-			// Watch for Login
-			this.watch('Session', lang.hitch(this, this._addApplications));
+			// Watch for Session changing
+			this.watch('Session', lang.hitch(this, this._updateMenu));
 			
 			// Create Login
 			this.Login = new Login({ApplicationContainer: this, title: 'Aras Innovator Login'});
 			this.Login.startup();
+			
+			// Update Menu
+			this._updateMenu();
 		},
 		
-		_addApplications: function() {
+		_updateMenu: function() {
 			
-			if (this.Session == null)
+			// Destroy Current Menu
+			if (this.Menu != null)
 			{
-				this.LoginMenu.SetEnabled(true);
-				this.LogoutMenu.SetEnabled(false);
+				this.removeChild(this.Menu);
+				this.Menu.destroyRecursive();
+			}
+			
+			// Create Menu
+			this.Menu = new ContentPane({ region: "left" });
+			this.addChild(this.Menu);
+			
+			if (this.Session != null)
+			{		
+				// Get ApplicationTypes
+				this.Session.ApplicationTypes().then(lang.hitch(this, function(applicationtypes){
+
+					// Add Appliction Buttons
+					for(i=0; i<applicationtypes.length; i++)
+					{
+						var logoutbutton = new Button({ label: applicationtypes[i].Label, onClick: lang.hitch(this, this._startApplication, applicationtypes[i].Name)});
+						this.Menu.addChild(logoutbutton);
+					}
+
+					// Add Logout Button
+					var logoutbutton = new Button({ label: "Logout", onClick: lang.hitch(this, this._logout)});
+					this.Menu.addChild(logoutbutton);
+				}));
 			}
 			else
 			{
-				this.LoginMenu.SetEnabled(false);
-				this.LogoutMenu.SetEnabled(true);
+				// Add Login Button
+				var loginbutton = new Button({ label: "Login", onClick: lang.hitch(this, this._login)});
+				this.Menu.addChild(loginbutton);
 			}
+		},
+		
+		_login() {
+				
+			// Display Login
+			this.Login.show();
+		},
+		
+		_logout() {
+		
+			// Logout
+			this.set("Session", null);
+			
+			// Update Menu
+			this._updateMenu();
 		},
 		
 		_startApplication(name) {
 			
-			
+			console.debug(name);
 		},
 		
 		_displayServerError: function() {

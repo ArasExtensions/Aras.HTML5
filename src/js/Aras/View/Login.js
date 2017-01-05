@@ -62,7 +62,7 @@ define([
 			this.inherited(arguments);
 
 			// Create Layout
-			var layout = new ContentPane({content: '<table><tr><td>Database:</td><td id="logindatabase"></td></tr><tr><td>Username:</td><td id="loginusername"></td></tr><tr><td>Password:</td><td id="loginpassword"></td></tr><tr><td></td><td align="right"><div id="loginlogin"></div><div id="logincancel"></div></td></tr></table>'});
+			var layout = new ContentPane({content: '<table><tr><td>Database</td><td id="logindatabase"></td></tr><tr><td>Username</td><td id="loginusername"></td></tr><tr><td>Password</td><td id="loginpassword"></td></tr><tr><td></td><td align="right"><div id="loginlogin"></div><div id="logincancel"></div></td></tr></table>'});
 			this.addChild(layout);
 			
 			// Add Database 
