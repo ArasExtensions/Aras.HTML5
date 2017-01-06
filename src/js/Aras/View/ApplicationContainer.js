@@ -27,11 +27,12 @@ define([
 	'dojo/_base/lang',
 	'dijit/layout/BorderContainer',
 	'dijit/layout/ContentPane',
+	'dojox/layout/TableContainer',
 	'dijit/form/Button',
 	'./Login',
 	'./ErrorDialog',
 	'../ViewModel/Server'
-], function(declare, lang, BorderContainer, ContentPane, Button, Login, ErrorDialog, Server) {
+], function(declare, lang, BorderContainer, ContentPane, TableContainer, Button, Login, ErrorDialog, Server) {
 	
 	return declare('Aras.View.ApplicationContainer', [BorderContainer], {
 		
@@ -45,6 +46,10 @@ define([
 		
 		Menu: null,
 		
+		Workspace: null,
+		
+		_applicationCache: new Object(),
+		
 		constructor: function() {
 			this.inherited(arguments);
 			
@@ -52,6 +57,14 @@ define([
 				
 		startup: function() {
 			this.inherited(arguments);
+			
+			// Create Menu
+			this.Menu = new ContentPane({ region: "left", splitter:true });
+			this.addChild(this.Menu);
+			
+			// Create Workspace
+			this.Workspace = new ContentPane({ region: "center", splitter:true });
+			this.addChild(this.Workspace);
 			
 			// Create Server
 			this.Server = new Server({ URL: this.URL });
@@ -72,40 +85,57 @@ define([
 		
 		_updateMenu: function() {
 			
-			// Destroy Current Menu
-			if (this.Menu != null)
+			// Remove all Menu Items
+			var menuitems = this.Menu.getChildren();
+			
+			for(i=0; i<menuitems.length; i++)
 			{
-				this.removeChild(this.Menu);
-				this.Menu.destroyRecursive();
+				this.Menu.removeChild(menuitems[i]);
+				menuitems[i].destroyRecursive();
 			}
-			
-			// Create Menu
-			this.Menu = new ContentPane({ region: "left" });
-			this.addChild(this.Menu);
-			
+
 			if (this.Session != null)
 			{		
 				// Get ApplicationTypes
 				this.Session.ApplicationTypes().then(lang.hitch(this, function(applicationtypes){
-
+					
+					// Create TableContainer
+					var table = new TableContainer({ cols: 1, showLabels: false });
+			
 					// Add Appliction Buttons
 					for(i=0; i<applicationtypes.length; i++)
 					{
-						var logoutbutton = new Button({ label: applicationtypes[i].Label, onClick: lang.hitch(this, this._startApplication, applicationtypes[i].Name)});
-						this.Menu.addChild(logoutbutton);
+						var applicationbutton = new Button({ label: applicationtypes[i].Label, class: "menuButton", onClick: lang.hitch(this, this._startApplication, applicationtypes[i].Name)});
+						table.addChild(applicationbutton);
 					}
 
 					// Add Logout Button
-					var logoutbutton = new Button({ label: "Logout", onClick: lang.hitch(this, this._logout)});
-					this.Menu.addChild(logoutbutton);
+					var logoutbutton = new Button({ label: "Logout", class: "menuButton", onClick: lang.hitch(this, this._logout)});
+					table.addChild(logoutbutton);
+						
+					// Add Table to Menu
+					this.Menu.addChild(table);
+					
+					// Ensure Menu is correct size
+					this.layout();					
 				}));
 			}
 			else
 			{
+				// Create TableContainer
+				var table = new TableContainer({ cols: 1, showLabels: false });
+					
 				// Add Login Button
-				var loginbutton = new Button({ label: "Login", onClick: lang.hitch(this, this._login)});
-				this.Menu.addChild(loginbutton);
+				var loginbutton = new Button({ label: "Login", class: "menuButton", onClick: lang.hitch(this, this._login)});
+				table.addChild(loginbutton);
+
+				// Add Table to Menu
+				this.Menu.addChild(table);	
+				
+				// Ensure Menu is correct size
+				this.layout();
 			}
+
 		},
 		
 		_login() {

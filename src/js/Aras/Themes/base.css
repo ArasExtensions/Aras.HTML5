@@ -30,6 +30,11 @@ html, body
 	width: 150px;
 }
 
+.menuButton span 
+{
+	width: 75px;
+}
+
 .editItemIcon 
 {
   background-image:  url('./images/EditItem.svg');
