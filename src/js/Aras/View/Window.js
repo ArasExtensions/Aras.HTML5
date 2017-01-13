@@ -30,11 +30,15 @@ define([
 	'dojox/layout/TableContainer',
 	'dijit/form/Button',
 	'./Login',
+	'./Window/Status',
+	'./Window/TopMenu',
+	'./Window/Toolbar',
+	'./Window/Workspace',
 	'./ErrorDialog',
 	'../ViewModel/Server'
-], function(declare, lang, BorderContainer, ContentPane, TableContainer, Button, Login, ErrorDialog, Server) {
+], function(declare, lang, BorderContainer, ContentPane, TableContainer, Button, Login, Status, TopMenu, Toolbar, Workspace, ErrorDialog, Server) {
 	
-	return declare('Aras.View.ApplicationContainer', [BorderContainer], {
+	return declare('Aras.View.Window', [BorderContainer], {
 		
 		URL: null,
 		
@@ -45,6 +49,12 @@ define([
 		Session: null,
 		
 		Menu: null,
+		
+		TopMenu: null,
+		
+		Toolbar: null,
+		
+		Status: null,
 		
 		Workspace: null,
 		
@@ -58,12 +68,24 @@ define([
 		startup: function() {
 			this.inherited(arguments);
 			
-			// Create Menu
+			// Create Side Menu
 			this.Menu = new ContentPane({ region: "left", splitter:true });
 			this.addChild(this.Menu);
 			
+			// Create Top Menu
+			this.TopMenu = new TopMenu({ region: "top", Window: this });
+			this.addChild(this.TopMenu);
+	
+			// Create Toolbar
+			this.Toolbar = new Toolbar({ region: "top", Window: this });
+			this.addChild(this.Toolbar);
+			
+			// Create Status
+			this.Status = new Status({ region: "bottom", Window: this });
+			this.addChild(this.Status);
+			
 			// Create Workspace
-			this.Workspace = new ContentPane({ region: "center", splitter:true });
+			this.Workspace = new Workspace({ region: "center", splitter:true });
 			this.addChild(this.Workspace);
 			
 			// Create Server

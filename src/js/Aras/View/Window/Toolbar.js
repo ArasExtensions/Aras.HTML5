@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<!--
+/*
   Aras.HTML5 provides a HTML5 client library to build Aras Innovator Applications
 
   Copyright (C) 2015 Processwall Limited.
@@ -21,44 +20,26 @@
   Address: The Winnowing House, Mill Lane, Askham Richard, York, YO23 3NW, United Kingdom
   Tel:     +44 113 815 3440
   Email:   support@processwall.com
--->
+*/
 
-<html>
+define([
+	'dojo/_base/declare',
+	'dijit/layout/ContentPane',
+], function(declare, ContentPane) {
+	
+	return declare('Aras.View.Window.Toolbar', [ContentPane], {
+			
+		Window: null,
+		
+		constructor: function(args) {
+		
+			this.content = "Toolbar";
+		},
+		
+		startup: function() {
+			this.inherited(arguments);
+		
+		}
 
-	<head>
-		<title>AAD</title>
-		
-		<link href="favicon.ico" rel="icon" type="image/x-icon" />
-		
-		<style>
-			@import "./js/Aras/Themes/claro/claro.css";
-		</style>
-		
-		<script>
-			dojoConfig={
-				has: {"dojo-firebug": true},
-				parseOnLoad: false,
-				async: true
-			};
-		</script>
-		
-		<script type="text/javascript" src="./js/dojo/dojo.js"></script>
-		
-		<script>
-			require(['Aras/View/Window', 'dojo/dom', 'dojo/domReady!'], function(Window, dom) {
-				var target = dom.byId('main');			
-				var window = new Window({ URL: '..', style: 'width: 100%; height: 100%', design: "sidebar", gutters: true }, target);
-				window.startup();
-			});
-		</script>
-		
-	</head>
-	
-	<body class="claro">
-	
-		<div id="main">
-		</div>
-		
-	</body>
-	
-</html>
+	});
+});
