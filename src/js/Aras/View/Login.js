@@ -39,7 +39,7 @@ define([
 	
 	return declare('Aras.View.Login', [Dialog], {
 		
-		ApplicationContainer: null,
+		Window: null,
 		
 		Database: null,
 		
@@ -104,14 +104,17 @@ define([
 			this.LoginButton.set('onClick', lang.hitch(this, function() {
 				
 				// Get Database
-				this.ApplicationContainer.Server.Database(this.Database.item.name).then(lang.hitch(this, function(database) {
+				this.Window.Server.Database(this.Database.item.name).then(lang.hitch(this, function(database) {
 		
 					// Login
 					database.Login(this.Username.value, MD5(this.Password.value, 1)).then(lang.hitch(this, function(session){
 
 						// Set Session
-						this.ApplicationContainer.set("Session", session);
+						this.Window.set("Session", session);
 							
+						// Clear Password
+						this.Password.set("value", '');
+						
 						// Close Dialog
 						this.hide();
 					
@@ -120,7 +123,7 @@ define([
 			}));
 						
 			// Get Database
-			this.ApplicationContainer.Server.Databases().then(lang.hitch(this, function(databases) {
+			this.Window.Server.Databases().then(lang.hitch(this, function(databases) {
 				
 				// Add Databases
 				var data = [];
