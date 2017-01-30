@@ -25,30 +25,76 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
+	'dojo/aspect',
 	'dijit/layout/ContentPane',
-], function(declare, lang, ContentPane) {
+	'dojox/layout/TableContainer',
+	'../TreeModels/SideMenuTree',
+	'../_Tree',
+], function(declare, lang, aspect, ContentPane, TableContainer, TreeModel, _Tree) {
 	
 	return declare('Aras.View.Window.SideMenu', [ContentPane], {
 			
 		Window: null,
 		
+		Table: null,
+		
+		Logo: null,
+		
+		TreeModel: null,
+		
+		Tree: null,
+		
 		constructor: function() {
 		
 			this.inherited(arguments);
-			
-			this.content = "Side Menu";
 		},
 		
 		startup: function() {
 			this.inherited(arguments);
 		
+			// Create Table to layout Logo and Menu
+			this.Table = new TableContainer({ cols: 1, showLabels: false });
+			this.Table.startup();
+			
+			
+			// Add Menu
+			this.Logo = new ContentPane({ content: '<div class="logo"></div>'});
+			this.Table.addChild(this.Logo);
+			
+			// Add Tree Model
+			this.TreeModel = new TreeModel({ Session: this.Window.Session });
+			
+			// Add Tree
+			this.Tree = new _Tree({style: 'height: 100%; width: 100%', region: 'center', gutters: false, persist: false, model: this.TreeModel, getIconClass: this.getIconClass, showRoot: false, autoExpand: true });
+			this.Table.addChild(this.Tree);
+			
+			this.set("content", this.Table);
+			
 			// Watch for Session changing
-			this.Window.watch('Session', lang.hitch(this, this._update));
+			this.Window.watch('Session', lang.hitch(this, function() {
+				
+				// Update Session in Tree Model
+				this.TreeModel.set("Session", this.Window.Session);
+			}));
 		},
 		
-		_update: function() {
-			
-			
+		getIconClass: function(item, opened) {
+					
+			if (item)
+			{
+				return item.Icon + 'Icon';
+			}
+			else
+			{
+				if (opened)
+				{
+					return 'dijitFolderOpened';
+				}
+				else
+				{
+					return 'dijitFolderClosed';
+				}
+			}
 		}
 
 	});

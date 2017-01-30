@@ -296,3 +296,19 @@ html, body
   height: 16px;
   width: 16px;
 }
+
+.logo 
+{
+  background-image:  url('./images/Logo.svg');
+  background-size: cover;
+  overflow: hidden;
+  height: 20px;
+  width: 112px;
+  padding: 0;
+  margin: 0;
+}
+
+.sideMenu
+{
+	width: 200px;
+}

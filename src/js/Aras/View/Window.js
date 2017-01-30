@@ -70,7 +70,7 @@ define([
 			this.inherited(arguments);
 			
 			// Create Side Menu
-			this.SideMenu = new SideMenu({ Window: this, region: "left", splitter:true });
+			this.SideMenu = new SideMenu({ class: "sideMenu", minSize: 200, Window: this, region: "left", splitter:true });
 			this.addChild(this.SideMenu);
 			
 			// Create Top Menu

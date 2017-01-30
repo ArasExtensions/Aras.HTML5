@@ -32,11 +32,52 @@ define([
 	
 	return declare('Aras.View.TreeModels.SideMenuTree', [Stateful], {
 		
+		Session: null,
+		
 		RootNode: null,
 		
 		constructor: function(args) {
 			
 			lang.mixin(this, args);
+			
+			// Update
+			this._update();
+			
+			// Watch for Changes in RootNode
+			this.watch('Session', lang.hitch(this, function() {
+				
+				// Update
+				this._update();
+			}));
+		},
+		
+		_update: function() {
+		
+			if (this.Session == null)
+			{
+				// Create Dummy Root Node
+				this.RootNode = {ID: '-1', Name: 'Root', Label: 'Root', Children: [] };
+				
+				// Signal Change
+				this.onChange(this.RootNode);
+				this.onChildrenChange(this.RootNode, this.RootNode.Children);	
+			}
+			else
+			{
+				// Get ApplicationTypes from Server and update tree
+				this.Session.ApplicationTypes().then(lang.hitch(this, function(applicationtype){
+					
+					// Force RootNode ID to be -1
+					applicationtype.ID = '-1';
+					
+					// Set as Root Node
+					this.RootNode = applicationtype;
+				
+					// Signal Change
+					this.onChange(this.RootNode);
+					this.onChildrenChange(this.RootNode, this.RootNode.Children);	
+				}));
+			}
 		},
 		
 		destroy: function(){
@@ -62,9 +103,16 @@ define([
 		
 		getChildren: function(parentItem, onComplete, onError){
 
-			if (parentItem.Children)
+			if (parentItem)
 			{
-				onComplete(parentItem.Children);
+				if (parentItem.Children)
+				{
+					onComplete(parentItem.Children);
+				}
+				else
+				{
+					onComplete([]);
+				}
 			}
 			else
 			{
@@ -79,12 +127,26 @@ define([
 		
 		getIdentity: function(item){
 			
-			return item.ID;
+			if (item)
+			{
+				return item.ID;
+			}
+			else
+			{
+				return null;
+			}
 		},
 		
 		getLabel: function(item){
 			
-			return item.Name;
+			if (item)
+			{
+				return item.Label;
+			}
+			else
+			{
+				return null;
+			}
 		},
 		
 		newItem: function(args, parent, insertIndex, before){

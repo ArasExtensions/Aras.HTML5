@@ -119,22 +119,8 @@ define([
 							   { headers: {'Accept': 'application/json'}, 
 								 handleAs: 'json'
 							   }).then(
-				lang.hitch(this, function(result) {
-			
-					var ret = [];
-			
-					array.forEach(result, lang.hitch(this, function(entry) {
-						
-						if (!this._applicationTypeCache[entry.Name])
-						{
-							entry['Session'] = this;
-							this._applicationTypeCache[entry.Name] = new ApplicationType(entry);
-						}
-
-						ret.push(this._applicationTypeCache[entry.Name]);
-					}));
-					
-					return ret;
+				lang.hitch(this, function(result) {					
+					return result;
 				}),
 				lang.hitch(this, function(error) {
 					this.ProcessError(error);
