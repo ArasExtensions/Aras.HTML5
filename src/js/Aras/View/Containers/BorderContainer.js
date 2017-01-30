@@ -31,7 +31,7 @@ define([
 	
 	return declare('Aras.View.Containers.BorderContainer', [BorderContainer, Container], {
 		
-		constructor: function(args) {
+		constructor: function() {
 			
 		},
 		

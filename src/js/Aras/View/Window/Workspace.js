@@ -24,21 +24,42 @@
 
 define([
 	'dojo/_base/declare',
+	'dojo/_base/lang',
 	'dijit/layout/ContentPane',
-], function(declare, ContentPane) {
+	'../Containers/Application',
+], function(declare, lang, ContentPane, Application) {
 	
 	return declare('Aras.View.Window.Workspace', [ContentPane], {
 			
 		Window: null,
+
+		Application: null,
 		
-		constructor: function(args) {
+		constructor: function() {
 		
-			this.content = "Workspace";
+			this.inherited(arguments);
 		},
 		
 		startup: function() {
 			this.inherited(arguments);
+
+		},
 		
+		StartApplication: function(ViewModel) {
+			
+			if (this.Application)
+			{
+				this.Application.destroyRecursive();
+			}
+			
+			// Create Application
+			this.Application = new Application();
+							
+			// Place Application in Workspace
+			this.set("content", this.Application);
+							
+			// Set Application ViewModel
+			this.Application.set("ViewModel", ViewModel);
 		}
 
 	});

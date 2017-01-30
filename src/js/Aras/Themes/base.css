@@ -297,6 +297,14 @@ html, body
   width: 16px;
 }
 
+.smallProjectIcon 
+{
+  background-image:  url('./images/Project.svg');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}
+
 .logo 
 {
   background-image:  url('./images/Logo.svg');

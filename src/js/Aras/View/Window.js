@@ -59,11 +59,12 @@ define([
 		
 		Workspace: null,
 		
-		_applicationCache: new Object(),
+		_applicationViewModelCache: null,
 		
 		constructor: function() {
 			this.inherited(arguments);
 			
+			this._applicationViewModelCache = new Object();
 		},
 				
 		startup: function() {
@@ -108,13 +109,40 @@ define([
 		
 		_logout() {
 		
-			// Logout
+			// Clear Session
 			this.set("Session", null);
+			
+			// Clear Application Cache
+			this._applicationCache = new Object();
 		},
 		
-		_startApplication(name) {
+		_startApplication(ApplicationType) {
 			
-			console.debug(name);
+			if (this.Session)
+			{
+				if (ApplicationType)
+				{
+					if (ApplicationType.Name)
+					{
+						if (this._applicationViewModelCache[ApplicationType.Name])
+						{
+							// Place Application in Workspace
+							this.Workspace.StartApplication(this._applicationViewModelCache[ApplicationType.Name]);
+						}
+						else
+						{
+							this.Session.Application(ApplicationType.Name).then(lang.hitch(this, function(viewmodel) {
+							
+								// Store ViewModel
+								this._applicationViewModelCache[viewmodel.Name] = viewmodel;
+							
+								// Place Application in Workspace
+								this.Workspace.StartApplication(viewmodel);
+							}));
+						}
+					}
+				}
+			}
 		},
 		
 		_displayServerError: function() {

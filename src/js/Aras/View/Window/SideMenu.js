@@ -56,7 +56,6 @@ define([
 			this.Table = new TableContainer({ cols: 1, showLabels: false });
 			this.Table.startup();
 			
-			
 			// Add Menu
 			this.Logo = new ContentPane({ content: '<div class="logo"></div>'});
 			this.Table.addChild(this.Logo);
@@ -66,6 +65,11 @@ define([
 			
 			// Add Tree
 			this.Tree = new _Tree({style: 'height: 100%; width: 100%', region: 'center', gutters: false, persist: false, model: this.TreeModel, getIconClass: this.getIconClass, showRoot: false, autoExpand: true });
+			this.Tree.onClick = lang.hitch(this, function(item) {
+				
+				// Start Application
+				this.Window._startApplication(item);
+			});
 			this.Table.addChild(this.Tree);
 			
 			this.set("content", this.Table);
@@ -82,7 +86,7 @@ define([
 					
 			if (item)
 			{
-				return item.Icon + 'Icon';
+				return 'small' + item.Icon + 'Icon';
 			}
 			else
 			{
