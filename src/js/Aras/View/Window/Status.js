@@ -33,7 +33,7 @@ define([
 		
 		constructor: function(args) {
 		
-			this.content = "Status";
+			this.content = "Ready";
 		},
 		
 		startup: function() {

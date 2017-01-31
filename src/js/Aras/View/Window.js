@@ -99,6 +99,9 @@ define([
 			// Create Login
 			this.Login = new Login({ id: "login", class: "login", Window: this, title: 'Aras Innovator Login' });
 			this.Login.startup();
+			
+			// Display Login
+			this.Login.show();
 		},
 
 		_login() {
