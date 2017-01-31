@@ -25,15 +25,13 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
-	'dijit/layout/ContentPane',
+	'dijit/layout/TabContainer',
 	'../Containers/Application',
-], function(declare, lang, ContentPane, Application) {
+], function(declare, lang, TabContainer, Application) {
 	
-	return declare('Aras.View.Window.Workspace', [ContentPane], {
+	return declare('Aras.View.Window.Workspace', [TabContainer], {
 			
 		Window: null,
-
-		Application: null,
 		
 		constructor: function() {
 		
@@ -47,29 +45,43 @@ define([
 		
 		StartApplication: function(ViewModel) {
 			
-			if (this.Application)
+			var currentapplicatons = this.getChildren();
+			var application = null;
+			
+			for(i=0; i<currentapplicatons.length; i++)
 			{
-				this.Application.destroyRecursive();
+				if (currentapplicatons[i].id == ViewModel.Name)
+				{
+					application = currentapplicatons[i];
+					break;
+				}
 			}
 			
-			// Create Application
-			this.Application = new Application();
-							
-			// Place Application in Workspace
-			this.set("content", this.Application);
-							
-			// Set Application ViewModel
-			this.Application.set("ViewModel", ViewModel);
+			if (application == null)
+			{
+				// Create Application
+				application = new Application({ id: ViewModel.Name, title: ViewModel.Label, iconClass: "small" + ViewModel.Icon + "Icon" });
+				
+				// Add to TabContainer
+				this.addChild(application);
+			
+				// Set Application ViewModel
+				application.set("ViewModel", ViewModel);
+			}
+			
+			// Select Application
+			this.selectChild(application);
 		},
 		
-		StopApplication: function() {
+		DeleteApplications: function() {
 			
-			if (this.Application)
+			var currentapplicatons = this.getChildren();
+			
+			for(i=0; i<currentapplicatons.length; i++)
 			{
-				this.Application.destroyRecursive();
+				this.removeChild(currentapplicatons[i]);
+				currentapplicatons[i].destroyRecursive();
 			}
-			
-			this.set("content", null);
 		}
 
 	});

@@ -14,7 +14,7 @@
 
 .sideMenu
 {
-	width: 200px;
+	width: 170px;
 }
 
 .sideMenuLogo 
@@ -22,14 +22,14 @@
 	background-image:  url('./images/Logo.svg');
 	background-size: cover;
 	overflow: hidden;
-	height: 32px;
-	width: 180px;
-	margin: 10px;
+	height: 28px;
+	width: 158px;
+	margin: 5px;
 }
 
 .sideMenuTree
 {
-	margin: 10px;
+	margin: 5px;
 }
 
 .topMenu

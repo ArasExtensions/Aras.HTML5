@@ -71,7 +71,7 @@ define([
 			this.inherited(arguments);
 			
 			// Create Side Menu
-			this.SideMenu = new SideMenu({ id: "sideMenu", class: "sideMenu", minSize: 205, Window: this, region: "left", splitter: true });
+			this.SideMenu = new SideMenu({ id: "sideMenu", class: "sideMenu", minSize: 180, Window: this, region: "left", splitter: true });
 			this.addChild(this.SideMenu);
 			
 			// Create Top Menu
@@ -113,9 +113,9 @@ define([
 			this.set("Session", null);
 			
 			// Stop Application
-			this.Workspace.StopApplication();
+			this.Workspace.DeleteApplications();
 			
-			// Clear Application Cache
+			// Clear Application ViewModel Cache
 			this._applicationCache = new Object();
 		},
 		

@@ -29,25 +29,19 @@ define([
 ], function(declare, BorderContainer, ContentPane) {
 	
 	return declare('Aras.View.Containers.Application', [BorderContainer], {
-			
-		Test: null,
-		
+					
 		constructor: function() {
 			this.inherited(arguments);
 		},
 		
 		startup: function() {
 			this.inherited(arguments);
-			
-			// Add Application Name to Content Pane
-			this.Test = new ContentPane({ region: "top" });
-			this.addChild(this.Test);
+
 		},
 		
 		OnViewModelLoaded: function() {
 			this.inherited(arguments);
-			
-			this.Test.set("content", this.ViewModel.Name);
+
 		}
 
 	});
