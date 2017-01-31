@@ -28,8 +28,8 @@ define([
 	'./Control'
 ], function(declare, Toolbar, Control) {
 	
-	return declare('Aras.View.Toolbar', [Toolbar, Control], {
-			
+	return declare('Aras.View.ToolBar', [Toolbar, Control], {
+		
 		constructor: function(args) {
 	
 		},

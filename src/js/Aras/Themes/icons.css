@@ -355,3 +355,35 @@
   height: 16px;
   width: 16px;
 }
+
+.mediumLoginIcon 
+{
+  background-image:  url('./images/Login.png');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
+
+.smallLoginIcon 
+{
+  background-image:  url('./images/Login.png');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}
+
+.mediumLogoutIcon 
+{
+  background-image:  url('./images/Logout.png');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
+
+.smallLogoutIcon 
+{
+  background-image:  url('./images/Logout.png');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}

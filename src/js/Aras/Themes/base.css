@@ -38,7 +38,7 @@
 	margin: 0;
 }
 
-.toolBar
+.topToolBar
 {
 	padding: 0;
 	margin: 0;
@@ -53,6 +53,12 @@
 .workspace
 {
 	padding: 0;
+	margin: 0;
+}
+
+.login th, td
+{
+	padding: 5px;
 	margin: 0;
 }
 

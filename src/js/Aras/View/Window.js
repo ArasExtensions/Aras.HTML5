@@ -33,11 +33,11 @@ define([
 	'./Window/SideMenu',
 	'./Window/Status',
 	'./Window/TopMenu',
-	'./Window/Toolbar',
+	'./Window/TopToolBar',
 	'./Window/Workspace',
 	'./ErrorDialog',
 	'../ViewModel/Server'
-], function(declare, lang, BorderContainer, ContentPane, TableContainer, Button, Login, SideMenu, Status, TopMenu, Toolbar, Workspace, ErrorDialog, Server) {
+], function(declare, lang, BorderContainer, ContentPane, TableContainer, Button, Login, SideMenu, Status, TopMenu, TopToolBar, Workspace, ErrorDialog, Server) {
 	
 	return declare('Aras.View.Window', [BorderContainer], {
 		
@@ -53,7 +53,7 @@ define([
 		
 		TopMenu: null,
 		
-		Toolbar: null,
+		TopToolBar: null,
 		
 		Status: null,
 		
@@ -78,9 +78,9 @@ define([
 			this.TopMenu = new TopMenu({ id: "topMenu", class: "topMenu", region: "top", Window: this, splitter: false });
 			this.addChild(this.TopMenu);
 	
-			// Create Toolbar
-			this.Toolbar = new Toolbar({ id: "toolBar", class: "toolBar", region: "top", Window: this, splitter: false });
-			this.addChild(this.Toolbar);
+			// Create Top ToolBar
+			this.TopToolBar = new TopToolBar({ id: "topToolBar", class: "topToolBar", region: "top", Window: this, splitter: false });
+			this.addChild(this.TopToolBar);
 			
 			// Create Status
 			this.Status = new Status({ id: "status", class: "status", region: "bottom", Window: this, splitter: false });
@@ -97,7 +97,7 @@ define([
 			this.Server.watch('InError', lang.hitch(this, this._displayServerError));
 			
 			// Create Login
-			this.Login = new Login({ Window: this, title: 'Aras Innovator Login' });
+			this.Login = new Login({ id: "login", class: "login", Window: this, title: 'Aras Innovator Login' });
 			this.Login.startup();
 		},
 
