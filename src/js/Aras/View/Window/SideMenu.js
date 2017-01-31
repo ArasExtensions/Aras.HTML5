@@ -57,14 +57,14 @@ define([
 			this.Table.startup();
 			
 			// Add Menu
-			this.Logo = new ContentPane({ content: '<div class="logo"></div>'});
+			this.Logo = new ContentPane({ content: '<div id="sideMenuLogo" class="sideMenuLogo"></div>'});
 			this.Table.addChild(this.Logo);
 			
 			// Add Tree Model
 			this.TreeModel = new TreeModel({ Session: this.Window.Session });
 			
 			// Add Tree
-			this.Tree = new _Tree({style: 'height: 100%; width: 100%', region: 'center', gutters: false, persist: false, model: this.TreeModel, getIconClass: this.getIconClass, showRoot: false, autoExpand: true });
+			this.Tree = new _Tree({ id: "sideMenuTree", class: "sideMenuTree", style: 'height: 100%; width: 100%', region: 'center', gutters: false, persist: false, model: this.TreeModel, getIconClass: this.getIconClass, showRoot: false, autoExpand: true });
 			this.Tree.onClick = lang.hitch(this, function(item) {
 				
 				// Start Application

@@ -1,6 +1,9 @@
-@import '../base.css';
+@import '../../../dojo/resources/dojo.css';
+@import '../../../dgrid/css/dgrid.css';
 @import '../../../dijit/themes/tundra/tundra.css';
 @import '../../../dgrid/css/skins/tundra.css';
+@import '../icons.css';
+@import '../base.css';
 
 .dgrid-row-odd 
 {

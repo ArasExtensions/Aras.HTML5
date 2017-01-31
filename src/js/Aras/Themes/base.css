@@ -1,322 +1,68 @@
-﻿@import '../../dojo/resources/dojo.css';
-@import '../../dgrid/css/dgrid.css';
-
-html, body
+﻿html, body
 {
-    height: 100%;
+	height: 100%;
 	width: 100%;
 	margin: 0;
 	padding: 0;
 }
 
+.mainWindow
+{
+	padding: 0;
+	margin: 0;
+}
+
+.sideMenuWindow
+{
+	width: 200px;
+}
+
+.sideMenuLogo 
+{
+	background-image:  url('./images/Logo.svg');
+	background-size: cover;
+	overflow: hidden;
+	height: 32px;
+	width: 180px;
+	margin: 10px;
+}
+
+.sideMenuTree
+{
+	margin: 10px;
+}
+
+.topMenuWindow
+{
+	padding: 0;
+	margin: 0;
+}
+
+.toolBarWindow
+{
+	padding: 0;
+	margin: 0;
+}
+
+.statusWindow
+{
+	padding: 0;
+	margin: 0;
+}
+
+.workspaceWindow
+{
+	padding: 0;
+	margin: 0;
+}
+
 .dgrid-row 
 {
-    height: 22px;
+	height: 22px;
 }
 
 .dgrid
 {
 	height: 100%;
 	width: 100%;
-}
-
-.dgrid-column-quantity
-{
-	width: 50px;
-}
-
-.dgrid-column-value
-{
-	width: 150px;
-}
-
-.menuButton span 
-{
-	width: 75px;
-}
-
-.editItemIcon 
-{
-  background-image:  url('./images/EditItem.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
-}
-
-.checkMarkIcon 
-{
-  background-image:  url('./images/CheckMark.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
-}
-
-.searchIcon 
-{
-  background-image:  url('./images/Search.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
-}
-
-.refreshIcon 
-{
-  background-image:  url('./images/Refresh.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
-}
-
-.saveIcon 
-{
-  background-image:  url('./images/Save.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
-}
-
-.disableIcon
-{
-  filter: url('./images/GrayScale.svg#grayscale');
-  opacity: 0.5;
-}
-
-.nextPageIcon 
-{
-  background-image:  url('./images/NextPage.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
-}
-
-.previousPageIcon 
-{
-  background-image:  url('./images/PreviousPage.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
-}
-
-.collapseAllIcon 
-{
-  background-image:  url('./images/CollapseAll.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
-}
-
-.expandAllIcon 
-{
-  background-image:  url('./images/ExpandAll.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
-}
-
-.smallPartIcon 
-{
-  background-image:  url('./images/Part.svg');
-  background-size: 16px 16px;
-  height: 16px;
-  width: 16px;
-}
-
-.largePartIcon 
-{
-  background-image:  url('./images/Part.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
-}
-
-.copyIcon 
-{
-  background-image:  url('./images/Copy.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
-}
-
-.cutIcon 
-{
-  background-image:  url('./images/Cut.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
-}
-
-.pasteIcon 
-{
-  background-image:  url('./images/Paste.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
-}
-
-.deleteIcon 
-{
-  background-image:  url('./images/Delete.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
-}
-
-.arrowRightIcon 
-{
-  background-image:  url('./images/ArrowRight.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
-}
-
-.arrowLeftIcon 
-{
-  background-image:  url('./images/ArrowLeft.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
-}
-
-.undoIcon 
-{
-  background-image:  url('./images/Undo.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
-}
-
-.newIcon 
-{
-  background-image:  url('./images/New.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
-}
-
-.compileIcon 
-{
-  background-image:  url('./images/Compile.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
-}
-
-.partFamilyIcon 
-{
-  background-image:  url('./images/PartFamily.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
-}
-
-.errorIcon 
-{
-  background-image:  url('./images/Error.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
-}
-
-.smallCopyIcon 
-{
-  background-image:  url('./images/Copy.svg');
-  background-size: 16px 16px;
-  height: 16px;
-  width: 16px;
-}
-
-.smallCutIcon 
-{
-  background-image:  url('./images/Cut.svg');
-  background-size: 16px 16px;
-  height: 16px;
-  width: 16px;
-}
-
-.smallPasteIcon 
-{
-  background-image:  url('./images/Paste.svg');
-  background-size: 16px 16px;
-  height: 16px;
-  width: 16px;
-}
-
-.smallDeleteIcon 
-{
-  background-image:  url('./images/Delete.svg');
-  background-size: 16px 16px;
-  height: 16px;
-  width: 16px;
-}
-
-.smallArrowRightIcon 
-{
-  background-image:  url('./images/ArrowRight.svg');
-  background-size: 16px 16px;
-  height: 16px;
-  width: 16px;
-}
-
-.smallArrowLeftIcon 
-{
-  background-image:  url('./images/ArrowLeft.svg');
-  background-size: 16px 16px;
-  height: 16px;
-  width: 16px;
-}
-
-.smallUndoIcon 
-{
-  background-image:  url('./images/Undo.svg');
-  background-size: 16px 16px;
-  height: 16px;
-  width: 16px;
-}
-
-.smallNewIcon 
-{
-  background-image:  url('./images/New.svg');
-  background-size: 16px 16px;
-  height: 16px;
-  width: 16px;
-}
-
-.smallCompileIcon 
-{
-  background-image:  url('./images/Compile.svg');
-  background-size: 16px 16px;
-  height: 16px;
-  width: 16px;
-}
-
-.smallPartFamilyIcon 
-{
-  background-image:  url('./images/PartFamily.svg');
-  background-size: 16px 16px;
-  height: 16px;
-  width: 16px;
-}
-
-.smallProjectIcon 
-{
-  background-image:  url('./images/Project.svg');
-  background-size: 16px 16px;
-  height: 16px;
-  width: 16px;
-}
-
-.logo 
-{
-  background-image:  url('./images/Logo.svg');
-  background-size: cover;
-  overflow: hidden;
-  height: 20px;
-  width: 112px;
-  padding: 0;
-  margin: 0;
-}
-
-.sideMenu
-{
-	width: 200px;
 }

@@ -71,23 +71,23 @@ define([
 			this.inherited(arguments);
 			
 			// Create Side Menu
-			this.SideMenu = new SideMenu({ class: "sideMenu", minSize: 200, Window: this, region: "left", splitter:true });
+			this.SideMenu = new SideMenu({ id: "sideMenuWindow", class: "sideMenuWindow", minSize: 205, Window: this, region: "left", splitter: true });
 			this.addChild(this.SideMenu);
 			
 			// Create Top Menu
-			this.TopMenu = new TopMenu({ region: "top", Window: this });
+			this.TopMenu = new TopMenu({ id: "topMenuWindow", class: "topMenuWindow", region: "top", Window: this, splitter: false });
 			this.addChild(this.TopMenu);
 	
 			// Create Toolbar
-			this.Toolbar = new Toolbar({ region: "top", Window: this });
+			this.Toolbar = new Toolbar({ id: "toolBarWindow", class: "toolBarWindow", region: "top", Window: this, splitter: false });
 			this.addChild(this.Toolbar);
 			
 			// Create Status
-			this.Status = new Status({ region: "bottom", Window: this });
+			this.Status = new Status({ id: "statusWindow", class: "statusWindow", region: "bottom", Window: this, splitter: false });
 			this.addChild(this.Status);
 			
 			// Create Workspace
-			this.Workspace = new Workspace({ region: "center", splitter:true });
+			this.Workspace = new Workspace({ id: "workspaceWindow", class: "workspaceWindow", region: "center", splitter:true });
 			this.addChild(this.Workspace);
 			
 			// Create Server

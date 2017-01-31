@@ -1,0 +1,357 @@
+.mediumEditItemIcon 
+{
+  background-image:  url('./images/EditItem.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
+
+.smallEditItemIcon 
+{
+  background-image:  url('./images/EditItem.svg');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}
+
+.mediumCheckMarkIcon 
+{
+  background-image:  url('./images/CheckMark.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
+
+.smallCheckMarkIcon 
+{
+  background-image:  url('./images/CheckMark.svg');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}
+
+.mediumSearchIcon 
+{
+  background-image:  url('./images/Search.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
+
+.smallSearchIcon 
+{
+  background-image:  url('./images/Search.svg');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}
+
+.mediumRefreshIcon 
+{
+  background-image:  url('./images/Refresh.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
+
+.smallRefreshIcon 
+{
+  background-image:  url('./images/Refresh.svg');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}
+
+.mediumSaveIcon 
+{
+  background-image:  url('./images/Save.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
+
+.smallSaveIcon 
+{
+  background-image:  url('./images/Save.svg');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}
+
+.disableIcon
+{
+  filter: url('./images/GrayScale.svg#grayscale');
+  opacity: 0.5;
+}
+
+.mediumNextPageIcon 
+{
+  background-image:  url('./images/NextPage.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
+
+.smallNextPageIcon 
+{
+  background-image:  url('./images/NextPage.svg');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}
+
+.mediumPreviousPageIcon 
+{
+  background-image:  url('./images/PreviousPage.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
+
+.smallPreviousPageIcon 
+{
+  background-image:  url('./images/PreviousPage.svg');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}
+
+.mediumCollapseAllIcon 
+{
+  background-image:  url('./images/CollapseAll.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
+
+.smallCollapseAllIcon 
+{
+  background-image:  url('./images/CollapseAll.svg');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}
+
+.mediumExpandAllIcon 
+{
+  background-image:  url('./images/ExpandAll.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
+
+.smallExpandAllIcon 
+{
+  background-image:  url('./images/ExpandAll.svg');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}
+
+.mediumPartIcon 
+{
+  background-image:  url('./images/Part.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
+
+.smallPartIcon 
+{
+  background-image:  url('./images/Part.svg');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}
+
+.mediumCopyIcon 
+{
+  background-image:  url('./images/Copy.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
+
+.smallCopyIcon 
+{
+  background-image:  url('./images/Copy.svg');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}
+
+.mediumCutIcon 
+{
+  background-image:  url('./images/Cut.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
+
+.smallCutIcon 
+{
+  background-image:  url('./images/Cut.svg');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}
+
+.mediumPasteIcon 
+{
+  background-image:  url('./images/Paste.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
+
+.smallPasteIcon 
+{
+  background-image:  url('./images/Paste.svg');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}
+
+.mediumDeleteIcon 
+{
+  background-image:  url('./images/Delete.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
+
+.smallDeleteIcon 
+{
+  background-image:  url('./images/Delete.svg');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}
+
+.mediumArrowRightIcon 
+{
+  background-image:  url('./images/ArrowRight.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
+
+.smallArrowRightIcon 
+{
+  background-image:  url('./images/ArrowRight.svg');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}
+
+.mediumArrowLeftIcon 
+{
+  background-image:  url('./images/ArrowLeft.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
+
+.smallArrowLeftIcon 
+{
+  background-image:  url('./images/ArrowLeft.svg');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}
+
+.mediumUndoIcon 
+{
+  background-image:  url('./images/Undo.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
+
+.smallUndoIcon 
+{
+  background-image:  url('./images/Undo.svg');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}
+
+.mediumNewIcon 
+{
+  background-image:  url('./images/New.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
+
+.smallNewIcon 
+{
+  background-image:  url('./images/New.svg');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}
+
+.mediumCompileIcon 
+{
+  background-image:  url('./images/Compile.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
+
+.smallCompileIcon 
+{
+  background-image:  url('./images/Compile.svg');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}
+
+.mediumPartFamilyIcon 
+{
+  background-image:  url('./images/PartFamily.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
+
+.smallPartFamilyIcon 
+{
+  background-image:  url('./images/PartFamily.svg');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}
+
+.mediumErrorIcon 
+{
+  background-image:  url('./images/Error.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
+
+.smallErrorIcon 
+{
+  background-image:  url('./images/Error.svg');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}
+
+.mediumProjectIcon 
+{
+  background-image:  url('./images/Project.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
+
+.smallProjectIcon 
+{
+  background-image:  url('./images/Project.svg');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}

@@ -53,7 +53,7 @@ define([
 			this.Window.watch('Session', lang.hitch(this, this._updateMenuBar));
 			
 			// Create MenuBar
-			this.MenuBar = new MenuBar();
+			this.MenuBar = new MenuBar({ id: 'topMenuBar' });
 			this.addChild(this.MenuBar);
 		
 			// Create Server Menu

@@ -1,6 +1,9 @@
-@import '../base.css';
+@import '../../../dojo/resources/dojo.css';
+@import '../../../dgrid/css/dgrid.css';
 @import '../../../dijit/themes/claro/claro.css';
 @import '../../../dgrid/css/skins/claro.css';
+@import '../icons.css';
+@import '../base.css';
 
 .dgrid-row-odd 
 {
