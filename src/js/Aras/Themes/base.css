@@ -6,13 +6,13 @@
 	padding: 0;
 }
 
-.mainWindow
+.main
 {
 	padding: 0;
 	margin: 0;
 }
 
-.sideMenuWindow
+.sideMenu
 {
 	width: 200px;
 }
@@ -32,25 +32,25 @@
 	margin: 10px;
 }
 
-.topMenuWindow
+.topMenu
 {
 	padding: 0;
 	margin: 0;
 }
 
-.toolBarWindow
+.toolBar
 {
 	padding: 0;
 	margin: 0;
 }
 
-.statusWindow
+.status
 {
 	padding: 0;
 	margin: 0;
 }
 
-.workspaceWindow
+.workspace
 {
 	padding: 0;
 	margin: 0;

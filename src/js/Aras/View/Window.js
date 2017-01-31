@@ -71,23 +71,23 @@ define([
 			this.inherited(arguments);
 			
 			// Create Side Menu
-			this.SideMenu = new SideMenu({ id: "sideMenuWindow", class: "sideMenuWindow", minSize: 205, Window: this, region: "left", splitter: true });
+			this.SideMenu = new SideMenu({ id: "sideMenu", class: "sideMenu", minSize: 205, Window: this, region: "left", splitter: true });
 			this.addChild(this.SideMenu);
 			
 			// Create Top Menu
-			this.TopMenu = new TopMenu({ id: "topMenuWindow", class: "topMenuWindow", region: "top", Window: this, splitter: false });
+			this.TopMenu = new TopMenu({ id: "topMenu", class: "topMenu", region: "top", Window: this, splitter: false });
 			this.addChild(this.TopMenu);
 	
 			// Create Toolbar
-			this.Toolbar = new Toolbar({ id: "toolBarWindow", class: "toolBarWindow", region: "top", Window: this, splitter: false });
+			this.Toolbar = new Toolbar({ id: "toolBar", class: "toolBar", region: "top", Window: this, splitter: false });
 			this.addChild(this.Toolbar);
 			
 			// Create Status
-			this.Status = new Status({ id: "statusWindow", class: "statusWindow", region: "bottom", Window: this, splitter: false });
+			this.Status = new Status({ id: "status", class: "status", region: "bottom", Window: this, splitter: false });
 			this.addChild(this.Status);
 			
 			// Create Workspace
-			this.Workspace = new Workspace({ id: "workspaceWindow", class: "workspaceWindow", region: "center", splitter:true });
+			this.Workspace = new Workspace({ id: "workspace", class: "workspace", region: "center", splitter:true });
 			this.addChild(this.Workspace);
 			
 			// Create Server
@@ -111,6 +111,9 @@ define([
 		
 			// Clear Session
 			this.set("Session", null);
+			
+			// Stop Application
+			this.Workspace.StopApplication();
 			
 			// Clear Application Cache
 			this._applicationCache = new Object();

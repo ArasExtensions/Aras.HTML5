@@ -25,18 +25,15 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
-	'dijit/layout/ContentPane',
 	'../MenuBar',
 	'../PopupMenuBarItem',
 	'../DropDownMenu',
 	'../MenuItem',
-], function(declare, lang, ContentPane, MenuBar, PopupMenuBarItem, DropDownMenu, MenuItem) {
+], function(declare, lang, MenuBar, PopupMenuBarItem, DropDownMenu, MenuItem) {
 	
-	return declare('Aras.View.Window.TopMenu', [ContentPane], {
+	return declare('Aras.View.Window.TopMenu', [MenuBar], {
 			
 		Window: null,
-		
-		MenuBar: null,
 		
 		LoginMenu: null,
 		
@@ -51,15 +48,11 @@ define([
 			
 			// Watch for Window Session changing
 			this.Window.watch('Session', lang.hitch(this, this._updateMenuBar));
-			
-			// Create MenuBar
-			this.MenuBar = new MenuBar({ id: 'topMenuBar' });
-			this.addChild(this.MenuBar);
 		
 			// Create Server Menu
 			var servermenu = new DropDownMenu();
 			var serverpopupmenu = new PopupMenuBarItem({ label: 'Server', popup: servermenu });
-			this.MenuBar.addChild(serverpopupmenu);
+			this.addChild(serverpopupmenu);
 			
 			// Add Login Menu Item
 			this.LoginMenu = new MenuItem({ label: 'Login' });
@@ -69,7 +62,6 @@ define([
 				
 			}));
 
-			
 			// Add Logout Menu Item
 			this.LogoutMenu = new MenuItem({ label: 'Logout' });
 			servermenu.addChild(this.LogoutMenu);

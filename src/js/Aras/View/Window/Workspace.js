@@ -60,6 +60,16 @@ define([
 							
 			// Set Application ViewModel
 			this.Application.set("ViewModel", ViewModel);
+		},
+		
+		StopApplication: function() {
+			
+			if (this.Application)
+			{
+				this.Application.destroyRecursive();
+			}
+			
+			this.set("content", null);
 		}
 
 	});
