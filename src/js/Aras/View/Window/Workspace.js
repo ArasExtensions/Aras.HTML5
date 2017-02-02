@@ -36,6 +36,9 @@ define([
 		constructor: function() {
 		
 			this.inherited(arguments);
+			
+			this.tabPosition = "bottom";
+			this.tabStrip = "true";
 		},
 		
 		startup: function() {
