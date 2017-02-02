@@ -28,7 +28,7 @@ define([
 	'./Control'
 ], function(declare, Toolbar, Control) {
 	
-	return declare('Aras.View.Containers.ToolBar', [Toolbar, Control], {
+	return declare('Aras.View.Containers.Toolbar', [Toolbar, Control], {
 		
 		constructor: function(args) {
 	
