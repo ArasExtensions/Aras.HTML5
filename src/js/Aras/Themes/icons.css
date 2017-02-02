@@ -1,4 +1,4 @@
-.mediumEditItemIcon 
+.mediumEditIcon 
 {
   background-image:  url('./images/EditItem.svg');
   background-size: 24px 24px;
@@ -6,7 +6,7 @@
   width: 24px;
 }
 
-.smallEditItemIcon 
+.smallEditIcon 
 {
   background-image:  url('./images/EditItem.svg');
   background-size: 16px 16px;
@@ -73,6 +73,22 @@
 .smallSaveIcon 
 {
   background-image:  url('./images/Save.svg');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}
+
+.mediumSaveUnlockIcon 
+{
+  background-image:  url('./images/SaveUnlockClose.svg');
+  background-size: 24px 24px;
+  height: 24px;
+  width: 24px;
+}
+
+.smallSaveUnlockIcon 
+{
+  background-image:  url('./images/SaveUnlockClose.svg');
   background-size: 16px 16px;
   height: 16px;
   width: 16px;
