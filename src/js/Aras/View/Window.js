@@ -33,7 +33,7 @@ define([
 	'./Window/SideMenu',
 	'./Window/Status',
 	'./Window/TopMenu',
-	'./Window/TopToolBar',
+	'./Containers/Toolbar',
 	'./Window/Workspace',
 	'./ErrorDialog',
 	'../ViewModel/Server'
@@ -70,6 +70,9 @@ define([
 		startup: function() {
 			this.inherited(arguments);
 			
+			// Set defaults for Tooltips
+			dijit.Tooltip.defaultPosition = ['above', 'below'];
+			
 			// Create Side Menu
 			this.SideMenu = new SideMenu({ id: "sideMenu", class: "sideMenu", minSize: 180, Window: this, region: "left", splitter: true });
 			this.addChild(this.SideMenu);
@@ -87,7 +90,7 @@ define([
 			this.addChild(this.Status);
 			
 			// Create Workspace
-			this.Workspace = new Workspace({ id: "workspace", class: "workspace", region: "center", splitter:true });
+			this.Workspace = new Workspace({ id: "workspace", class: "workspace", region: "center", Window: this,  splitter:true });
 			this.addChild(this.Workspace);
 			
 			// Create Server

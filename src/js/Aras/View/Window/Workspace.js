@@ -74,6 +74,9 @@ define([
 			
 			// Select Application
 			this.selectChild(application);
+			
+			// Update Toolbar
+			this.Window.TopToolBar.set("ViewModel", ViewModel.Toolbar);
 		},
 		
 		DeleteApplications: function() {

@@ -24,11 +24,24 @@
 
 define([
 	'dojo/_base/declare',
+	'dojo/_base/lang',
+	'dojo/promise/all',
 	'dijit/Toolbar',
-	'./Control'
-], function(declare, Toolbar, Control) {
+	'../Control',
+	'dijit/Tooltip',
+	'../Button',
+	'dijit/ToolbarSeparator',
+], function(declare, lang, all, Toolbar, Control, Tooltip, Button, Separator) {
 	
 	return declare('Aras.View.Containers.Toolbar', [Toolbar, Control], {
+		
+		Window: null,
+		
+		LoginButton: null,
+		
+		LogoutButton: null,
+		
+		SessionWatch: null,
 		
 		constructor: function(args) {
 	
@@ -36,6 +49,114 @@ define([
 		
 		startup: function() {
 			this.inherited(arguments);
+			
+			this._addTopButtons();
+		},
+		
+		_addTopButtons: function() {
+		
+			if (this.Window != null)
+			{
+				// Add Login Button
+				this.LoginButton = new Button({ iconClass: "smallLoginIcon"});
+				this.LoginButton.set('onClick', lang.hitch(this, function() {
+					this.Window._login();
+				}));
+				this.addChild(this.LoginButton);
+				var logintooltip = new Tooltip({connectId: this.LoginButton.id, label: 'Login'});
+			
+				// Add Logout Button
+				this.LogoutButton = new Button({ iconClass: "smallLogoutIcon"});
+				this.LogoutButton.set('onClick', lang.hitch(this, function() {
+					this.Window._logout();
+				}));
+				this.addChild(this.LogoutButton);
+				var logouttooltip = new Tooltip({connectId: this.LogoutButton.id, label: 'Logout'});
+			
+				var sep = new Separator();
+				this.addChild(sep);
+				
+				// Watch for Window Session changing
+				this.SessionWatch = this.Window.watch('Session', lang.hitch(this, this._updateTopToolBar));
+			
+				// Update
+				this._updateTopToolBar();
+				
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		},
+		
+		_updateTopToolBar: function() {
+			
+			if (this.Window != null)
+			{
+				if (this.Window.Session == null)
+				{
+					this.LoginButton.SetEnabled(true);
+					this.LogoutButton.SetEnabled(false);
+				}
+				else
+				{
+					this.LoginButton.SetEnabled(false);
+					this.LogoutButton.SetEnabled(true);
+				}
+			}				
+		},
+		
+		OnViewModelLoaded: function() {
+			this.inherited(arguments);
+
+			// Clear Toolbar
+			var children = this.getChildren();
+			
+			for(i=0; i<children.length; i++)
+			{
+				children[i].destroyRecursive();
+				this.removeChild(children[i]);
+			}
+			
+			// Add Top Buttons
+			this._addTopButtons();
+			
+			if (this.ViewModel != null)
+			{
+				// Check all ViewModels are loaded
+				all(this.ViewModel.Children).then(lang.hitch(this, function(childviewmodels) {
+
+					// Get all required Control Paths
+					var controlpaths = [];
+					
+					for(i=0; i<childviewmodels.length; i++)
+					{
+						controlpaths.push(this.ControlPath(childviewmodels[i]));
+					}
+						
+					// Ensure all Controls are loaded
+					require(controlpaths, lang.hitch(this, function() {
+						
+						for(i=0; i<childviewmodels.length; i++)
+						{
+							var controltype = arguments[i];
+							
+							var childviewmodel = childviewmodels[i];
+
+							// Create Control
+							var control = new controltype(this.ControlParameters(childviewmodel));
+				
+							// Add to Toolbar
+							this.addChild(control);
+				
+							// Set ViewModel
+							control.set("ViewModel", childviewmodel);	
+						}
+					}));
+				}));
+				
+			}
 		}
 	});
 });

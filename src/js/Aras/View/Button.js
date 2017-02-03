@@ -25,13 +25,16 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
+	'dojo/when',
 	'dijit/form/Button',
 	'./Command'
-], function(declare, lang, Button, Command) {
+], function(declare, lang, when, Button, Command) {
 	
 	return declare('Aras.View.Button', [Button, Command], {
 		
 		_savedIconClass: null,
+		
+		_CanExecuteWatch: null,
 		
 		constructor: function(args) {
 			
@@ -39,16 +42,27 @@ define([
 		
 		startup: function() {
 			this.inherited(arguments);
-			
-			// Store IconClass
-			this._savedIconClass = this.iconClass;
-			
-			// Disable Button
-			this.SetEnabled(false);
+
+			if (this.iconClass != null)
+			{
+				// Store IconClass
+				this._savedIconClass = this.iconClass;
+				
+				this.SetEnabled(false);
+			}
+		},
+		
+		destroy: function() {
+			this.inherited(arguments);
+
+			if (this._CanExecuteWatch)
+			{
+				this._CanExecuteWatch.unwatch();
+			}
 		},
 		
 		SetEnabled: function(Enabled) {
-		
+			
 			if (Enabled)
 			{
 				this.set('disabled', false);
@@ -64,20 +78,36 @@ define([
 		OnViewModelLoaded: function() {
 			this.inherited(arguments);
 			
-			// Link Click Event
-			this.set('onClick', lang.hitch(this, function() {
-				this.SetEnabled(false);
-				this.ViewModel.Execute();
-			}));
+			if (this.ViewModel != null)
+			{
+				// Set IconClass
+				this.set("iconClass", "small" + this.ViewModel.Icon + "Icon");
 			
-			// Set Enabled
-			this.SetEnabled(this.ViewModel.CanExecute);
+				// Store IconClass
+				this._savedIconClass = this.iconClass;
 			
-			// Watch for changes in CanExecute
-			this.ViewModel.watch('CanExecute', lang.hitch(this, function(name, oldValue, newValue) {
-				this.SetEnabled(newValue);
-			}));
+				when(this.ViewModel.Command).then(lang.hitch(this, function() {
+					
+					// Link Click Event
+					this.set('onClick', lang.hitch(this, function() {
+						this.SetEnabled(false);
+						this.ViewModel.Command.Execute();
+					}));
 			
+					// Set Enabled
+					this.SetEnabled(this.ViewModel.Command.CanExecute);
+			
+					// Watch for changes in CanExecute
+					if (this._CanExecuteWatch)
+					{
+						this._CanExecuteWatch.unwatch();
+					}
+					
+					this._CanExecuteWatch = this.ViewModel.Command.watch('CanExecute', lang.hitch(this, function(name, oldValue, newValue) {
+						this.SetEnabled(newValue);
+					}));
+				}));
+			}
 		}
 	});
 });

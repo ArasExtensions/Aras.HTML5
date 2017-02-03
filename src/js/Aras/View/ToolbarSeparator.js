@@ -1,7 +1,7 @@
 /*
   Aras.HTML5 provides a HTML5 client library to build Aras Innovator Applications
 
-  Copyright (C) 2015 Processwall Limited.
+  Copyright (C) 2017 Processwall Limited.
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published
@@ -24,34 +24,12 @@
 
 define([
 	'dojo/_base/declare',
-	'dojo/Stateful',
-	'dojo/_base/lang'
-], function(declare, Stateful, lang) {
+	'dojo/_base/lang',
+	'dijit/ToolbarSeparator',
+	'./Control',
+], function(declare, lang, ToolbarSeparator, Control) {
 	
-	return declare('Aras.View.Command', [Stateful], {
-		
-		ViewModel: null, 
-		
-		_viewModelWatch: null,
-		
-		constructor: function() {
-			
-			// Watch ViewModel
-			this._viewModelWatch = this.watch("ViewModel", lang.hitch(this, this.OnViewModelLoaded));
-		},
-			
-		destroy: function() {
-			this.inherited(arguments);
-			
-			if (this._viewModelWatch)
-			{
-				this._viewModelWatch.unwatch();
-			}
-		},
-		
-		OnViewModelLoaded: function() {
-			
-		}
-		
+	return declare('Aras.View.ToolbarSeparator', [ToolbarSeparator, Control], {
+
 	});
 });
