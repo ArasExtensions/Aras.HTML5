@@ -73,7 +73,9 @@ define([
 		
 		ControlPath: function(ViewModel) {
 
-			return ViewModel.Type.replace(/\./g, "/");
+			// Get path for Control
+			var path = ViewModel.Type.replace(/\./g, "/");
+			return path;
 		},
 
 		ControlParameters: function(ViewModel) {
