@@ -30,7 +30,7 @@ define([
 	'dijit/form/NumberSpinner'
 ], function(declare, lang, on, Property, NumberSpinner) {
 	
-	return declare('Aras.View.Properties.Int32', [NumberSpinner, Property], {
+	return declare('Aras.View.Properties.Integer', [NumberSpinner, Property], {
 		
 		_viewModelValueHandle: null,
 		

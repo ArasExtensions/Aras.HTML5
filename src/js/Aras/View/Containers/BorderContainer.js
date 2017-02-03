@@ -25,9 +25,10 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
+	'dojo/when',
 	'dijit/layout/BorderContainer',
 	'../Container'
-], function(declare, lang, BorderContainer, Container) {
+], function(declare, lang, when, BorderContainer, Container) {
 	
 	return declare('Aras.View.Containers.BorderContainer', [BorderContainer, Container], {
 		
@@ -38,6 +39,31 @@ define([
 		startup: function() {
 			this.inherited(arguments);
 			
+		},
+		
+		OnViewModelLoaded: function() {
+			this.inherited(arguments);
+
+			for(i=0; i<this.ViewModel.Children.length; i++)
+			{
+				// Check ViewModel is loaded
+				when(this.ViewModel.Children[i]).then(lang.hitch(this, function(childviewmodel) {
+					
+					// Check Control is loaded
+					require([this.ControlPath(childviewmodel)], lang.hitch(this, function(controlType) {
+					
+						// Create Control
+						var control = new controlType(this.ControlParameters(childviewmodel));
+				
+						// Add to BorderContainer
+						this.addChild(control);
+				
+						// Set ViewModel
+						control.set("ViewModel", childviewmodel);
+					}));				
+					
+				}));
+			}
 		}
 
 	});

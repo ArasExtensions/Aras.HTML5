@@ -69,7 +69,65 @@ define([
 			{
 				this.ViewModel.Close.Execute();
 			}
-		}
+		},
+		
+		ControlPath: function(ViewModel) {
 
+			return ViewModel.Type.replace(/\./g, "/");
+		},
+
+		ControlParameters: function(ViewModel) {
+
+			var parameters = new Object();
+			
+			// Region 
+			switch(ViewModel.Region)
+			{
+				case 1:
+					parameters['region'] = 'top';
+					break;
+				case 2:
+					parameters['region'] = 'bottom';
+					break;
+				case 3:
+					parameters['region'] = 'right';
+					break;
+				case 4:
+					parameters['region'] = 'left';
+					break;
+				case 5:
+					parameters['region'] = 'center';
+					break;
+				case 6:
+					parameters['region'] = 'leading';
+					break;
+				case 7:
+					parameters['region'] = 'trailing';
+					break;
+				default:
+					parameters['region'] = 'center';
+					break;			
+			}
+			
+			// Style
+			var style = '';
+			
+			if (ViewModel.Height != null)
+			{
+				style = style + 'height:' + ViewModel.Height + 'px;';
+			}
+	
+			if (ViewModel.Width != null)
+			{
+				style = style + 'width:' + ViewModel.Width + 'px;';
+			}
+			
+			if (style.length > 0)
+			{
+				parameters['style'] = style;
+			}
+			
+			return parameters;
+		}
 	});
 });

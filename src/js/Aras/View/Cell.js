@@ -31,8 +31,9 @@ define([
 	'./Control',
 	'./Properties/String',
 	'./Properties/List',
-	'./Properties/Float'
-], function(declare, lang, construct, array, when, Control, String, List, Float) {
+	'./Properties/Float',
+	'./Properties/Integer',
+], function(declare, lang, construct, array, when, Control, String, List, Float, Integer) {
 	
 	return declare('Aras.View.Cell', [Control], {
 		
@@ -82,7 +83,6 @@ define([
 			{	
 				return when(this.ViewModel.Value).then(lang.hitch(this, function(valueviewmodel) {
 
-					
 					if ( dojo.isIE)
 					{						
 						if (this.Value != null)
@@ -107,9 +107,12 @@ define([
 								break;
 							case 'Aras.View.Properties.Float':							
 								this.Value = new Float( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
-								break;								
+								break;	
+							case 'Aras.View.Properties.Integer':							
+								this.Value = new Integer( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
+								break;									
 							default:
-								console.debug('ViewModel Type not supported: ' + valueviewmodel);
+								console.debug('ViewModel Type not supported: ' + valueviewmodel.Type);
 								break;				
 						}
 					
