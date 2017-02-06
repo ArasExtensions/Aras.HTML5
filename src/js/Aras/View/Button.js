@@ -34,7 +34,7 @@ define([
 		
 		_savedIconClass: null,
 		
-		_CanExecuteWatch: null,
+		_canExecuteHandle: null,
 		
 		constructor: function(args) {
 			
@@ -55,9 +55,9 @@ define([
 		destroy: function() {
 			this.inherited(arguments);
 
-			if (this._CanExecuteWatch)
+			if (this._canExecuteHandle)
 			{
-				this._CanExecuteWatch.unwatch();
+				this._canExecuteHandle.unwatch();
 			}
 		},
 		
@@ -98,12 +98,12 @@ define([
 					this.SetEnabled(this.ViewModel.Command.CanExecute);
 			
 					// Watch for changes in CanExecute
-					if (this._CanExecuteWatch)
+					if (this._canExecuteHandle)
 					{
-						this._CanExecuteWatch.unwatch();
+						this._canExecuteHandle.unwatch();
 					}
 					
-					this._CanExecuteWatch = this.ViewModel.Command.watch('CanExecute', lang.hitch(this, function(name, oldValue, newValue) {
+					this._canExecuteHandle = this.ViewModel.Command.watch('CanExecute', lang.hitch(this, function(name, oldValue, newValue) {
 						this.SetEnabled(newValue);
 					}));
 				}));
