@@ -33,6 +33,8 @@ define([
 			
 		_viewModelValueHandle: null, 
 		
+		_valueHandle: null,
+		
 		constructor: function() {
 			
 		},
@@ -49,6 +51,11 @@ define([
 			{
 				this._viewModelValueHandle.unwatch();
 			}
+			
+			if (this._valueHandle)
+			{
+				this._valueHandle.unwatch();
+			}
 		},
 		
 		OnViewModelLoaded: function() {
@@ -57,13 +64,32 @@ define([
 			// Set Value from ViewModel
 			this.set("value", this.ViewModel.Value);
 			
-			// Remove Existing ViewModel watch
+			// Watch for changes in Control value
+			if (this._valueHandle)
+			{
+				this._valueHandle.unwatch();
+			}
+			
+			this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
+				
+				if (oldValue !== newValue)
+				{										
+					if (!this._updateFromViewModel)
+					{
+						// Update ViewModel Value
+						this.ViewModel.set('Value', newValue);
+						this.ViewModel.Write();
+					}
+				}
+	
+			}));
+			
+			// Watch for changes in the ViewModel
 			if (this._viewModelValueHandle)
 			{
 				this._viewModelValueHandle.unwatch();
 			}
 			
-			// Watch for changes in the ViewModel
 			this._viewModelValueHandle = this.ViewModel.watch('Value', lang.hitch(this, function(name, oldValue, newValue) {
 					
 				// Stop ViewModel Update
