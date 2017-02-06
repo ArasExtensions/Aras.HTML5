@@ -24,13 +24,11 @@
 
 define([
 	'dojo/_base/declare',
-	'dojo/_base/lang',
-	'dojo/promise/all',
-	'dijit/layout/BorderContainer',
-	'../Container'
-], function(declare, lang, all, BorderContainer, Container) {
+	'dijit/TitlePane',
+	'../Control',
+], function(declare, ContentPane, Control) {
 	
-	return declare('Aras.View.Containers.BorderContainer', [BorderContainer, Container], {
+	return declare('Aras.View.Panes.TitlePane', [TitlePane, Control], {
 		
 		constructor: function() {
 			
@@ -38,35 +36,49 @@ define([
 		
 		startup: function() {
 			this.inherited(arguments);
-			
+		},
+		
+		destroy: function() {
+			this.inherited(arguments);
 		},
 		
 		OnViewModelLoaded: function() {
 			this.inherited(arguments);
 
-			// Check ViewModel is loaded
-			all(this.ViewModel.Children).then(lang.hitch(this, function(childviewmodels) {
-
-				for(i=0; i<childviewmodels.length; i++)
-				{
-					var childviewmodel = childviewmodels[i];
+			if (this.content)
+			{
+				// Destroy current content
+				this.content.destroyRecursive();
+			}
+				
+			if ((this.ViewModel != null) && (this.ViewModel.Content != null))
+			{				
+				this.set("title", this.ViewModel.Title);
+				this.set("open", this.ViewModel.Open);
+				
+				when(this.ViewModel.Content, lang.hitch(this, function(contentviewmodel) {
 					
 					// Check Control is loaded
-					require([this.ControlPath(childviewmodel)], lang.hitch(this, function(controlType) {
+					require([this.ControlPath(contentviewmodel)], lang.hitch(this, function(controlType) {
 					
 						// Create Control
-						var control = new controlType(this.ControlParameters(childviewmodel));
+						var control = new controlType(this.ControlParameters(contentviewmodel));
 				
-						// Add to BorderContainer
-						this.addChild(control);
+						// Set Content
+						this.set("content", control);
 				
 						// Set ViewModel
-						control.set("ViewModel", childviewmodel);
-					}));				
-				}
-			}));
-			
+						control.set("ViewModel", contentviewmodel);
+					}));
+				}));
+			}
+			else
+			{
+				this.set("content", null);
+				this.set("title", null);
+				this.set("open", false);
+			}
 		}
-
+		
 	});
 });
