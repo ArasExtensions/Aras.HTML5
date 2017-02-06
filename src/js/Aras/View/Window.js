@@ -61,8 +61,9 @@ define([
 		
 		_applicationViewModelCache: null,
 		
+		_inErrorHandle: null,
+		
 		constructor: function() {
-			this.inherited(arguments);
 			
 			this._applicationViewModelCache = new Object();
 		},
@@ -97,7 +98,7 @@ define([
 			this.Server = new Server({ URL: this.URL });
 			
 			// Watch for Errors
-			this.Server.watch('InError', lang.hitch(this, this._displayServerError));
+			this._inErrorHandle = this.Server.watch('InError', lang.hitch(this, this._displayServerError));
 			
 			// Create Login
 			this.Login = new Login({ id: "login", class: "login", Window: this, title: 'Aras Innovator Login' });
@@ -107,6 +108,16 @@ define([
 			this.Login.show();
 		},
 
+		destroy: function() {
+			this.inherited(arguments);
+			
+			if (this._inErrorHandle)
+			{
+				this._inErrorHandle.unwatch();
+			}
+			
+		},
+		
 		_login() {
 				
 			// Display Login

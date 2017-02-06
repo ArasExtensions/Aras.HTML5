@@ -31,7 +31,7 @@ define([
 	return declare('Aras.View.Containers.Application', [BorderContainer], {
 					
 		constructor: function() {
-			this.inherited(arguments);
+			
 		},
 		
 		startup: function() {

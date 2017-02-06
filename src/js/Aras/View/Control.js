@@ -33,7 +33,7 @@ define([
 		
 		ViewModel: null, 
 		
-		_ViewModelWatch: null,
+		_viewModelHandle: null,
 		
 		constructor: function() {
 
@@ -43,15 +43,15 @@ define([
 			this.inherited(arguments);
 	
 			// Watch ViewModel
-			this._ViewModelWatch = this.watch("ViewModel", lang.hitch(this, this._onViewModelChange));
+			this._viewModelHandle = this.watch("ViewModel", lang.hitch(this, this._onViewModelChange));
 		},
 	
 		destroy: function() {
 			this.inherited(arguments);
 	
-			if (this._ViewModelWatch)
+			if (this._viewModelHandle)
 			{
-				this._ViewModelWatch.unwatch();
+				this._viewModelHandle.unwatch();
 			}
 		},
 		

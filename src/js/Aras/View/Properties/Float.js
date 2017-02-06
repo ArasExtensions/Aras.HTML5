@@ -34,12 +34,28 @@ define([
 		
 		_viewModelValueHandle: null,
 		
+		_valueHandle: null,
+		
 		constructor: function() {
 
 		},
 		
 		startup: function() {
 			this.inherited(arguments);			
+		},
+		
+		destroy: function() {
+			this.inherited(arguments);	
+
+			if (this._viewModelValueHandle != null)
+			{
+				this._viewModelValueHandle.unwatch();
+			}
+			
+			if (this._valueHandle)
+			{
+				this._valueHandle.unwatch();
+			}
 		},
 		
 		_mouseWheeled: function(evt){
@@ -59,7 +75,12 @@ define([
 			this.set("value", this.ViewModel.Value);
 			
 			// Watch for changes in Control value
-			this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
+			if (this._valueHandle)
+			{
+				this._valueHandle.unwatch();
+			}
+			
+			this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
 		
 				if (isNaN(newValue))
 				{

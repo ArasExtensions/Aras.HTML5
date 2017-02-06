@@ -40,7 +40,6 @@ define([
 		Index: null,
 
 		constructor: function() {
-			this.inherited(arguments);
 
 		},
 		

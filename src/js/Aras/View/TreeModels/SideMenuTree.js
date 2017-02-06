@@ -36,6 +36,8 @@ define([
 		
 		RootNode: null,
 		
+		_sessionHandle: null,
+		
 		constructor: function(args) {
 			
 			lang.mixin(this, args);
@@ -44,7 +46,7 @@ define([
 			this._update();
 			
 			// Watch for Changes in RootNode
-			this.watch('Session', lang.hitch(this, function() {
+			this._sessionHandle = this.watch('Session', lang.hitch(this, function() {
 				
 				// Update
 				this._update();
@@ -81,7 +83,12 @@ define([
 		},
 		
 		destroy: function(){
+			this.inherited(arguments);
 			
+			if (this._sessionHandle)
+			{
+				this._sessionHandle.unwatch();
+			}
 		},
 		
 		getRoot: function(onItem, onError){

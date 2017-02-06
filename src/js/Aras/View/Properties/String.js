@@ -42,6 +42,15 @@ define([
 			
 		},
 		
+		destroy: function() {
+			this.inherited(arguments);	
+
+			if (this._viewModelValueHandle != null)
+			{
+				this._viewModelValueHandle.unwatch();
+			}
+		},
+		
 		OnViewModelLoaded: function() {
 			this.inherited(arguments);
 
@@ -49,7 +58,7 @@ define([
 			this.set("value", this.ViewModel.Value);
 			
 			// Remove Existing ViewModel watch
-			if (this._viewModelValueHandle != null)
+			if (this._viewModelValueHandle)
 			{
 				this._viewModelValueHandle.unwatch();
 			}

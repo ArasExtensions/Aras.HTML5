@@ -31,8 +31,10 @@ define([
 	
 	return declare('Aras.View.MenuItem', [MenuItem, Command], {
 	
-		constructor: function(args) {
-			
+		_canExecuteHandle: null,
+		
+		constructor: function() {
+		
 		},
 		
 		startup: function() {
@@ -40,6 +42,15 @@ define([
 	
 			// Disable Button
 			this.SetEnabled(false);
+		},
+		
+		destroy: function() {
+			this.inherited(arguments);
+			
+			if (this._canExecuteHandle)
+			{
+				this._canExecuteHandle.unwatch();
+			}
 		},
 		
 		SetEnabled: function(Enabled) {
@@ -69,7 +80,12 @@ define([
 				this.SetEnabled(this.ViewModel.CanExecute);
 			
 				// Watch for changes in CanExecute
-				this.ViewModel.watch('CanExecute', lang.hitch(this, function(name, oldValue, newValue) {
+				if (this._canExecuteHandle)
+				{
+					this._canExecuteHandle.unwatch();
+				}
+				
+				this._canExecuteHandle = this.ViewModel.watch('CanExecute', lang.hitch(this, function(name, oldValue, newValue) {
 					this.SetEnabled(newValue);
 				}));
 			}

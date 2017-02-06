@@ -32,6 +32,8 @@ define([
 
 		url: null,
 		
+		_urlHandle: null,
+		
 		_updateContent: function() {
 			
 			if (this.url != null)
@@ -49,9 +51,18 @@ define([
 			
 			this._updateContent();
 			
-			this.watch('url', lang.hitch(this, function(name, oldval, newcal) {
+			this._urlHandle = this.watch('url', lang.hitch(this, function(name, oldval, newcal) {
 				this._updateContent();
 			}));
+		}
+		
+		destroy: function() {
+			this.inherited(arguments);
+			
+			if (this._urlHandle)
+			{
+				this._urlHandle.unwatch();
+			}
 		}
 		
 	});

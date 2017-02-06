@@ -41,7 +41,7 @@ define([
 		
 		LogoutButton: null,
 		
-		SessionWatch: null,
+		_sessionHandle: null,
 		
 		constructor: function(args) {
 	
@@ -51,6 +51,15 @@ define([
 			this.inherited(arguments);
 			
 			this._addTopButtons();
+		},
+		
+		destroy: function() {
+			this.inherited(arguments);
+		
+			if (this._sessionHandle)
+			{
+				this._sessionHandle.unwatch();
+			}		
 		},
 		
 		_addTopButtons: function() {
@@ -77,7 +86,13 @@ define([
 				this.addChild(sep);
 				
 				// Watch for Window Session changing
-				this.SessionWatch = this.Window.watch('Session', lang.hitch(this, this._updateTopToolBar));
+				
+				if (this._sessionHandle)
+				{
+					this._sessionHandle.unwatch();
+				}
+				
+				this._sessionHandle = this.Window.watch('Session', lang.hitch(this, this._updateTopToolBar));
 			
 				// Update
 				this._updateTopToolBar();

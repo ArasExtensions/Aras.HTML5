@@ -48,8 +48,12 @@ define([
 		
 		Server: null,
 		
-		constructor: function(args) {
+		constructor: function() {
 		
+		},
+		
+		destroy: function() {
+			this.inherited(arguments);
 			
 		},
 		

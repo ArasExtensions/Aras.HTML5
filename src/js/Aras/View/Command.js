@@ -32,20 +32,20 @@ define([
 		
 		ViewModel: null, 
 		
-		_viewModelWatch: null,
+		_viewModelHandle: null,
 		
 		constructor: function() {
 			
 			// Watch ViewModel
-			this._viewModelWatch = this.watch("ViewModel", lang.hitch(this, this.OnViewModelLoaded));
+			this._viewModelHandle = this.watch("ViewModel", lang.hitch(this, this.OnViewModelLoaded));
 		},
 			
 		destroy: function() {
 			this.inherited(arguments);
 			
-			if (this._viewModelWatch)
+			if (this._viewModelHandle)
 			{
-				this._viewModelWatch.unwatch();
+				this._viewModelHandle.unwatch();
 			}
 		},
 		

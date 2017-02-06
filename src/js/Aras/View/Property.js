@@ -35,7 +35,7 @@ define([
 		_updateFromViewModel: null,
 		
 		constructor: function() {
-
+			
 		},
 		
 		startup: function() {
@@ -54,6 +54,15 @@ define([
 				
 			}));
 			
+		},
+		
+		destroy: function() {
+			this.inherited(arguments);
+			
+			if (this._viewModelEnabledHandle != null)
+			{
+				this._viewModelEnabledHandle.unwatch();
+			}
 		},
 		
 		OnViewModelLoaded: function() {

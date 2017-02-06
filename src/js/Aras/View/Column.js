@@ -40,7 +40,7 @@ define([
 		Editable: null,
 		
 		constructor: function() {
-			this.inherited(arguments);
+			
 		},
 		
 		startup: function() {

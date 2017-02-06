@@ -39,6 +39,8 @@ define([
 		
 		LogoutMenu: null,
 		
+		_sessionHandle: null,
+				
 		constructor: function(args) {
 
 		},
@@ -47,7 +49,7 @@ define([
 			this.inherited(arguments);
 			
 			// Watch for Window Session changing
-			this.Window.watch('Session', lang.hitch(this, this._updateMenuBar));
+			this._sessionHandle = this.Window.watch('Session', lang.hitch(this, this._updateMenuBar));
 		
 			// Create Server Menu
 			var servermenu = new DropDownMenu();
@@ -71,6 +73,15 @@ define([
 			}));
 
 			this._updateMenuBar();
+		},
+		
+		destroy: function() {
+			this.inherited(arguments);
+			
+			if (this._sessionHandle)
+			{
+				this._sessionHandle.unwatch();
+			}
 		},
 		
 		_updateMenuBar: function() {

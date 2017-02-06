@@ -44,9 +44,10 @@ define([
 		
 		Tree: null,
 		
+		_sessionHandle: null,
+		
 		constructor: function() {
 		
-			this.inherited(arguments);
 		},
 		
 		startup: function() {
@@ -75,11 +76,20 @@ define([
 			this.set("content", this.Table);
 			
 			// Watch for Session changing
-			this.Window.watch('Session', lang.hitch(this, function() {
+			this._sessionHandle = this.Window.watch('Session', lang.hitch(this, function() {
 				
 				// Update Session in Tree Model
 				this.TreeModel.set("Session", this.Window.Session);
 			}));
+		},
+		
+		destroy: function() {
+			this.inherited(arguments);
+			
+			if (this._sessionHandle)
+			{
+				this._sessionHandle.unwatch();
+			}
 		},
 		
 		getIconClass: function(item, opened) {

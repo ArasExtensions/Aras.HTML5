@@ -88,6 +88,20 @@ define([
 			}));
 		},
 
+		destroy: function() {
+			this.inherited(arguments);
+			
+			if (this._columnsHandle)
+			{
+				this._columnsHandle.unwatch();
+			}
+			
+			if (this._rowsHandle)
+			{
+				this._rowsHandle.unwatch();
+			}
+		},
+		
 		OnViewModelLoaded: function() {
 			this.inherited(arguments);
 

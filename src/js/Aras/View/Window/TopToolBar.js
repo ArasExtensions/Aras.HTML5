@@ -38,6 +38,8 @@ define([
 		
 		LogoutButton: null,
 		
+		_sessionHandle: null,
+		
 		constructor: function() {
 			this.inherited(arguments);
 	
@@ -67,10 +69,19 @@ define([
 			var logouttooltip = new Tooltip({connectId: this.LogoutButton.id, label: 'Logout'});
 			
 			// Watch for Window Session changing
-			this.Window.watch('Session', lang.hitch(this, this._updateTopToolBar));
+			this._sessionHandle = this.Window.watch('Session', lang.hitch(this, this._updateTopToolBar));
 			
 			// Update
 			this._updateTopToolBar();
+		},
+		
+		destroy: function() {
+			this.inherited(arguments);
+			
+			if (this._sessionHandle)
+			{
+				this._sessionHandle.unwatch();
+			}
 		},
 		
 		_updateTopToolBar: function() {

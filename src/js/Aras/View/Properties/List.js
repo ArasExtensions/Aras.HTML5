@@ -33,6 +33,10 @@ define([
 	
 	return declare('Aras.View.Properties.List', [Select, Property], {
 		
+		_viewModelValueHandle: null,
+		
+		_valueHandle: null,
+		
 		constructor: function() {
 			
 		},
@@ -40,6 +44,20 @@ define([
 		startup: function() {
 			this.inherited(arguments);
 			
+		},
+		
+		destroy: function() {
+			this.inherited(arguments);	
+
+			if (this._viewModelValueHandle != null)
+			{
+				this._viewModelValueHandle.unwatch();
+			}
+			
+			if (this._valueHandle != null)
+			{
+				this._valueHandle.unwatch();
+			}
 		},
 		
 		OnViewModelLoaded: function() {
@@ -69,7 +87,12 @@ define([
 					this.addOption(options);
 					
 					// Watch for change in Select Value
-					this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
+					if (this._valueHandle != null)
+					{
+						this._valueHandle.unwatch();
+					}
+			
+					this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
 					
 						if (newValue !== this.ViewModel.Value)
 						{
@@ -84,7 +107,12 @@ define([
 					}));
 				
 					// Watch for change in ViewModel Value
-					this.ViewModel.watch('Value', lang.hitch(this, function(name, oldValue, newValue) {
+					if (this._viewModelValueHandle != null)
+					{
+						this._viewModelValueHandle.unwatch();
+					}
+			
+					this._viewModelValueHandle = this.ViewModel.watch('Value', lang.hitch(this, function(name, oldValue, newValue) {
 					
 						if (newValue !== this.get('value'))
 						{

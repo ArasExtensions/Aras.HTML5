@@ -35,7 +35,7 @@ define([
 		ErrorMessage: null,
 		
 		constructor: function() {
-			this.inherited(arguments);
+		
 		},
 				
 		startup: function() {
