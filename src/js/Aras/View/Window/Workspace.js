@@ -51,7 +51,7 @@ define([
 			var currentapplicatons = this.getChildren();
 			var application = null;
 			
-			for(i=0; i<currentapplicatons.length; i++)
+			for(var i=0; i<currentapplicatons.length; i++)
 			{
 				if (currentapplicatons[i].id == ViewModel.Name)
 				{
@@ -83,7 +83,7 @@ define([
 			
 			var currentapplicatons = this.getChildren();
 			
-			for(i=0; i<currentapplicatons.length; i++)
+			for(var i=0; i<currentapplicatons.length; i++)
 			{
 				this.removeChild(currentapplicatons[i]);
 				currentapplicatons[i].destroyRecursive();

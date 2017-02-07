@@ -128,7 +128,7 @@ define([
 			// Clear Toolbar
 			var children = this.getChildren();
 			
-			for(i=0; i<children.length; i++)
+			for(var i=0; i<children.length; i++)
 			{
 				children[i].destroyRecursive();
 				this.removeChild(children[i]);
@@ -145,7 +145,7 @@ define([
 					// Get all required Control Paths
 					var controlpaths = [];
 					
-					for(i=0; i<childviewmodels.length; i++)
+					for(var i=0; i<childviewmodels.length; i++)
 					{
 						controlpaths.push(this.ControlPath(childviewmodels[i]));
 					}
@@ -153,7 +153,7 @@ define([
 					// Ensure all Controls are loaded
 					require(controlpaths, lang.hitch(this, function() {
 						
-						for(i=0; i<childviewmodels.length; i++)
+						for(var i=0; i<childviewmodels.length; i++)
 						{
 							var controltype = arguments[i];
 							
@@ -169,8 +169,7 @@ define([
 							control.set("ViewModel", childviewmodel);	
 						}
 					}));
-				}));
-				
+				}));	
 			}
 		}
 	});

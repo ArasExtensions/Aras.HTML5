@@ -25,10 +25,11 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
+	'dojo/_base/array',
 	'dojo/promise/all',
 	'dijit/layout/BorderContainer',
 	'../Container'
-], function(declare, lang, all, BorderContainer, Container) {
+], function(declare, lang, array, all, BorderContainer, Container) {
 	
 	return declare('Aras.View.Containers.BorderContainer', [BorderContainer, Container], {
 		
@@ -46,14 +47,12 @@ define([
 
 			// Check ViewModel is loaded
 			all(this.ViewModel.Children).then(lang.hitch(this, function(childviewmodels) {
+						
+				array.forEach(childviewmodels, function(childviewmodel) {
 
-				for(i=0; i<childviewmodels.length; i++)
-				{
-					var childviewmodel = childviewmodels[i];
-					
 					// Check Control is loaded
 					require([this.ControlPath(childviewmodel)], lang.hitch(this, function(controlType) {
-					
+
 						// Create Control
 						var control = new controlType(this.ControlParameters(childviewmodel));
 				
@@ -62,10 +61,10 @@ define([
 				
 						// Set ViewModel
 						control.set("ViewModel", childviewmodel);
-					}));				
-				}
+					}));
+					
+				}, this);
 			}));
-			
 		}
 
 	});

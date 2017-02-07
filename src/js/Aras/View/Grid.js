@@ -75,13 +75,14 @@ define([
 				{					
 					var Parameters = [];
 				
-					for(i=0; i<event.rows.length; i++)
-					{
-						if (this.Rows[event.rows[i].data.id].ViewModel != null)
+					array.forEach(event.rows, function(row) {
+						
+						if (this.Rows[row.data.id].ViewModel != null)
 						{
-							Parameters.push(this.Rows[event.rows[i].data.id].ViewModel.ID);
+							Parameters.push(this.Rows[row.data.id].ViewModel.ID);
 						}
-					}
+						
+					}, this);
 
 					this.ViewModel.Select.Execute(Parameters);
 				}
@@ -190,12 +191,12 @@ define([
 					// Render Grid
 					var rowdata = [];
 					
-					for(i=0; i<this.NoRows; i++)
+					for(var i=0; i<this.NoRows; i++)
 					{
 						rowdata[i] = new Object();
 						rowdata[i]['id'] = i;
 						
-						for (j=0; j<this.Columns.length; j++) 
+						for (var j=0; j<this.Columns.length; j++) 
 						{
 							rowdata[i][this.Columns[j].Name] = null;
 						}

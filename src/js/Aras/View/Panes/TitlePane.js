@@ -26,7 +26,7 @@ define([
 	'dojo/_base/declare',
 	'dijit/TitlePane',
 	'../Control',
-], function(declare, ContentPane, Control) {
+], function(declare, TitlePane, Control) {
 	
 	return declare('Aras.View.Panes.TitlePane', [TitlePane, Control], {
 		
@@ -36,6 +36,7 @@ define([
 		
 		startup: function() {
 			this.inherited(arguments);
+
 		},
 		
 		destroy: function() {
@@ -44,39 +45,40 @@ define([
 		
 		OnViewModelLoaded: function() {
 			this.inherited(arguments);
-
-			if (this.content)
-			{
-				// Destroy current content
-				this.content.destroyRecursive();
-			}
-				
-			if ((this.ViewModel != null) && (this.ViewModel.Content != null))
+			
+			if (this.ViewModel)
 			{				
 				this.set("title", this.ViewModel.Title);
 				this.set("open", this.ViewModel.Open);
-				
-				when(this.ViewModel.Content, lang.hitch(this, function(contentviewmodel) {
+			
+				if(this.ViewModel.Content)
+				{
+					when(this.ViewModel.Content, lang.hitch(this, function(contentviewmodel) {
 					
-					// Check Control is loaded
-					require([this.ControlPath(contentviewmodel)], lang.hitch(this, function(controlType) {
+						// Check Control is loaded
+						require([this.ControlPath(contentviewmodel)], lang.hitch(this, function(controlType) {
 					
-						// Create Control
-						var control = new controlType(this.ControlParameters(contentviewmodel));
+							// Create Control
+							var control = new controlType(this.ControlParameters(contentviewmodel));
 				
-						// Set Content
-						this.set("content", control);
+							// Set Content
+							this.set("content", control);
 				
-						// Set ViewModel
-						control.set("ViewModel", contentviewmodel);
+							// Set ViewModel
+							control.set("ViewModel", contentviewmodel);
+						}));
 					}));
-				}));
+				}
+				else
+				{
+					this.set("content", null);
+				}
 			}
 			else
 			{
-				this.set("content", null);
 				this.set("title", null);
 				this.set("open", false);
+				this.set("content", null);
 			}
 		}
 		

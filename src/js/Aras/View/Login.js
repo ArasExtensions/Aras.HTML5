@@ -128,7 +128,7 @@ define([
 				// Add Databases
 				var data = [];
 				
-				for(i=0; i<databases.length; i++)
+				for(var i=0; i<databases.length; i++)
 				{
 					data.push({id: databases[i].ID, name: databases[i].ID});
 				}
