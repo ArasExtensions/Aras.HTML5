@@ -26,14 +26,17 @@ define([
 	'dojo/_base/declare',
 	'dojo/Stateful',
 	'dojo/_base/lang',
-	'dojo/when'
-], function(declare, Stateful, lang, when) {
+	'dojo/when',
+	'dijit/Tooltip'
+], function(declare, Stateful, lang, when, Tooltip) {
 	
 	return declare('Aras.View.Control', [Stateful], {
 		
 		ViewModel: null, 
 		
 		_viewModelHandle: null,
+		
+		_toolTip: null,
 		
 		constructor: function() {
 
@@ -62,6 +65,26 @@ define([
 		
 		OnViewModelLoaded: function() {
 			
+			// Add Tooltip
+			if((this.ViewModel != null) && (this.ViewModel.Tooltip != null))
+			{				
+				if (!this._toolTip)
+				{
+					this._toolTip = new Tooltip({ connectId: this.id, label: this.ViewModel.Tooltip });
+				}
+				else
+				{
+					this._toolTip.set('label', this.ViewModel.Tooltip);
+				}
+			}
+			else
+			{
+				if (this._toolTip)
+				{
+					this._toolTip.destroyRecursive();
+					this._toolTip = null;
+				}
+			}
 		},
 		
 		Refresh: function() {
