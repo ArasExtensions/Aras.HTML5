@@ -27,10 +27,10 @@ define([
 	'dojo/_base/lang',
 	'dojo/on',
 	'../Property',
-	'dijit/form/NumberSpinner'
-], function(declare, lang, on, Property, NumberSpinner) {
+	'dijit/form/NumberTextBox'
+], function(declare, lang, on, Property, NumberTextBox) {
 	
-	return declare('Aras.View.Properties.Integer', [NumberSpinner, Property], {
+	return declare('Aras.View.Properties.Integer', [NumberTextBox, Property], {
 		
 		_viewModelValueHandle: null,
 		
@@ -38,6 +38,8 @@ define([
 		
 		constructor: function() {
 
+			// Set Default Contraints
+			this.constraints = { pattern: '#', places: 0 };
 		},
 		
 		startup: function() {
@@ -58,71 +60,72 @@ define([
 			}
 		},
 		
-		_mouseWheeled: function(evt){
-			
-			// Disable change on scroll wheel
-			evt.stopPropagation();
-			evt.preventDefault();
-		},
-		
 		OnViewModelLoaded: function() {
 			this.inherited(arguments);
 
-			// Set Value from ViewModel
-			this.set("value", this.ViewModel.Value);
-			
-			// Watch for changes in Control value
-			if (this._valueHandle != null)
+			if (this.ViewModel != null)
 			{
-				this._valueHandle.unwatch();
-			}
+				// Set Minimum Value
+				this.constraints.min = this.ViewModel.MinValue;
+				
+				// Set Maximum Value
+				this.constraints.max = this.ViewModel.MaxValue;
+				
+				// Set Value from ViewModel
+				this.set("value", this.ViewModel.Value);
 			
-			this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
-				
-				if (isNaN(newValue))
+				// Watch for changes in Control value
+				if (this._valueHandle != null)
 				{
-					this.set("value", oldValue);
+					this._valueHandle.unwatch();
 				}
-				else
-				{
-					var newnumber = Number(newValue);
-					var currentnumber = Number(this.ViewModel.get('Value'));
+			
+				this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
 				
-					if (currentnumber !== newnumber)
-					{										
-						if (!this._updateFromViewModel)
-						{
-							// Update ViewModel Value
-							this.ViewModel.set('Value', newnumber);
-							this.ViewModel.Write();
+					if (isNaN(newValue))
+					{
+						this.set("value", oldValue);
+					}
+					else
+					{
+						var newnumber = Number(newValue);
+						var currentnumber = Number(this.ViewModel.get('Value'));
+				
+						if (currentnumber !== newnumber)
+						{										
+							if (!this._updateFromViewModel)
+							{
+								// Update ViewModel Value
+								this.ViewModel.set('Value', newnumber);
+								this.ViewModel.Write();
+							}
 						}
 					}
-				}
 					
-			}));
+				}));
 			
-			// Watch for changes in ViewModel
-			if (this._viewModelValueHandle != null)
-			{
-				this._viewModelValueHandle.unwatch();
-			}
-			
-			this._viewModelValueHandle = this.ViewModel.watch('Value', lang.hitch(this, function(name, oldValue, newValue) {
-					
-				if (newValue)
+				// Watch for changes in ViewModel
+				if (this._viewModelValueHandle != null)
 				{
-					// Stop ViewModel Update
-					this._updateFromViewModel = true;
-					
-					// Set Value
-					this.set("value", this.ViewModel.Value);
-					
-					// Start ViewModel Update
-					this._updateFromViewModel = false;
+					this._viewModelValueHandle.unwatch();
 				}
+			
+				this._viewModelValueHandle = this.ViewModel.watch('Value', lang.hitch(this, function(name, oldValue, newValue) {
 					
-			}));
+					if (newValue)
+					{
+						// Stop ViewModel Update
+						this._updateFromViewModel = true;
+					
+						// Set Value
+						this.set("value", this.ViewModel.Value);
+					
+						// Start ViewModel Update
+						this._updateFromViewModel = false;
+					}
+					
+				}));
+			}
 		}
-
 	});
 });
