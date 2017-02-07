@@ -27,6 +27,7 @@ define([
 	'dojo/_base/lang',
 	'dojo/dom',
 	'dojo/dom-construct',
+	'dojo/html',
 	'dojox/encoding/digests/MD5',
 	'dijit/Dialog',
 	'dijit/form/ComboBox',
@@ -35,7 +36,7 @@ define([
 	'dojo/store/Memory',
 	'dojox/widget/Standby',
 	'./Button'
-], function(declare, lang, dom, domconstruct, MD5, Dialog, ComboBox, TextBox, ContentPane, Memory, Standby, Button) {
+], function(declare, lang, dom, domconstruct, html, MD5, Dialog, ComboBox, TextBox, ContentPane, Memory, Standby, Button) {
 	
 	return declare('Aras.View.Login', [Dialog], {
 		
@@ -62,7 +63,7 @@ define([
 			this.inherited(arguments);
 
 			// Create Layout
-			var layout = new ContentPane({content: '<table><tr><td>Database</td><td id="logindatabase"></td></tr><tr><td>Username</td><td id="loginusername"></td></tr><tr><td>Password</td><td id="loginpassword"></td></tr><tr><td></td><td align="right"><div id="loginlogin"></div><div id="logincancel"></div></td></tr></table>'});
+			var layout = new ContentPane({content: '<table><tr><td>Database</td><td id="logindatabase"></td></tr><tr><td>Username</td><td id="loginusername"></td></tr><tr><td>Password</td><td id="loginpassword"></td></tr><tr><td></td><td align="right"><div id="loginlogin"></div><div id="logincancel"></div></td></tr><tr><td id="errormessage" colspan="2"></td></tr></table>'});
 			this.addChild(layout);
 			
 			// Add Database 
@@ -93,6 +94,14 @@ define([
 			this.CancelButton.startup();
 			
 			this.CancelButton.set('onClick', lang.hitch(this, function() {
+				
+				// Clear Password
+				this.Password.set('value', '');
+				
+				// Reset Error Message
+				this._errorMessage('');
+				
+				// Hide Login Widget
 				this.hide();	
 			}));
 	
@@ -100,28 +109,8 @@ define([
 			var loginbuttontarget = dom.byId('loginlogin');
 			this.LoginButton = new Button({label: 'Login'}, loginbuttontarget);
 			this.LoginButton.startup();
-			
-			this.LoginButton.set('onClick', lang.hitch(this, function() {
-				
-				// Get Database
-				this.Window.Server.Database(this.Database.item.name).then(lang.hitch(this, function(database) {
-		
-					// Login
-					database.Login(this.Username.value, MD5(this.Password.value, 1)).then(lang.hitch(this, function(session){
-
-						// Set Session
-						this.Window.set("Session", session);
-							
-						// Clear Password
-						this.Password.set("value", '');
-						
-						// Close Dialog
-						this.hide();
-					
-					}));
-				}));
-			}));
-						
+			this.LoginButton.set('onClick', lang.hitch(this, this._login));
+									
 			// Get Database
 			this.Window.Server.Databases().then(lang.hitch(this, function(databases) {
 				
@@ -150,6 +139,40 @@ define([
 				this.Standby.hide();
 			}));
 
+		},
+		
+		_login: function() {
+			
+			// Get Database
+			this.Window.Server.Database(this.Database.item.name).then(lang.hitch(this, function(database) {
+		
+				// Login
+				database.Login(this.Username.value, MD5(this.Password.value, 1)).then(lang.hitch(this, function(session){
+
+					// Clear Password
+					this.Password.set("value", '');
+					
+					if (session)
+					{
+						// Clear Error Message
+						this._errorMessage('');
+						
+						// Set Session
+						this.Window.set("Session", session);
+	
+						// Close Dialog
+						this.hide();
+					}
+					else
+					{
+						this._errorMessage('Login failed, check Username and Password');
+					}
+				}));
+			}));	
+		},
+		
+		_errorMessage: function(message) {
+			html.set(dom.byId('errormessage'), message);
 		}
 
 	});

@@ -49,7 +49,7 @@ define([
 					return new Session({ Database: this, Username: Username, Password: Password });
 				}),
 				lang.hitch(this, function(error) {
-					this.Server.ProcessError(error);
+				
 					return null;
 				})
 			);
