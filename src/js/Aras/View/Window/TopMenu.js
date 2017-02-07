@@ -52,13 +52,13 @@ define([
 			this._sessionHandle = this.Window.watch('Session', lang.hitch(this, this._updateMenuBar));
 		
 			// Create Server Menu
-			var servermenu = new DropDownMenu();
-			var serverpopupmenu = new PopupMenuBarItem({ label: 'Server', popup: servermenu });
-			this.addChild(serverpopupmenu);
+			var filemenu = new DropDownMenu();
+			var filepopupmenu = new PopupMenuBarItem({ label: 'File', popup: filemenu });
+			this.addChild(filepopupmenu);
 			
 			// Add Login Menu Item
 			this.LoginMenu = new MenuItem({ label: 'Login' });
-			servermenu.addChild(this.LoginMenu);
+			filemenu.addChild(this.LoginMenu);
 			this.LoginMenu.set('onClick', lang.hitch(this, function() {
 				this.Window._login();
 				
@@ -66,7 +66,7 @@ define([
 
 			// Add Logout Menu Item
 			this.LogoutMenu = new MenuItem({ label: 'Logout' });
-			servermenu.addChild(this.LogoutMenu);
+			filemenu.addChild(this.LogoutMenu);
 			this.LogoutMenu.set('onClick', lang.hitch(this, function() {
 				this.Window._logout();
 				
