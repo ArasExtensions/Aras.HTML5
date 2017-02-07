@@ -25,67 +25,61 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
-	'./Control'
-], function(declare, lang, Control) {
+	'dojo/_base/array',
+	'dojo/promise/all',
+	'dojox/layout/TableContainer',
+	'../Container'
+], function(declare, lang, array, all, TableContainer, Container) {
 	
-	return declare('Aras.View.Property', [Control], {
-			
-		_viewModelEnabledHandle: null,
-		
-		_updateFromViewModel: null,
+	return declare('Aras.View.Containers.TableContainer', [TableContainer, Container], {
 		
 		constructor: function() {
-
+			
+			// Show Labels
+			this.showLabels = true;
+			
+			// Set Label Orientation
+			this.orientation = 'vert';
 		
+			// Set Label Width
+			this.labelWidth = '50%';
 		},
 		
 		startup: function() {
 			this.inherited(arguments);
+			
 
-			// Default UpdateFromViewModel
-			this._updateFromViewModel = false;
-			
-			// Prevent default dehaviour when Property is ReadOnly
-			this.on('keydown', lang.hitch(this, function(event){
-				
-				if (this.readOnly)
-				{
-					event.preventDefault();
-				}
-				
-			}));
-			
-		},
-		
-		destroy: function() {
-			this.inherited(arguments);
-			
-			if (this._viewModelEnabledHandle != null)
-			{
-				this._viewModelEnabledHandle.unwatch();
-			}
 		},
 		
 		OnViewModelLoaded: function() {
 			this.inherited(arguments);
-						
-			// Set Label
-			this.set('title', this.ViewModel.Label);
-						
-			// Set ReadOnly
-			this.set("readOnly", !this.ViewModel.Enabled);
-			
-			// Watch for changes in ViewModel
-			if (this._viewModelEnabledHandle != null)
+
+			if (this.ViewModel)
 			{
-				this._viewModelEnabledHandle.unwatch();
-			}
-			
-			this._viewModelEnabledHandle = this.ViewModel.watch('Enabled', lang.hitch(this, function(name, oldValue, newValue) {
+				// Set Columns
+				this.set('cols', this.ViewModel.Columns);
+				
+				// Check all Child ViewModels are loaded
+				all(this.ViewModel.Children).then(lang.hitch(this, function(childviewmodels) {
+						
+					array.forEach(childviewmodels, function(childviewmodel) {
+
+						// Check Control is loaded
+						require([this.ControlPath(childviewmodel)], lang.hitch(this, function(controlType) {
+
+							// Create Control
+							var control = new controlType(this.ControlParameters(childviewmodel));
+							
+							// Add to TableContainer
+							this.addChild(control);
+							
+							// Set ViewModel
+							control.set("ViewModel", childviewmodel);
+						}));
 					
-				// Set Value
-				this.set("readOnly", !this.ViewModel.Enabled);	
-			}));
+					}, this);
+				}));
+			}
 		}
 
 	});

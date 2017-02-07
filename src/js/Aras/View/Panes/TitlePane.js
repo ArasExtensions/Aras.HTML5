@@ -24,9 +24,11 @@
 
 define([
 	'dojo/_base/declare',
+	'dojo/_base/lang',
+	'dojo/when',
 	'dijit/TitlePane',
 	'../Control',
-], function(declare, TitlePane, Control) {
+], function(declare, lang, when, TitlePane, Control) {
 	
 	return declare('Aras.View.Panes.TitlePane', [TitlePane, Control], {
 		
