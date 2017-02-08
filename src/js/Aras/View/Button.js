@@ -27,34 +27,30 @@ define([
 	'dojo/_base/lang',
 	'dojo/when',
 	'dijit/form/Button',
-	'./Command'
-], function(declare, lang, when, Button, Command) {
+	'./Control'
+], function(declare, lang, when, Button, Control) {
 	
-	return declare('Aras.View.Button', [Button, Command], {
+	return declare('Aras.View.Button', [Button, Control], {
 		
 		_savedIconClass: null,
 		
 		_canExecuteHandle: null,
-		
-		constructor: function(args) {
-			
-		},
-		
+				
 		startup: function() {
 			this.inherited(arguments);
 
-			if (this.iconClass != null)
-			{
-				// Store IconClass
-				this._savedIconClass = this.iconClass;
-				
-				this.SetEnabled(false);
-			}
+			// Call Control Startup
+			this._startup();
+			
+			this._updateButton();
 		},
 		
 		destroy: function() {
 			this.inherited(arguments);
 
+			// Call Control Destroy
+			this._destroy();
+			
 			if (this._canExecuteHandle)
 			{
 				this._canExecuteHandle.unwatch();
@@ -75,8 +71,7 @@ define([
 			}
 		},
 		
-		OnViewModelLoaded: function() {
-			this.inherited(arguments);
+		_updateButton: function() {
 			
 			if (this.ViewModel != null)
 			{
@@ -86,28 +81,36 @@ define([
 				// Store IconClass
 				this._savedIconClass = this.iconClass;
 			
-				when(this.ViewModel.Command).then(lang.hitch(this, function() {
-					
-					// Link Click Event
-					this.set('onClick', lang.hitch(this, function() {
-						this.SetEnabled(false);
-						this.ViewModel.Command.Execute();
-					}));
+				// Link Click Event
+				this.set('onClick', lang.hitch(this, function() {
+					this.SetEnabled(false);
+					this.ViewModel.Command.Execute();
+				}));
 			
-					// Set Enabled
-					this.SetEnabled(this.ViewModel.Command.CanExecute);
+				// Set Enabled
+				this.SetEnabled(this.ViewModel.Command.CanExecute);
 			
-					// Watch for changes in CanExecute
-					if (this._canExecuteHandle)
-					{
-						this._canExecuteHandle.unwatch();
-					}
+				// Watch for changes in CanExecute
+				if (this._canExecuteHandle)
+				{
+					this._canExecuteHandle.unwatch();
+				}
 					
-					this._canExecuteHandle = this.ViewModel.Command.watch('CanExecute', lang.hitch(this, function(name, oldValue, newValue) {
-						this.SetEnabled(newValue);
-					}));
+				this._canExecuteHandle = this.ViewModel.Command.watch('CanExecute', lang.hitch(this, function(name, oldValue, newValue) {
+					this.SetEnabled(newValue);
 				}));
 			}
+			else
+			{
+				// Store IconClass
+				this._savedIconClass = this.iconClass;
+			}
+		},
+		
+		OnViewModelChanged: function() {
+			this.inherited(arguments);
+			
+			this._updateButton();
 		}
 	});
 });

@@ -39,16 +39,15 @@ define([
 		
 		Editable: null,
 		
-		constructor: function() {
-			
-		},
+		Index: null,
 		
-		startup: function() {
+		_startup: function() {
 			this.inherited(arguments);
+			
+			this._updateColumn();
 		},
 				
-		OnViewModelLoaded: function() {
-			this.inherited(arguments);
+		_updateColumn: function() {
 
 			if (this.ViewModel != null)
 			{
@@ -62,6 +61,13 @@ define([
 				this.set('Label', null);
 				this.set('Editable', null);			
 			}
+		},
+		
+		OnViewModelChanged: function(name, oldValue, newValue) {
+			this.inherited(arguments);
+			
+			// Update Column
+			this._updateColumn();	
 		}
 		
 	});

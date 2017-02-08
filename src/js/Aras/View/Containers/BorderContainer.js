@@ -25,47 +25,27 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
-	'dojo/_base/array',
-	'dojo/promise/all',
 	'dijit/layout/BorderContainer',
 	'../Container'
-], function(declare, lang, array, all, BorderContainer, Container) {
+], function(declare, lang, BorderContainer, Container) {
 	
 	return declare('Aras.View.Containers.BorderContainer', [BorderContainer, Container], {
-		
-		constructor: function() {
-			
-		},
 		
 		startup: function() {
 			this.inherited(arguments);
 			
+			// Call Container Startup
+			this._startup();
+			
+			// Add Children
+			this._addChildren();
 		},
 		
-		OnViewModelLoaded: function() {
+		destroy: function() {
 			this.inherited(arguments);
-
-			// Check ViewModel is loaded
-			all(this.ViewModel.Children).then(lang.hitch(this, function(childviewmodels) {
-						
-				array.forEach(childviewmodels, function(childviewmodel) {
-
-					// Check Control is loaded
-					require([this.ControlPath(childviewmodel)], lang.hitch(this, function(controlType) {
-
-						// Create Control
-						var control = new controlType(this.ControlParameters(childviewmodel));
-				
-						// Add to BorderContainer
-						this.addChild(control);
-				
-						// Set ViewModel
-						control.set("ViewModel", childviewmodel);
-					}));
-					
-				}, this);
-			}));
+			
+			// Call Container Destroy
+			this._destroy();
 		}
-
 	});
 });

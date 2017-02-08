@@ -24,24 +24,18 @@
 
 define([
 	'dojo/_base/declare',
-	'./BorderContainer',
-	'./ContentPane',
-], function(declare, BorderContainer, ContentPane) {
+	'./BorderContainer'
+], function(declare, BorderContainer) {
 	
 	return declare('Aras.View.Containers.Application', [BorderContainer], {
-					
-		constructor: function() {
+		
+		postMixInProperties: function() {
+			this.inherited(arguments);
 			
-		},
-		
-		startup: function() {
-			this.inherited(arguments);
-
-		},
-		
-		OnViewModelLoaded: function() {
-			this.inherited(arguments);
-
+			// Set Parameters from ViewModel
+			this.id = this.ViewModel.Name;
+			this.title = this.ViewModel.Label;
+			this.iconClass = "small" + this.ViewModel.Icon + "Icon";
 		}
 
 	});

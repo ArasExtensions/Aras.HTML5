@@ -48,37 +48,27 @@ define([
 		startup: function() {
 			this.inherited(arguments);
 			
+			// Call Control Startup
+			this._startup();
+		},
 
+		destroy: function() {
+			this.inherited(arguments);
+			
+			// Call Control Destroy
+			this._destroy();
 		},
 		
-		OnViewModelLoaded: function() {
+		buildRendering: function() {
 			this.inherited(arguments);
-
+			
 			if (this.ViewModel)
 			{
 				// Set Columns
 				this.set('cols', this.ViewModel.Columns);
 				
-				// Check all Child ViewModels are loaded
-				all(this.ViewModel.Children).then(lang.hitch(this, function(childviewmodels) {
-						
-					array.forEach(childviewmodels, function(childviewmodel) {
-
-						// Check Control is loaded
-						require([this.ControlPath(childviewmodel)], lang.hitch(this, function(controlType) {
-
-							// Create Control
-							var control = new controlType(this.ControlParameters(childviewmodel));
-							
-							// Add to TableContainer
-							this.addChild(control);
-							
-							// Set ViewModel
-							control.set("ViewModel", childviewmodel);
-						}));
-					
-					}, this);
-				}));
+				// Add Children
+				this._addChildren();
 			}
 		}
 

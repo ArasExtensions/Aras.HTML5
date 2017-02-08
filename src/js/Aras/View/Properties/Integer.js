@@ -43,12 +43,20 @@ define([
 		},
 		
 		startup: function() {
-			this.inherited(arguments);			
+			this.inherited(arguments);	
+
+			// Call Property Startup
+			this._startup();
+			
+			this._updateInteger();
 		},
 
 		destroy: function() {
 			this.inherited(arguments);	
 
+			// Call Property Destroy
+			this._destroy();
+			
 			if (this._viewModelValueHandle != null)
 			{
 				this._viewModelValueHandle.unwatch();
@@ -60,8 +68,7 @@ define([
 			}
 		},
 		
-		OnViewModelLoaded: function() {
-			this.inherited(arguments);
+		_updateInteger: function() {
 
 			if (this.ViewModel != null)
 			{
@@ -126,6 +133,12 @@ define([
 					
 				}));
 			}
+		},
+		
+		OnViewModelChanged: function(name, oldValue, newValue) {
+			this.inherited(arguments);	
+			
+			this._updateInteger();	
 		}
 	});
 });

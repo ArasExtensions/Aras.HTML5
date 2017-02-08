@@ -26,9 +26,8 @@ define([
 	'dojo/_base/declare',
 	'dojo/Stateful',
 	'dojo/_base/lang',
-	'dojo/when',
 	'dijit/Tooltip'
-], function(declare, Stateful, lang, when, Tooltip) {
+], function(declare, Stateful, lang, Tooltip) {
 	
 	return declare('Aras.View.Control', [Stateful], {
 		
@@ -37,20 +36,17 @@ define([
 		_viewModelHandle: null,
 		
 		_toolTip: null,
-		
-		constructor: function() {
+				
+		_startup: function() {
 
-		},
-		
-		startup: function() {
-			this.inherited(arguments);
-	
+			// Update Tooltip
+			this._updateTooltip();
+			
 			// Watch ViewModel
-			this._viewModelHandle = this.watch("ViewModel", lang.hitch(this, this._onViewModelChange));
+			this._viewModelHandle = this.watch("ViewModel", lang.hitch(this, this.OnViewModelChanged));
 		},
 	
-		destroy: function() {
-			this.inherited(arguments);
+		_destroy: function() {
 	
 			if (this._viewModelHandle)
 			{
@@ -58,14 +54,8 @@ define([
 			}
 		},
 		
-		_onViewModelChange: function(name, oldValue, newValue) {
-
-			this.OnViewModelLoaded();
-		},
-		
-		OnViewModelLoaded: function() {
+		_updateTooltip: function() {
 			
-			// Add Tooltip
 			if((this.ViewModel != null) && (this.ViewModel.Tooltip != null))
 			{				
 				if (!this._toolTip)
@@ -84,86 +74,14 @@ define([
 					this._toolTip.destroyRecursive();
 					this._toolTip = null;
 				}
-			}
+			}			
 		},
 		
-		Refresh: function() {
-			this.inherited(arguments);
-			
-			if (this.ViewModel != null)
-			{
-				this.ViewModel.Refresh.Execute();
-			}
-		},
-		
-		Close: function() {
-			this.inherited(arguments);
-			
-			if (this.ViewModel != null)
-			{
-				this.ViewModel.Close.Execute();
-			}
-		},
-		
-		ControlPath: function(ViewModel) {
+		OnViewModelChanged: function(name, oldValue, newValue) {
 
-			// Get path for Control
-			var path = ViewModel.Type.replace(/\./g, "/");
-			return path;
-		},
-
-		ControlParameters: function(ViewModel) {
-
-			var parameters = new Object();
-			
-			// Region 
-			switch(ViewModel.Region)
-			{
-				case 1:
-					parameters['region'] = 'top';
-					break;
-				case 2:
-					parameters['region'] = 'bottom';
-					break;
-				case 3:
-					parameters['region'] = 'right';
-					break;
-				case 4:
-					parameters['region'] = 'left';
-					break;
-				case 5:
-					parameters['region'] = 'center';
-					break;
-				case 6:
-					parameters['region'] = 'leading';
-					break;
-				case 7:
-					parameters['region'] = 'trailing';
-					break;
-				default:
-					parameters['region'] = 'center';
-					break;			
-			}
-			
-			// Style
-			var style = '';
-			
-			if (ViewModel.Height != null)
-			{
-				style = style + 'height:' + ViewModel.Height + 'px;';
-			}
-	
-			if (ViewModel.Width != null)
-			{
-				style = style + 'width:' + ViewModel.Width + 'px;';
-			}
-			
-			if (style.length > 0)
-			{
-				parameters['style'] = style;
-			}
-			
-			return parameters;
+			// Update Tooltip
+			this._updateTooltip();	
 		}
+
 	});
 });

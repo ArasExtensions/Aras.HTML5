@@ -26,10 +26,10 @@ define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
 	'dijit/MenuItem',
-	'./Command'
-], function(declare, lang, MenuItem, Command) {
+	'./Control'
+], function(declare, lang, MenuItem, Control) {
 	
-	return declare('Aras.View.MenuItem', [MenuItem, Command], {
+	return declare('Aras.View.MenuItem', [MenuItem, Control], {
 	
 		_canExecuteHandle: null,
 		

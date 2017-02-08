@@ -24,18 +24,30 @@
 
 define([
 	'dojo/_base/declare',
+	'dojo/_base/array',
 	'./Control',
-], function(declare, Control) {
+], function(declare, array, Control) {
 	
 	return declare('Aras.View.Container', [Control], {
-				
-		constructor: function() {
-
+			
+		_addChildren: function() {
+			
+			array.forEach(this.ViewModel.Children, function(childviewmodel) {
+					
+				var control = childviewmodel.Session.ViewControl(childviewmodel);
+				this.addChild(control);
+					
+			}, this);
 		},
 		
-		startup: function() {
-			this.inherited(arguments);
-
+		_removeChildren: function() {
+			
+			var children = this.getChildren();
+			
+			array.forEach(children, function(child) {
+				child.destroyRecursive();
+				this.removeChild(child);
+			}, this);
 		}
 
 	});

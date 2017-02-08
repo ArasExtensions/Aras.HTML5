@@ -27,13 +27,13 @@ define([
 	'dojo/_base/lang',
 	'dojo/promise/all',
 	'dijit/Toolbar',
-	'../Control',
-	'dijit/Tooltip',
+	'../Container',
 	'../Button',
+	'dijit/Tooltip',
 	'dijit/ToolbarSeparator',
-], function(declare, lang, all, Toolbar, Control, Tooltip, Button, Separator) {
+], function(declare, lang, all, Toolbar, Container, Button, Tooltip, Separator) {
 	
-	return declare('Aras.View.Containers.Toolbar', [Toolbar, Control], {
+	return declare('Aras.View.Containers.Toolbar', [Toolbar, Container], {
 		
 		Window: null,
 		
@@ -50,12 +50,18 @@ define([
 		startup: function() {
 			this.inherited(arguments);
 			
+			// Call Container Startup
+			this._startup();
+			
 			this._addTopButtons();
 		},
 		
 		destroy: function() {
 			this.inherited(arguments);
 		
+			// Call Container Destroy
+			this._destroy();
+			
 			if (this._sessionHandle)
 			{
 				this._sessionHandle.unwatch();
@@ -68,6 +74,7 @@ define([
 			{
 				// Add Login Button
 				this.LoginButton = new Button({ iconClass: "smallLoginIcon"});
+				
 				this.LoginButton.set('onClick', lang.hitch(this, function() {
 					this.Window._login();
 				}));
@@ -86,7 +93,6 @@ define([
 				this.addChild(sep);
 				
 				// Watch for Window Session changing
-				
 				if (this._sessionHandle)
 				{
 					this._sessionHandle.unwatch();
@@ -122,55 +128,17 @@ define([
 			}				
 		},
 		
-		OnViewModelLoaded: function() {
+		OnViewModelChanged: function() {
 			this.inherited(arguments);
 
 			// Clear Toolbar
-			var children = this.getChildren();
-			
-			for(var i=0; i<children.length; i++)
-			{
-				children[i].destroyRecursive();
-				this.removeChild(children[i]);
-			}
-			
+			this._removeChildren()
+						
 			// Add Top Buttons
 			this._addTopButtons();
 			
-			if (this.ViewModel != null)
-			{
-				// Check all ViewModels are loaded
-				all(this.ViewModel.Children).then(lang.hitch(this, function(childviewmodels) {
-
-					// Get all required Control Paths
-					var controlpaths = [];
-					
-					for(var i=0; i<childviewmodels.length; i++)
-					{
-						controlpaths.push(this.ControlPath(childviewmodels[i]));
-					}
-						
-					// Ensure all Controls are loaded
-					require(controlpaths, lang.hitch(this, function() {
-						
-						for(var i=0; i<childviewmodels.length; i++)
-						{
-							var controltype = arguments[i];
-							
-							var childviewmodel = childviewmodels[i];
-
-							// Create Control
-							var control = new controltype(this.ControlParameters(childviewmodel));
-				
-							// Add to Toolbar
-							this.addChild(control);
-				
-							// Set ViewModel
-							control.set("ViewModel", childviewmodel);	
-						}
-					}));
-				}));	
-			}
+			// Add Control Buttons
+			this._addChildren();
 		}
 	});
 });

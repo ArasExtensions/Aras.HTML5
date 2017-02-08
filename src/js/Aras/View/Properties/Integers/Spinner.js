@@ -35,18 +35,22 @@ define([
 		_viewModelValueHandle: null,
 		
 		_valueHandle: null,
-		
-		constructor: function() {
-
-		},
-		
+				
 		startup: function() {
-			this.inherited(arguments);			
+			this.inherited(arguments);
+
+			// Call Property Startup
+			this._startup();
+			
+			this._updateSpinner();
 		},
 
 		destroy: function() {
 			this.inherited(arguments);	
 
+			// Call Property Destroy
+			this._destroy();
+			
 			if (this._viewModelValueHandle != null)
 			{
 				this._viewModelValueHandle.unwatch();
@@ -65,63 +69,86 @@ define([
 			evt.preventDefault();
 		},
 		
-		OnViewModelLoaded: function() {
-			this.inherited(arguments);
-
-			// Set Value from ViewModel
-			this.set("value", this.ViewModel.Value);
-			
-			// Watch for changes in Control value
-			if (this._valueHandle != null)
+		_updateSpinner: function() {
+	
+			if (this.ViewModel != null)
 			{
-				this._valueHandle.unwatch();
-			}
+				// Set Value from ViewModel
+				this.set("value", this.ViewModel.Value);
 			
-			this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
-				
-				if (isNaN(newValue))
+				// Watch for changes in Control value
+				if (this._valueHandle != null)
 				{
-					this.set("value", oldValue);
+					this._valueHandle.unwatch();
 				}
-				else
-				{
-					var newnumber = Number(newValue);
-					var currentnumber = Number(this.ViewModel.get('Value'));
+			
+				this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
 				
-					if (currentnumber !== newnumber)
-					{										
-						if (!this._updateFromViewModel)
-						{
-							// Update ViewModel Value
-							this.ViewModel.set('Value', newnumber);
-							this.ViewModel.Write();
+					if (isNaN(newValue))
+					{
+						this.set("value", oldValue);
+					}
+					else
+					{
+						var newnumber = Number(newValue);
+						var currentnumber = Number(this.ViewModel.get('Value'));
+				
+						if (currentnumber !== newnumber)
+						{										
+							if (!this._updateFromViewModel)
+							{
+								// Update ViewModel Value
+								this.ViewModel.set('Value', newnumber);
+								this.ViewModel.Write();
+							}
 						}
 					}
-				}
 					
-			}));
+				}));
 			
-			// Watch for changes in ViewModel
-			if (this._viewModelValueHandle != null)
-			{
-				this._viewModelValueHandle.unwatch();
-			}
-			
-			this._viewModelValueHandle = this.ViewModel.watch('Value', lang.hitch(this, function(name, oldValue, newValue) {
-					
-				if (newValue)
+				// Watch for changes in ViewModel
+				if (this._viewModelValueHandle != null)
 				{
-					// Stop ViewModel Update
-					this._updateFromViewModel = true;
-					
-					// Set Value
-					this.set("value", this.ViewModel.Value);
-					
-					// Start ViewModel Update
-					this._updateFromViewModel = false;
+					this._viewModelValueHandle.unwatch();
 				}
+			
+				this._viewModelValueHandle = this.ViewModel.watch('Value', lang.hitch(this, function(name, oldValue, newValue) {
 					
-			}));
+					if (newValue)
+					{
+						// Stop ViewModel Update
+						this._updateFromViewModel = true;
+					
+						// Set Value
+						this.set("value", this.ViewModel.Value);
+					
+						// Start ViewModel Update
+						this._updateFromViewModel = false;
+					}
+					
+				}));
+			}
+			else
+			{
+				this.set("value", null);
+			
+				if (this._valueHandle != null)
+				{
+					this._valueHandle.unwatch();
+				}
+			
+				if (this._viewModelValueHandle != null)
+				{
+					this._viewModelValueHandle.unwatch();
+				}
+			}
+		},
+		
+		OnViewModelChanged: function(name, oldValue, newValue) {
+			this.inherited(arguments);	
+			
+			// Update String
+			this._updateSpinner();	
 		}
 
 	});

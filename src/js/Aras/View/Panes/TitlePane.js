@@ -32,21 +32,27 @@ define([
 	
 	return declare('Aras.View.Panes.TitlePane', [TitlePane, Control], {
 		
-		constructor: function() {
-			
-		},
-		
 		startup: function() {
 			this.inherited(arguments);
 
+			// Call Control Startup
+			this._startup();
 		},
 		
 		destroy: function() {
 			this.inherited(arguments);
+			
+			// Call Control Destroy
+			this._destroy();
 		},
 		
-		OnViewModelLoaded: function() {
+		buildRendering: function() {
 			this.inherited(arguments);
+			
+			this._updateTitlePane();
+		},
+				
+		_updateTitlePane: function() {
 			
 			if (this.ViewModel)
 			{				
@@ -55,21 +61,7 @@ define([
 			
 				if(this.ViewModel.Content)
 				{
-					when(this.ViewModel.Content, lang.hitch(this, function(contentviewmodel) {
-					
-						// Check Control is loaded
-						require([this.ControlPath(contentviewmodel)], lang.hitch(this, function(controlType) {
-					
-							// Create Control
-							var control = new controlType(this.ControlParameters(contentviewmodel));
-				
-							// Set Content
-							this.set("content", control);
-				
-							// Set ViewModel
-							control.set("ViewModel", contentviewmodel);
-						}));
-					}));
+					this.set("content", this.ViewModel.Session.ViewControl(this.ViewModel.Content));
 				}
 				else
 				{
@@ -82,6 +74,13 @@ define([
 				this.set("open", false);
 				this.set("content", null);
 			}
+		},
+		
+		OnViewModelChanged: function(name, oldValue, newValue) {
+			this.inherited(arguments);
+			
+			// Update TotlePane
+			this._updateTitlePane();	
 		}
 		
 	});

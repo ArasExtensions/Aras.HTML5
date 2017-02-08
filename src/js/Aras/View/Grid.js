@@ -64,6 +64,9 @@ define([
 		startup: function() {
 			this.inherited(arguments);
 			
+			// Call Control Startup
+			this._startup();
+			
 			// Create Grid
 			this._grid = new _Grid({ region: 'center', selectionMode: 'extended' });
 			this.addChild(this._grid);
@@ -87,10 +90,16 @@ define([
 					this.ViewModel.Select.Execute(Parameters);
 				}
 			}));
+			
+			// Update Grid
+			this._updateGrid();
 		},
 
 		destroy: function() {
 			this.inherited(arguments);
+			
+			// Call Control Destroy
+			this._destroy();
 			
 			if (this._columnsHandle)
 			{
@@ -103,9 +112,15 @@ define([
 			}
 		},
 		
-		OnViewModelLoaded: function() {
+		OnViewModelChanged: function(name, oldValue, newValue) {
 			this.inherited(arguments);
-
+			
+			// Update Grid
+			this._updateGrid();	
+		},
+		
+		_updateGrid: function() {
+	
 			// Watch for changes in Columns
 			if (this._columnsHandle)
 			{
@@ -121,96 +136,90 @@ define([
 			}
 
 			this._rowsHandle = this.ViewModel.watch("Rows", lang.hitch(this, this._updateRows));
-			
+	
 			// Update Columns
 			this._updateColumns();
 		},
 		
 		_updateColumns: function() {
 		
-			all(this.ViewModel.Columns).then(lang.hitch(this, function(columns) {
-	
-				// Refresh Columns
-				var gridcolumns = {};
+			// Refresh Columns
+			var gridcolumns = {};
 				
-				array.forEach(columns, function(columnviewmodel, i) {
-				
-					// Ensure Column Exists
-					if (!this.Columns[i])
-					{
-						this.Columns[i] = new Column({ Grid: this });
-						this.Columns[i].startup();
-					}
-			
+			array.forEach(this.ViewModel.Columns, function(columnviewmodel, i) {
+								
+				if (!this.Columns[i])
+				{
+					// Create Column
+					this.Columns[i] = new Column({ Grid: this, ViewModel: columnviewmodel, Index: i });
+					this.Columns[i]._startup();
+				}
+				else
+				{
 					// Update Column
 					this.Columns[i].set('Index', i);
-					this.Columns[i].set('ViewModel', columnviewmodel);			
+					this.Columns[i].set('ViewModel', columnviewmodel);	
+				}				
 	
-					gridcolumns[this.Columns[i].Name] = {};
-					gridcolumns[this.Columns[i].Name].label = this.Columns[i].Label;
-					gridcolumns[this.Columns[i].Name].renderCell = lang.hitch(this.Columns[i], this._renderCell);
+				gridcolumns[this.Columns[i].Name] = {};
+				gridcolumns[this.Columns[i].Name].label = this.Columns[i].Label;
+				gridcolumns[this.Columns[i].Name].renderCell = lang.hitch(this.Columns[i], this._renderCell);
 					
-				}, this);
+			}, this);
 			
-				// Update NoColumns
-				this.NoColumns = columns.length;
+			// Update NoColumns
+			this.NoColumns = this.ViewModel.Columns.length;
 			
-				// Set Grid Columns
-				this._grid._setColumns(gridcolumns);
+			// Set Grid Columns
+			this._grid._setColumns(gridcolumns);
 
-				// Update Rows
-				this._updateRows();				
-			}));
-
+			// Update Rows
+			this._updateRows();				
 		},
 
 		_updateRows: function() {
 				
-			all(this.ViewModel.Rows).then(lang.hitch(this, function(rows) {
-				
-				array.forEach(rows, function(rowviewmodel, i) {
-					
-					// Ensure Row Exists
-					if (!this.Rows[i])
-					{
-						this.Rows[i] = new Row({ Grid: this });
-						this.Rows[i].startup();
-						this.Rows[i].set('Index', i);
-					}
-					
-					// Set ViewModel
-					this.Rows[i].set('ViewModel', rowviewmodel);
 
-				}, this);	
-
-				if (this.NoRows != rows.length)
+			array.forEach(this.ViewModel.Rows, function(rowviewmodel, i) {
+					
+				if (!this.Rows[i])
 				{
-					// Update NoRows
-					this.NoRows = rows.length;
-				
-					// Render Grid
-					var rowdata = [];
-					
-					for(var i=0; i<this.NoRows; i++)
-					{
-						rowdata[i] = new Object();
-						rowdata[i]['id'] = i;
-						
-						for (var j=0; j<this.Columns.length; j++) 
-						{
-							rowdata[i][this.Columns[j].Name] = null;
-						}
-					}
-										
-					// Clear Grid
-					this._grid.refresh();
-					
-					// Render Grid
-					this._grid.renderArray(rowdata);
+					// Create Row
+					this.Rows[i] = new Row({ Grid: this, ViewModel: rowviewmodel, Index: i });
+					this.Rows[i]._startup();
 				}
+				else
+				{
+					// Update ViewModel
+					this.Rows[i].set('ViewModel', rowviewmodel);
+				}
+			}, this);	
+
+			if (this.NoRows != this.ViewModel.Rows.length)
+			{
+				// Update NoRows
+				this.NoRows = this.ViewModel.Rows.length;
 				
-			}));
-				
+				// Render Grid
+				var rowdata = [];
+					
+				for(var i=0; i<this.NoRows; i++)
+				{
+					rowdata[i] = new Object();
+					rowdata[i]['id'] = i;
+						
+					for (var j=0; j<this.Columns.length; j++) 
+					{
+						rowdata[i][this.Columns[j].Name] = null;
+					}
+				}
+										
+				// Clear Grid
+				this._grid.refresh();
+					
+				// Render Grid
+				this._grid.renderArray(rowdata);
+			}	
 		},
 		
 		_renderCell: function(object, value, node, options) {

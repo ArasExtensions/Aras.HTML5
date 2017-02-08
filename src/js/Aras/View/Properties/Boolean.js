@@ -30,21 +30,17 @@ define([
 ], function(declare, lang, Property, CheckBox) {
 	
 	return declare('Aras.View.Properties.Boolean', [CheckBox, Property], {
-								
-		constructor: function() {
-		
-			
-		},
-		
+										
 		startup: function() {
 			this.inherited(arguments);
 			
+			this._startup();
 		},
 		
-		OnViewModelLoaded: function() {
+		destroy: function() {
 			this.inherited(arguments);
-
 			
+			this._destroy();
 		}
 
 	});

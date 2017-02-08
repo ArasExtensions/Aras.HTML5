@@ -33,13 +33,8 @@ define([
 		_viewModelEnabledHandle: null,
 		
 		_updateFromViewModel: null,
-		
-		constructor: function() {
-
-		
-		},
-		
-		startup: function() {
+				
+		_startup: function() {
 			this.inherited(arguments);
 
 			// Default UpdateFromViewModel
@@ -55,9 +50,10 @@ define([
 				
 			}));
 			
+			this._updateProperty();
 		},
 		
-		destroy: function() {
+		_destroy: function() {
 			this.inherited(arguments);
 			
 			if (this._viewModelEnabledHandle != null)
@@ -66,26 +62,34 @@ define([
 			}
 		},
 		
-		OnViewModelLoaded: function() {
-			this.inherited(arguments);
-						
-			// Set Label
-			this.set('title', this.ViewModel.Label);
-						
-			// Set ReadOnly
-			this.set("readOnly", !this.ViewModel.Enabled);
+		_updateProperty: function() {
 			
-			// Watch for changes in ViewModel
-			if (this._viewModelEnabledHandle != null)
-			{
-				this._viewModelEnabledHandle.unwatch();
-			}
+			if (this.ViewModel != null)
+			{	
+				// Set Label
+				this.set('title', this.ViewModel.Label);
+						
+				// Set ReadOnly
+				this.set("readOnly", !this.ViewModel.Enabled);
 			
-			this._viewModelEnabledHandle = this.ViewModel.watch('Enabled', lang.hitch(this, function(name, oldValue, newValue) {
+				// Watch for changes in ViewModel Enabled
+				if (this._viewModelEnabledHandle != null)
+				{
+					this._viewModelEnabledHandle.unwatch();
+				}
+			
+				this._viewModelEnabledHandle = this.ViewModel.watch('Enabled', lang.hitch(this, function(name, oldValue, newValue) {
 					
-				// Set Value
-				this.set("readOnly", !this.ViewModel.Enabled);	
-			}));
+					// Set Value
+					this.set("readOnly", !this.ViewModel.Enabled);	
+				}));
+			}
+		},
+		
+		OnViewModelChanged: function() {
+			this.inherited(arguments);
+						
+			this._updateProperty();
 		}
 
 	});

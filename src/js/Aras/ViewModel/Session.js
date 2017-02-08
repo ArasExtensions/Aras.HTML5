@@ -31,8 +31,36 @@ define([
 	'dojo/when',
 	'./Control',
 	'./Command',
-	'./ApplicationType'
-], function(declare, request, lang, array, json, when, Control, Command, ApplicationType) {
+	'./ApplicationType',
+	'../View/Containers/BorderContainer',
+	'../View/Grid',
+	'../View/Panes/TitlePane',
+	'../View/Button',
+	'../View/Properties/Integer',
+	'../View/Properties/String',
+	'../View/Properties/Integers/Spinner',
+	'../View/ToolbarSeparator',
+	'../View/Containers/TableContainer'
+], function(
+	declare, 
+	request, 
+	lang, 
+	array, 
+	json, 
+	when, 
+	Control, 
+	Command, 
+	ApplicationType, 
+	BorderContainer, 
+	Grid, 
+	TitlePane, 
+	Button, 
+	Integer, 
+	String, 
+	Spinner, 
+	ToolbarSeparator, 
+	TableContainer
+) {
 	
 	return declare('Aras.ViewModel.Session', null, {
 		
@@ -247,14 +275,98 @@ define([
 			);				
 		},
 		
-		View: function(Control) {
+		ViewControl: function(ViewModelControl) {
 			
-			switch(Control.Type)
+			var viewcontrol = null;
+			
+			// Build Parameters for Control
+			var parameters = new Object();
+			
+			// ViewModel
+			parameters['ViewModel'] = ViewModelControl;
+			
+			// Region 
+			switch(ViewModelControl.Region)
 			{
+				case 1:
+					parameters['region'] = 'top';
+					break;
+				case 2:
+					parameters['region'] = 'bottom';
+					break;
+				case 3:
+					parameters['region'] = 'right';
+					break;
+				case 4:
+					parameters['region'] = 'left';
+					break;
+				case 5:
+					parameters['region'] = 'center';
+					break;
+				case 6:
+					parameters['region'] = 'leading';
+					break;
+				case 7:
+					parameters['region'] = 'trailing';
+					break;
 				default:
-					console.debug("View not supported: " + Control.Type);
+					parameters['region'] = 'center';
+					break;			
+			}
+			
+			// Style
+			var style = '';
+			
+			if (ViewModelControl.Height != null)
+			{
+				style = style + 'height:' + ViewModelControl.Height + 'px;';
+			}
+	
+			if (ViewModelControl.Width != null)
+			{
+				style = style + 'width:' + ViewModelControl.Width + 'px;';
+			}
+			
+			if (style.length > 0)
+			{
+				parameters['style'] = style;
+			}
+			
+			switch(ViewModelControl.Type)
+			{
+				case 'Aras.View.Containers.BorderContainer':
+					viewcontrol = new BorderContainer(parameters);
+					break;
+				case 'Aras.View.Grid':
+					viewcontrol = new Grid(parameters);
+					break;
+				case 'Aras.View.Panes.TitlePane':
+					viewcontrol = new TitlePane(parameters);
+					break;
+				case 'Aras.View.Button':
+					viewcontrol = new Button(parameters);
+					break;
+				case 'Aras.View.Properties.Integer':
+					viewcontrol = new Integer(parameters);
+					break;
+				case 'Aras.View.Properties.String':
+					viewcontrol = new String(parameters);
+					break;
+				case 'Aras.View.Properties.Integers.Spinner':
+					viewcontrol = new Spinner(parameters);
+					break;
+				case 'Aras.View.ToolbarSeparator':
+					viewcontrol = new ToolbarSeparator(parameters);
+					break;
+				case 'Aras.View.Containers.TableContainer':
+					viewcontrol = new TableContainer(parameters);
+					break;					
+				default:
+					console.debug("View not supported: " + ViewModelControl.Type);
 					break;
 			}
+			
+			return viewcontrol;
 		}
 		
 	});

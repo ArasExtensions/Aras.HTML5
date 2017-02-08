@@ -43,7 +43,7 @@ define([
 
 		},
 		
-		startup: function() {
+		_startup: function() {
 			this.inherited(arguments);
 			
 			this.Cells = [];
@@ -51,28 +51,31 @@ define([
 			array.forEach(this.Grid.Columns, function(column, i) {
 				
 				this.Cells[i] = new Cell({ Column: column, Row: this, Index: i });
-				this.Cells[i].startup();
+				this.Cells[i]._startup();
 				
+			}, this);
+			
+			this._updateRow();
+		},
+		
+		_updateRow: function() {
+	
+			// Set ViewModel for each Cell
+			array.forEach(this.ViewModel.Cells, function(cellviewmodel, i) {	
+				
+				if (this.Cells[i].ID != cellviewmodel.ID)
+				{
+					this.Cells[i].set('ViewModel', cellviewmodel);
+				}			
+					
 			}, this);
 		},
 		
-		OnViewModelLoaded: function() {
+		OnViewModelChanged: function(name, oldValue, newValue) {
 			this.inherited(arguments);
 			
-			// Set ViewModel for each Cell
-			all(this.ViewModel.Cells).then(lang.hitch(this, function(cellviewmodels) {
-				
-				array.forEach(cellviewmodels, function(cellviewmodel, i) {	
-				
-					if (this.Cells[i].ID != cellviewmodel.ID)
-					{
-						this.Cells[i].set('ViewModel', cellviewmodel);
-					}			
-					
-				}, this);				
-				
-			}));
-
+			// Update Row
+			this._updateRow();	
 		}
 		
 	});

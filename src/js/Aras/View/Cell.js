@@ -46,12 +46,15 @@ define([
 		Node: null,
 		
 		_viewModelValueHandle: null,
-								
-		constructor: function() {
+
+		_startup: function() {
+			this.inherited(arguments);
 			
+			// Update Cell
+			this._updateCell();	
 		},
 		
-		destroy: function() {
+		_destroy: function() {
 			this.inherited(arguments);
 			
 			if (this._viewModelValueHandle)
@@ -60,30 +63,34 @@ define([
 			}		
 		},
 		
-		OnViewModelLoaded: function() {
+		OnViewModelChanged: function(name, oldValue, newValue) {
 			this.inherited(arguments);
+			
+			// Update Cell
+			this._updateCell();	
+		},
+		
+		_updateCell: function() {
 
-			// Watch for changes in ViewModel Value
-			if (this._viewModelValueHandle)
+			if (this.ViewModel != null)
 			{
-				this._viewModelValueHandle.unwatch();
-			}
+				// Watch for changes in ViewModel Value
+				if (this._viewModelValueHandle)
+				{
+					this._viewModelValueHandle.unwatch();
+				}
 
-			this._viewModelValueHandle = this.ViewModel.watch("Value", lang.hitch(this, this.OnViewModelValueChange));
+				this._viewModelValueHandle = this.ViewModel.watch("Value", lang.hitch(this, this.OnViewModelValueChange));
+			}
 		},
 		
 		OnViewModelValueChange: function(name, oldValue, newValue) {
 
-			when(newValue, lang.hitch(this, function(viewmodel) {
-			
-				if (this.Value)
-				{
-					// Update Value ViewModel
-					this.Value.set("ViewModel", viewmodel);
-				}
-				
-			}));
-
+			if (this.Value)
+			{
+				// Update Value ViewModel
+				this.Value.set("ViewModel", newValue);
+			}
 		},
 				
 		RenderCell: function() {

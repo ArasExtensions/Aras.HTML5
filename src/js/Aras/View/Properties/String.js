@@ -42,11 +42,18 @@ define([
 		startup: function() {
 			this.inherited(arguments);
 			
+			// Call Control Startup
+			this._startup();
+			
+			this._updateString();
 		},
 		
 		destroy: function() {
 			this.inherited(arguments);	
 
+			// Call Control Destroy
+			this._destroy();
+			
 			if (this._viewModelValueHandle != null)
 			{
 				this._viewModelValueHandle.unwatch();
@@ -58,49 +65,72 @@ define([
 			}
 		},
 		
-		OnViewModelLoaded: function() {
-			this.inherited(arguments);
+		_updateString: function() {
 
-			// Set Value from ViewModel
-			this.set("value", this.ViewModel.Value);
-			
-			// Watch for changes in Control value
-			if (this._valueHandle)
+			if (this.ViewModel != null)
 			{
-				this._valueHandle.unwatch();
-			}
+				// Set Value from ViewModel
+				this.set("value", this.ViewModel.Value);
 			
-			this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
-				
-				if (oldValue !== newValue)
-				{										
-					if (!this._updateFromViewModel)
-					{
-						// Update ViewModel Value
-						this.ViewModel.set('Value', newValue);
-						this.ViewModel.Write();
-					}
+				// Watch for changes in Control value
+				if (this._valueHandle)
+				{
+					this._valueHandle.unwatch();
 				}
-	
-			}));
 			
-			// Watch for changes in the ViewModel
-			if (this._viewModelValueHandle)
-			{
-				this._viewModelValueHandle.unwatch();
-			}
-			
-			this._viewModelValueHandle = this.ViewModel.watch('Value', lang.hitch(this, function(name, oldValue, newValue) {
-					
-				// Stop ViewModel Update
-				this._updateFromViewModel = true;
+				this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
 				
-				// Set Value
-				this.set("value", newValue);
+					if (oldValue !== newValue)
+					{										
+						if (!this._updateFromViewModel)
+						{
+							// Update ViewModel Value
+							this.ViewModel.set('Value', newValue);
+							this.ViewModel.Write();
+						}
+					}
+	
+				}));
+			
+				// Watch for changes in the ViewModel
+				if (this._viewModelValueHandle)
+				{
+					this._viewModelValueHandle.unwatch();
+				}
+			
+				this._viewModelValueHandle = this.ViewModel.watch('Value', lang.hitch(this, function(name, oldValue, newValue) {
+					
+					// Stop ViewModel Update
+					this._updateFromViewModel = true;
+				
+					// Set Value
+					this.set("value", newValue);
 
-				// Stop ViewModel Update
-				this._updateFromViewModel = false;				
-			}));
+					// Stop ViewModel Update
+					this._updateFromViewModel = false;				
+				}));
+			}
+			else
+			{
+				this.set("value", null);
+				
+				if (this._valueHandle)
+				{
+					this._valueHandle.unwatch();
+				}
+				
+				if (this._viewModelValueHandle)
+				{
+					this._viewModelValueHandle.unwatch();
+				}
+			}
+		},
+		
+		OnViewModelChanged: function(name, oldValue, newValue) {
+			this.inherited(arguments);	
+			
+			// Update String
+			this._updateString();	
 		}
 
 	});

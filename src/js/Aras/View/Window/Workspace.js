@@ -63,13 +63,10 @@ define([
 			if (application == null)
 			{
 				// Create Application
-				application = new Application({ id: ViewModel.Name, title: ViewModel.Label, iconClass: "small" + ViewModel.Icon + "Icon" });
+				application = new Application({ ViewModel: ViewModel });
 				
 				// Add to TabContainer
 				this.addChild(application);
-			
-				// Set Application ViewModel
-				application.set("ViewModel", ViewModel);
 			}
 			
 			// Select Application
