@@ -39,7 +39,7 @@ define([
 		
 		Type: null,
 				
-		constructor: function(Session, ID, Data) {
+		constructor: function(Session, ID, Type) {
 			
 			// Set Session
 			this.set('Session', Session);
@@ -47,12 +47,9 @@ define([
 			// Set ID
 			this.set('ID', ID);
 				
-			// Set Data
-			this.set('Data', Data);
+			// Set Type
+			this.set('Type', Type);
 			
-			// Read Data
-			this._readData();
-				
 			// Watch for Data Updates
 			this.watch('Data', lang.hitch(this, function(name, oldValue, newValue) {
 				this._readData();
@@ -61,9 +58,6 @@ define([
 		
 		_readData: function() {
 
-			// Set Type
-			this.set('Type', this.Data.Type);
-			
 			// Process Properties
 			array.forEach(this.Data.Properties, function(property){
 				

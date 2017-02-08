@@ -35,14 +35,11 @@ define([
 		
 		ID: null,
 		
-		Name: null,
-		
 		CanExecute: null,
 		
-		constructor: function(Session, ID, Name, CanExecute) {
+		constructor: function(Session, ID, CanExecute) {
 			this.set('Session', Session);
 			this.set('ID', ID);
-			this.set('Name', Name);
 			this.set('CanExecute', CanExecute);
 		},
 		
