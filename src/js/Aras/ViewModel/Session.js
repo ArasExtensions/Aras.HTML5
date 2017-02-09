@@ -41,7 +41,8 @@ define([
 	'../View/Properties/Integers/Spinner',
 	'../View/ToolbarSeparator',
 	'../View/Containers/TableContainer',
-	'../View/Properties/Item'
+	'../View/Properties/Item',
+	'../View/Properties/Sequence'
 ], function(
 	declare, 
 	request, 
@@ -61,7 +62,8 @@ define([
 	Spinner, 
 	ToolbarSeparator, 
 	TableContainer,
-	Item
+	Item,
+	Sequence
 ) {
 	
 	return declare('Aras.ViewModel.Session', null, {
@@ -365,6 +367,9 @@ define([
 					break;	
 				case 'Aras.View.Properties.Item':
 					viewcontrol = new Item(parameters);
+					break;	
+				case 'Aras.View.Properties.Sequence':
+					viewcontrol = new Sequence(parameters);
 					break;						
 				default:
 					console.debug("View not supported: " + ViewModelControl.Type);

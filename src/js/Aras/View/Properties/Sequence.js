@@ -25,67 +25,84 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
-	'dijit/TitlePane',
-	'../Control',
-], function(declare, lang, TitlePane, Control) {
+	'../Property',
+	'dijit/form/TextBox'
+], function(declare, lang, Property, TextBox) {
 	
-	return declare('Aras.View.Panes.TitlePane', [TitlePane, Control], {
-		
+	return declare('Aras.View.Properties.Sequence', [TextBox, Property], {
+			
+		_viewModelValueHandle: null, 
+				
 		constructor: function() {
-		
-			this.toggleable = false;
+			
+			this._forceReadOnly = true;
 		},
 		
 		startup: function() {
 			this.inherited(arguments);
-
+			
 			// Call Control Startup
 			this._startup();
+			
+			this._updateString();
 		},
 		
 		destroy: function() {
-			this.inherited(arguments);
-			
+			this.inherited(arguments);	
+
 			// Call Control Destroy
 			this._destroy();
+			
+			if (this._viewModelValueHandle != null)
+			{
+				this._viewModelValueHandle.unwatch();
+			}
 		},
 		
-		buildRendering: function() {
-			this.inherited(arguments);
+		_updateString: function() {
+
+			console.debug('seq', this.ViewModel);
 			
-			this._updateTitlePane();
-		},
+			if (this.ViewModel != null)
+			{
+				// Set Value from ViewModel
+				this.set("value", this.ViewModel.Value);
+						
+				// Watch for changes in the ViewModel
+				if (this._viewModelValueHandle)
+				{
+					this._viewModelValueHandle.unwatch();
+				}
+			
+				this._viewModelValueHandle = this.ViewModel.watch('Value', lang.hitch(this, function(name, oldValue, newValue) {
+					
+					// Stop ViewModel Update
+					this._updateFromViewModel = true;
 				
-		_updateTitlePane: function() {
-			
-			if (this.ViewModel)
-			{				
-				this.set("title", this.ViewModel.Title);
-				this.set("open", this.ViewModel.Open);
-			
-				if(this.ViewModel.Content)
-				{
-					this.set("content", this.ViewModel.Session.ViewControl(this.ViewModel.Content));
-				}
-				else
-				{
-					this.set("content", null);
-				}
+					// Set Value
+					this.set("value", newValue);
+
+					// Stop ViewModel Update
+					this._updateFromViewModel = false;				
+				}));
 			}
 			else
 			{
-				this.set("title", null);
-				this.set("open", false);
-				this.set("content", null);
+				this.set("value", null);
+				
+				if (this._viewModelValueHandle)
+				{
+					this._viewModelValueHandle.unwatch();
+				}
 			}
 		},
 		
 		OnViewModelChanged: function(name, oldValue, newValue) {
-			this.inherited(arguments);
+			this.inherited(arguments);	
 			
-			// Update TotlePane
-			this._updateTitlePane();	
+			// Update String
+			this._updateString();	
 		}
-		
+
 	});
 });

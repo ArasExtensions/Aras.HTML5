@@ -33,7 +33,8 @@ define([
 	'./Properties/List',
 	'./Properties/Float',
 	'./Properties/Integer',
-], function(declare, lang, construct, array, when, Control, String, List, Float, Integer) {
+	'./Properties/Sequence'
+], function(declare, lang, construct, array, when, Control, String, List, Float, Integer, Sequence) {
 	
 	return declare('Aras.View.Cell', [Control], {
 		
@@ -126,7 +127,10 @@ define([
 								break;	
 							case 'Aras.View.Properties.Integer':							
 								this.Value = new Integer( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
-								break;									
+								break;
+							case 'Aras.View.Properties.Sequence':
+								this.Value = new Sequence( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
+								break;						
 							default:
 								console.debug('ViewModel Type not supported: ' + valueviewmodel.Type);
 								break;				

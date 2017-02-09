@@ -40,9 +40,6 @@ define([
 			
 			// Set Label Orientation
 			this.orientation = 'vert';
-		
-			// Set Label Width
-			//this.labelWidth = '50%';
 		},
 		
 		startup: function() {
@@ -70,6 +67,7 @@ define([
 				// Add Children
 				this._addChildren();
 			}
+
 		}
 
 	});
