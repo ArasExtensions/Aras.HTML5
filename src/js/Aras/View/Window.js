@@ -118,13 +118,13 @@ define([
 			
 		},
 		
-		_login() {
+		_login: function() {
 				
 			// Display Login
 			this.Login.show();
 		},
 		
-		_logout() {
+		_logout: function() {
 		
 			// Clear Session
 			this.set("Session", null);
@@ -139,7 +139,7 @@ define([
 			this.TopToolBar.set("ViewModel", null);
 		},
 		
-		_startApplication(ApplicationType) {
+		_startApplication: function(ApplicationType) {
 			
 			if (this.Session)
 			{
