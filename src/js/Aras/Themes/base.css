@@ -72,3 +72,16 @@
 	height: 100%;
 	width: 100%;
 }
+
+.tableContainer-labelCell
+{
+	padding: 5px 0px 0px 5px;
+	margin: 0;
+}
+
+.dijitNumberTextBox input.dijitInputInner,
+.dijitCurrencyTextBox input.dijitInputInner,
+.dijitSpinner input.dijitInputInner 
+{
+	text-align: left;
+}
