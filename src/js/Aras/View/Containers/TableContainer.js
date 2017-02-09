@@ -42,7 +42,7 @@ define([
 			this.orientation = 'vert';
 		
 			// Set Label Width
-			this.labelWidth = '50%';
+			//this.labelWidth = '50%';
 		},
 		
 		startup: function() {
