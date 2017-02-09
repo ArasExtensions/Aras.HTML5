@@ -26,16 +26,17 @@ define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
 	'../Property',
-	'dijit/form/TextBox'
-], function(declare, lang, Property, TextBox) {
+	'dijit/form/DateTextBox'
+], function(declare, lang, Property, DateTextBox) {
 	
-	return declare('Aras.View.Properties.Sequence', [TextBox, Property], {
+	return declare('Aras.View.Properties.Date', [DateTextBox, Property], {
 			
 		_viewModelValueHandle: null, 
-				
+		
+		_valueHandle: null,
+		
 		constructor: function() {
 			
-			this._forceReadOnly = true;
 		},
 		
 		startup: function() {
@@ -44,7 +45,7 @@ define([
 			// Call Control Startup
 			this._startup();
 			
-			this._updateString();
+			this._updateDate();
 		},
 		
 		destroy: function() {
@@ -57,15 +58,40 @@ define([
 			{
 				this._viewModelValueHandle.unwatch();
 			}
+			
+			if (this._valueHandle)
+			{
+				this._valueHandle.unwatch();
+			}
 		},
 		
-		_updateString: function() {
+		_updateDate: function() {
 			
 			if (this.ViewModel != null)
 			{
 				// Set Value from ViewModel
 				this.set("value", this.ViewModel.Value);
-						
+
+				// Watch for changes in Control value
+				if (this._valueHandle)
+				{
+					this._valueHandle.unwatch();
+				}
+			
+				this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
+				
+					if (oldValue !== newValue)
+					{										
+						if (!this._updateFromViewModel)
+						{
+							// Update ViewModel Value
+							this.ViewModel.set('Value', newValue);						
+							this.ViewModel.Write();
+						}
+					}
+	
+				}));
+			
 				// Watch for changes in the ViewModel
 				if (this._viewModelValueHandle)
 				{
@@ -77,8 +103,8 @@ define([
 					// Stop ViewModel Update
 					this._updateFromViewModel = true;
 				
-					// Set Value
-					this.set("value", newValue);
+					// Set Value from ViewModel
+					this.set("value", this.ViewModel.Value);
 
 					// Stop ViewModel Update
 					this._updateFromViewModel = false;				
@@ -87,6 +113,11 @@ define([
 			else
 			{
 				this.set("value", null);
+				
+				if (this._valueHandle)
+				{
+					this._valueHandle.unwatch();
+				}
 				
 				if (this._viewModelValueHandle)
 				{
@@ -99,7 +130,7 @@ define([
 			this.inherited(arguments);	
 			
 			// Update String
-			this._updateString();	
+			this._updateDate();	
 		}
 
 	});

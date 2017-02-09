@@ -137,6 +137,20 @@ define([
 							this.set(property.Name, property.Values);
 						
 							break;
+	
+						case 8:
+						
+							// Date
+							if (property.Values[0] == null)
+							{
+								this.set(property.Name, null);
+							}
+							else
+							{
+								this.set(property.Name, new Date(property.Values[0]));
+							}
+						
+							break;
 							
 						default:
 						
@@ -212,7 +226,6 @@ define([
 					property.Values = [];
 					
 					// Update Control ID
-			
 					if (this.get(property.Name) == null)
 					{
 						property.Values[0] = null;
@@ -239,6 +252,22 @@ define([
 						}
 						
 					}, this);
+				}
+				else if (property.Type == 8)
+				{
+					// Date
+					property.Values = [];
+					
+					var datevalue = this.get(property.Name);
+					
+					if (datevalue == null)
+					{
+						property.Values[0] = null;
+					}
+					else
+					{
+						property.Values[0] = datevalue.toISOString();
+					}
 				}
 				else
 				{						

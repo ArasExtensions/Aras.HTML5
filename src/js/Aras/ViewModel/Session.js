@@ -42,7 +42,8 @@ define([
 	'../View/ToolbarSeparator',
 	'../View/Containers/TableContainer',
 	'../View/Properties/Item',
-	'../View/Properties/Sequence'
+	'../View/Properties/Sequence',
+	'../View/Properties/Date'
 ], function(
 	declare, 
 	request, 
@@ -63,7 +64,8 @@ define([
 	ToolbarSeparator, 
 	TableContainer,
 	Item,
-	Sequence
+	Sequence,
+	DateProp
 ) {
 	
 	return declare('Aras.ViewModel.Session', null, {
@@ -370,7 +372,10 @@ define([
 					break;	
 				case 'Aras.View.Properties.Sequence':
 					viewcontrol = new Sequence(parameters);
-					break;						
+					break;	
+				case 'Aras.View.Properties.Date':
+					viewcontrol = new DateProp(parameters);
+					break;		
 				default:
 					console.debug("View not supported: " + ViewModelControl.Type);
 					break;
