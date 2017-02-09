@@ -96,7 +96,7 @@ define([
 					
 			if (item)
 			{
-				return 'small' + item.Icon + 'Icon';
+				return 'medium' + item.Icon + 'Icon';
 			}
 			else
 			{

@@ -1,9 +1,9 @@
 .mediumEditIcon 
 {
   background-image:  url('./images/EditItem.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
+  background-size: 20px 20px;
+  height: 20px;
+  width: 20px;
 }
 
 .smallEditIcon 
@@ -17,9 +17,9 @@
 .mediumCheckMarkIcon 
 {
   background-image:  url('./images/CheckMark.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
+  background-size: 20px 20px;
+  height: 20px;
+  width: 20px;
 }
 
 .smallCheckMarkIcon 
@@ -33,9 +33,9 @@
 .mediumSearchIcon 
 {
   background-image:  url('./images/Search.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
+  background-size: 20px 20px;
+  height: 20px;
+  width: 20px;
 }
 
 .smallSearchIcon 
@@ -49,9 +49,9 @@
 .mediumRefreshIcon 
 {
   background-image:  url('./images/Refresh.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
+  background-size: 20px 20px;
+  height: 20px;
+  width: 20px;
 }
 
 .smallRefreshIcon 
@@ -65,9 +65,9 @@
 .mediumSaveIcon 
 {
   background-image:  url('./images/Save.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
+  background-size: 20px 20px;
+  height: 20px;
+  width: 20px;
 }
 
 .smallSaveIcon 
@@ -81,9 +81,9 @@
 .mediumSaveUnlockIcon 
 {
   background-image:  url('./images/SaveUnlockClose.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
+  background-size: 20px 20px;
+  height: 20px;
+  width: 20px;
 }
 
 .smallSaveUnlockIcon 
@@ -103,9 +103,9 @@
 .mediumNextPageIcon 
 {
   background-image:  url('./images/NextPage.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
+  background-size: 20px 20px;
+  height: 20px;
+  width: 20px;
 }
 
 .smallNextPageIcon 
@@ -119,9 +119,9 @@
 .mediumPreviousPageIcon 
 {
   background-image:  url('./images/PreviousPage.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
+  background-size: 20px 20px;
+  height: 20px;
+  width: 20px;
 }
 
 .smallPreviousPageIcon 
@@ -135,9 +135,9 @@
 .mediumCollapseAllIcon 
 {
   background-image:  url('./images/CollapseAll.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
+  background-size: 20px 20px;
+  height: 20px;
+  width: 20px;
 }
 
 .smallCollapseAllIcon 
@@ -151,9 +151,9 @@
 .mediumExpandAllIcon 
 {
   background-image:  url('./images/ExpandAll.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
+  background-size: 20px 20px;
+  height: 20px;
+  width: 20px;
 }
 
 .smallExpandAllIcon 
@@ -167,9 +167,9 @@
 .mediumPartIcon 
 {
   background-image:  url('./images/Part.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
+  background-size: 20px 20px;
+  height: 20px;
+  width: 20px;
 }
 
 .smallPartIcon 
@@ -183,9 +183,9 @@
 .mediumCopyIcon 
 {
   background-image:  url('./images/Copy.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
+  background-size: 20px 20px;
+  height: 20px;
+  width: 20px;
 }
 
 .smallCopyIcon 
@@ -199,9 +199,9 @@
 .mediumCutIcon 
 {
   background-image:  url('./images/Cut.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
+  background-size: 20px 20px;
+  height: 20px;
+  width: 20px;
 }
 
 .smallCutIcon 
@@ -215,9 +215,9 @@
 .mediumPasteIcon 
 {
   background-image:  url('./images/Paste.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
+  background-size: 20px 20px;
+  height: 20px;
+  width: 20px;
 }
 
 .smallPasteIcon 
@@ -231,9 +231,9 @@
 .mediumDeleteIcon 
 {
   background-image:  url('./images/Delete.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
+  background-size: 20px 20px;
+  height: 20px;
+  width: 20px;
 }
 
 .smallDeleteIcon 
@@ -247,9 +247,9 @@
 .mediumArrowRightIcon 
 {
   background-image:  url('./images/ArrowRight.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
+  background-size: 20px 20px;
+  height: 20px;
+  width: 20px;
 }
 
 .smallArrowRightIcon 
@@ -263,9 +263,9 @@
 .mediumArrowLeftIcon 
 {
   background-image:  url('./images/ArrowLeft.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
+  background-size: 20px 20px;
+  height: 20px;
+  width: 20px;
 }
 
 .smallArrowLeftIcon 
@@ -279,9 +279,9 @@
 .mediumUndoIcon 
 {
   background-image:  url('./images/Undo.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
+  background-size: 20px 20px;
+  height: 20px;
+  width: 20px;
 }
 
 .smallUndoIcon 
@@ -295,9 +295,9 @@
 .mediumNewIcon 
 {
   background-image:  url('./images/New.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
+  background-size: 20px 20px;
+  height: 20px;
+  width: 20px;
 }
 
 .smallNewIcon 
@@ -311,9 +311,9 @@
 .mediumCompileIcon 
 {
   background-image:  url('./images/Compile.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
+  background-size: 20px 20px;
+  height: 20px;
+  width: 20px;
 }
 
 .smallCompileIcon 
@@ -327,9 +327,9 @@
 .mediumPartFamilyIcon 
 {
   background-image:  url('./images/PartFamily.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
+  background-size: 20px 20px;
+  height: 20px;
+  width: 20px;
 }
 
 .smallPartFamilyIcon 
@@ -343,9 +343,9 @@
 .mediumErrorIcon 
 {
   background-image:  url('./images/Error.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
+  background-size: 20px 20px;
+  height: 20px;
+  width: 20px;
 }
 
 .smallErrorIcon 
@@ -359,9 +359,9 @@
 .mediumProjectIcon 
 {
   background-image:  url('./images/Project.svg');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
+  background-size: 20px 20px;
+  height: 20px;
+  width: 20px;
 }
 
 .smallProjectIcon 
@@ -375,9 +375,9 @@
 .mediumLoginIcon 
 {
   background-image:  url('./images/Login.png');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
+  background-size: 20px 20px;
+  height: 20px;
+  width: 20px;
 }
 
 .smallLoginIcon 
@@ -390,15 +390,15 @@
 
 .mediumLogoutIcon 
 {
-  background-image:  url('./images/Logout.png');
-  background-size: 24px 24px;
-  height: 24px;
-  width: 24px;
+  background-image:  url('./images/Logout.svg');
+  background-size: 20px 20px;
+  height: 20px;
+  width: 20px;
 }
 
 .smallLogoutIcon 
 {
-  background-image:  url('./images/Logout.png');
+  background-image:  url('./images/Logout.svg');
   background-size: 16px 16px;
   height: 16px;
   width: 16px;

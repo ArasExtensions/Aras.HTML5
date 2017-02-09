@@ -76,7 +76,7 @@ define([
 			if (this.ViewModel != null)
 			{
 				// Set IconClass
-				this.set("iconClass", "small" + this.ViewModel.Icon + "Icon");
+				this.set("iconClass", "medium" + this.ViewModel.Icon + "Icon");
 			
 				// Store IconClass
 				this._savedIconClass = this.iconClass;

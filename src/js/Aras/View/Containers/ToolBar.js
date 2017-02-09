@@ -73,7 +73,7 @@ define([
 			if (this.Window != null)
 			{
 				// Add Login Button
-				this.LoginButton = new Button({ iconClass: "smallLoginIcon"});
+				this.LoginButton = new Button({ iconClass: "mediumLoginIcon"});
 				
 				this.LoginButton.set('onClick', lang.hitch(this, function() {
 					this.Window._login();
@@ -82,7 +82,7 @@ define([
 				var logintooltip = new Tooltip({connectId: this.LoginButton.id, label: 'Login'});
 			
 				// Add Logout Button
-				this.LogoutButton = new Button({ iconClass: "smallLogoutIcon"});
+				this.LogoutButton = new Button({ iconClass: "mediumLogoutIcon"});
 				this.LogoutButton.set('onClick', lang.hitch(this, function() {
 					this.Window._logout();
 				}));

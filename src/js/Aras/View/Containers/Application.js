@@ -35,7 +35,7 @@ define([
 			// Set Parameters from ViewModel
 			this.id = this.ViewModel.Name;
 			this.title = this.ViewModel.Label;
-			this.iconClass = "small" + this.ViewModel.Icon + "Icon";
+			this.iconClass = "medium" + this.ViewModel.Icon + "Icon";
 		}
 
 	});
