@@ -32,7 +32,7 @@ define([
 	
 	return declare('Aras.View.ErrorDialog', [Dialog], {
 			
-		ErrorMessage: null,
+		Message: null,
 		
 		constructor: function() {
 		
@@ -42,14 +42,12 @@ define([
 			this.inherited(arguments);
 
 			// Create Layout
-			var layout = new ContentPane({content: '<table><tr><td class="errorIcon"></td><td>' + this.ErrorMessage + '</td></tr></table>'});
+			var layout = new ContentPane({content: '<span class="dijitInline mediumErrorIcon" style="padding-right: 5px;"></span><span class="dijitInline">' + this.Message + '</span>'});
 			this.addChild(layout);
 						
 			// Set Title
 			this.set('title', 'Error');			
 		}
-		
-		
-		
+
 	});
 });

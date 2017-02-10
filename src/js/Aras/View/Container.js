@@ -26,7 +26,8 @@ define([
 	'dojo/_base/declare',
 	'dojo/_base/array',
 	'./Control',
-], function(declare, array, Control) {
+	'./ErrorDialog'
+], function(declare, array, Control, ErrorDialog) {
 	
 	return declare('Aras.View.Container', [Control], {
 			
@@ -48,7 +49,15 @@ define([
 				child.destroyRecursive();
 				this.removeChild(child);
 			}, this);
+		},
+		
+		OnError: function(Message) {
+			this.inherited(arguments);
+			
+			// Display Error Message
+			var message = ErrorDialog({ Message: Message });
+			message.show();		
 		}
-
+		
 	});
 });

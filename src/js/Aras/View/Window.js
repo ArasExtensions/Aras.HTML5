@@ -189,7 +189,7 @@ define([
 					}
 					
 					// Display Error Message
-					var message = ErrorDialog({ErrorMessage: messagetext});
+					var message = ErrorDialog({ Message: messagetext });
 					message.show();
 				
 					// Reset Error

@@ -35,12 +35,14 @@ define([
 		
 		_viewModelHandle: null,
 		
+		_errorMessageHandle: null,
+		
 		_toolTip: null,
 				
 		_startup: function() {
 
-			// Update Tooltip
-			this._updateTooltip();
+			// Update Control
+			this._updateControl();
 			
 			// Watch ViewModel
 			this._viewModelHandle = this.watch("ViewModel", lang.hitch(this, this.OnViewModelChanged));
@@ -52,35 +54,79 @@ define([
 			{
 				this._viewModelHandle.unwatch();
 			}
+			
+			if (this._inErrorHandle)
+			{
+				this._inErrorHandle.unwatch();
+			}
 		},
 		
-		_updateTooltip: function() {
+		_updateControl: function() {
 			
-			if((this.ViewModel != null) && (this.ViewModel.Tooltip != null))
-			{				
-				if (!this._toolTip)
+			if(this.ViewModel != null)
+			{	
+				if (this.ViewModel.Tooltip != null)
 				{
-					this._toolTip = new Tooltip({ connectId: this.id, label: this.ViewModel.Tooltip });
+					if (!this._toolTip)
+					{
+						// Create Tooltip
+						this._toolTip = new Tooltip({ connectId: this.id, label: this.ViewModel.Tooltip });
+					}
+					else
+					{
+						// Update Tooltip
+						this._toolTip.set('label', this.ViewModel.Tooltip);
+					}
 				}
 				else
 				{
-					this._toolTip.set('label', this.ViewModel.Tooltip);
+					// Destroy Tooltip
+					if (this._toolTip)
+					{
+						this._toolTip.destroyRecursive();
+						this._toolTip = null;
+					}
 				}
+				
+				// Watch ErrorMessage
+				if (this._errorMessageHandle)
+				{
+					this._errorMessageHandle.unwatch();
+				}
+			
+				this._errorMessageHandle = this.ViewModel.watch('ErrorMessage', lang.hitch(this, function(name, oldValue, newValue) {
+					
+					if (newValue != null)
+					{
+						this.OnError(newValue);
+					}
+				}));
 			}
 			else
 			{
+				// Destroy Tooltip
 				if (this._toolTip)
 				{
 					this._toolTip.destroyRecursive();
 					this._toolTip = null;
 				}
-			}			
+				
+				// Unwatch ErrorMessage
+				if (this._errorMessageHandle)
+				{
+					this._errorMessageHandle.unwatch();
+				}
+			}	
 		},
-		
+
 		OnViewModelChanged: function(name, oldValue, newValue) {
 
-			// Update Tooltip
-			this._updateTooltip();	
+			// Update Control
+			this._updateControl();
+		},
+		
+		OnError: function(Message) {
+			
 		}
 
 	});

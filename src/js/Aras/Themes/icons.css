@@ -342,6 +342,7 @@
 
 .mediumErrorIcon 
 {
+  background-repeat: no-repeat;
   background-image:  url('./images/Error.svg');
   background-size: 20px 20px;
   height: 20px;
