@@ -104,11 +104,8 @@ define([
 		},
 		
 		_processResponse: function(Response) {
-	
-			// Process Command Queue
-			this._processCommands(Response.CommandQueue);
-			
-			// Create Controls that is not already in Cache
+				
+			// Ensure Controls are in Cache
 			array.forEach(Response.ControlQueue, lang.hitch(this, function(control) {
 				
 				// Process attached Commands
@@ -121,7 +118,7 @@ define([
 				}
 			}));
 			
-			// Set Data
+			// Set Control Data
 			array.forEach(Response.ControlQueue, lang.hitch(this, function(control) {
 
 				// Set new Data in existing Control
