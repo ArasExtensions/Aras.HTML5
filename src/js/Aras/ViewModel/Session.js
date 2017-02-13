@@ -43,7 +43,8 @@ define([
 	'../View/Containers/TableContainer',
 	'../View/Properties/Item',
 	'../View/Properties/Sequence',
-	'../View/Properties/Date'
+	'../View/Properties/Date',
+	'../View/Properties/List'
 ], function(
 	declare, 
 	request, 
@@ -65,7 +66,8 @@ define([
 	TableContainer,
 	Item,
 	Sequence,
-	DateProp
+	DateProp,
+	ListProp
 ) {
 	
 	return declare('Aras.ViewModel.Session', null, {
@@ -372,7 +374,10 @@ define([
 					break;	
 				case 'Aras.View.Properties.Date':
 					viewcontrol = new DateProp(parameters);
-					break;		
+					break;
+				case 'Aras.View.Properties.List':
+					viewcontrol = new ListProp(parameters);
+					break;			
 				default:
 					console.debug("View not supported: " + ViewModelControl.Type);
 					break;

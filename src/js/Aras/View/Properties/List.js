@@ -26,24 +26,32 @@ define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
 	'dojo/_base/array',
-	'dojo/promise/all',
 	'../Property',
 	'dijit/form/Select'
-], function(declare, lang, array, all, Property, Select) {
+], function(declare, lang, array, Property, Select) {
 	
 	return declare('Aras.View.Properties.List', [Select, Property], {
 		
 		_viewModelValueHandle: null,
 		
 		_valueHandle: null,
-		
+	
 		constructor: function() {
+			
+		},
+		
+		buildRendering: function() {
+			this.inherited(arguments);
 			
 		},
 		
 		startup: function() {
 			this.inherited(arguments);
+	
+			// Call Control Startup
+			this._startup();
 			
+			this._updateList();
 		},
 		
 		destroy: function() {
@@ -60,77 +68,94 @@ define([
 			}
 		},
 		
-		OnViewModelLoaded: function() {
-			this.inherited(arguments);
-
+		_updateList: function() {
+			
 			if (this.ViewModel != null)
 			{
-				all(this.ViewModel.Values).then(lang.hitch(this, function(values) {
-
-					// Load Options
-					var options = [];
+				// Load Options
+				var options = [];
 					
-					array.forEach(values, function(valueviewmodel, i) {
+				array.forEach(this.ViewModel.Values, function(valueviewmodel, i) {
 			
-						if (this.ViewModel.Value == valueviewmodel.Value)
-						{
-							options[i] = { label: valueviewmodel.Label, value: valueviewmodel.Value, selected: true };
-						}
-						else
-						{
-							options[i] = { label: valueviewmodel.Label, value: valueviewmodel.Value };
-						}
-	
-
-					}, this);					
-					
-					this.addOption(options);
-					
-					// Watch for change in Select Value
-					if (this._valueHandle != null)
+					if (this.ViewModel.Value == valueviewmodel.Value)
 					{
-						this._valueHandle.unwatch();
+						options[i] = { label: valueviewmodel.Label, value: valueviewmodel.Value, selected: true };
 					}
-			
-					this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
-					
-						if (newValue !== this.ViewModel.Value)
-						{
-							if (!this._updateFromViewModel)
-							{
-								// Update ViewModel
-								this.ViewModel.Value = newValue;
-								this.ViewModel.Write();
-							}
-						}
-					
-					}));
-				
-					// Watch for change in ViewModel Value
-					if (this._viewModelValueHandle != null)
+					else
 					{
-						this._viewModelValueHandle.unwatch();
+						options[i] = { label: valueviewmodel.Label, value: valueviewmodel.Value };
 					}
+				}, this);					
+					
+				this.addOption(options);
+					
+				// Watch for change in Select Value
+				if (this._valueHandle != null)
+				{
+					this._valueHandle.unwatch();
+				}
 			
-					this._viewModelValueHandle = this.ViewModel.watch('Value', lang.hitch(this, function(name, oldValue, newValue) {
+				this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
 					
-						if (newValue !== this.get('value'))
+					if (newValue !== this.ViewModel.Value)
+					{
+						if (!this._updateFromViewModel)
 						{
-							// Stop ViewModel Update
-							this._updateFromViewModel = true;
-					
-							// Set Value
-							this.set('value', newValue);
-						
-							// Start ViewModel Update
-							this._updateFromViewModel = false;
+							// Update ViewModel
+							this.ViewModel.Value = newValue;
+							this.ViewModel.Write();
 						}
-					
-					}));
-				
+					}	
 				}));
-
+				
+				// Watch for change in ViewModel Value
+				if (this._viewModelValueHandle != null)
+				{
+					this._viewModelValueHandle.unwatch();
+				}
+			
+				this._viewModelValueHandle = this.ViewModel.watch('Value', lang.hitch(this, function(name, oldValue, newValue) {
+					
+					if (newValue !== this.get('value'))
+					{
+						// Stop ViewModel Update
+						this._updateFromViewModel = true;
+					
+						// Set Value
+						this.set('value', newValue);
+						
+						// Start ViewModel Update
+						this._updateFromViewModel = false;
+					}
+					
+				}));
 			}
+			else
+			{
+				// Unwatch for change in Select Value
+				if (this._valueHandle != null)
+				{
+					this._valueHandle.unwatch();
+				}
+				
+				// Unwatch for change in ViewModel Value
+				if (this._viewModelValueHandle != null)
+				{
+					this._viewModelValueHandle.unwatch();
+				}
+				
+				this.addOption([]);
+				
+				// Set Value
+				this.set('value', null);
+			}
+		},
+		
+		OnViewModelChanged: function(name, oldValue, newValue) {
+			this.inherited(arguments);	
+			
+			// Update List
+			this._updateList();	
 		}
 
 	});
