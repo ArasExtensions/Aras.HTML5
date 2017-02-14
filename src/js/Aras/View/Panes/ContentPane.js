@@ -32,48 +32,51 @@ define([
 	return declare('Aras.View.Panes.ContentPane', [ContentPane, Control], {
 		
 		constructor: function() {
+		
+			this.style = 'overflow: auto';
+		},
+		
+		buildRendering: function() {
+			this.inherited(arguments);
 			
+			// Update ContentPane
+			this._updateContentPane();
 		},
 		
 		startup: function() {
 			this.inherited(arguments);
+			
+			// Call Control Startup
+			this._startup();
+			
+
 		},
 		
 		destroy: function() {
 			this.inherited(arguments);
 		},
 		
-		OnViewModelLoaded: function() {
-			this.inherited(arguments);
-
-			if (this.content != null)
-			{
-				// Destroy current content
-				this.content.destroyRecursive();
-			}
+		_updateContentPane: function() {
 				
 			if ((this.ViewModel != null) && (this.ViewModel.Content != null))
 			{
-				when(this.ViewModel.Content, lang.hitch(this, function(contentviewmodel) {
-					
-					// Check Control is loaded
-					require([this.ControlPath(contentviewmodel)], lang.hitch(this, function(controlType) {
-					
-						// Create Control
-						var control = new controlType(this.ControlParameters(contentviewmodel));
+				// Create Control
+				var control = this.ViewModel.Session.ViewControl(this.ViewModel.Content);
 				
-						// Set Content
-						this.set("content", control);
-				
-						// Set ViewModel
-						control.set("ViewModel", contentviewmodel);
-					}));
-				}));
+				// Set Content
+				this.set("content", control);
 			}
 			else
 			{
 				this.set("content", null);
 			}
+		},
+		
+		OnViewModelChanged: function(name, oldValue, newValue) {
+			this.inherited(arguments);	
+			
+			// Update ContentPane
+			this._updateContentPane();	
 		}
 		
 	});
