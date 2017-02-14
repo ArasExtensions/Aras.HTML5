@@ -44,7 +44,8 @@ define([
 	'../View/Properties/Item',
 	'../View/Properties/Sequence',
 	'../View/Properties/Date',
-	'../View/Properties/List'
+	'../View/Properties/List',
+	'../View/Properties/Decimal'
 ], function(
 	declare, 
 	request, 
@@ -67,7 +68,8 @@ define([
 	Item,
 	Sequence,
 	DateProp,
-	ListProp
+	ListProp,
+	DecimalProp
 ) {
 	
 	return declare('Aras.ViewModel.Session', null, {
@@ -377,7 +379,10 @@ define([
 					break;
 				case 'Aras.View.Properties.List':
 					viewcontrol = new ListProp(parameters);
-					break;			
+					break;	
+				case 'Aras.View.Properties.Decimal':
+					viewcontrol = new DecimalProp(parameters);
+					break;						
 				default:
 					console.debug("View not supported: " + ViewModelControl.Type);
 					break;

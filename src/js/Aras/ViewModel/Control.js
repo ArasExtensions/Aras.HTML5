@@ -151,9 +151,21 @@ define([
 							}
 						
 							break;
-							
-						default:
+						case 9:
 						
+							// Decimal
+							if (property.Values[0] == null)
+							{
+								this.set(property.Name, null);
+							}
+							else
+							{
+								this.set(property.Name, new Number(property.Values[0]));
+							}
+						
+							break;					
+						default:
+							console.debug('Property Type not implemented: ' + property.Type);
 							break;
 					}
 				}

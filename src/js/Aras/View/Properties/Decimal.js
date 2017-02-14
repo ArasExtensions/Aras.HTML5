@@ -30,7 +30,7 @@ define([
 	'dijit/form/NumberTextBox'
 ], function(declare, lang, on, Property, NumberTextBox) {
 	
-	return declare('Aras.View.Properties.Float', [NumberTextBox, Property], {
+	return declare('Aras.View.Properties.Decimal', [NumberTextBox, Property], {
 		
 		_viewModelValueHandle: null,
 		
@@ -46,7 +46,7 @@ define([
 			// Call Control Startup
 			this._startup();
 			
-			this._updateFloat();				
+			this._updateDecimal();			
 		},
 		
 		destroy: function() {
@@ -62,8 +62,8 @@ define([
 				this._valueHandle.unwatch();
 			}
 		},
-				
-		_updateFloat: function() {
+	
+		_updateDecimal: function() {
 			
 			// Set Min and Max Values
 			this.set("constraints", {min: this.ViewModel.MinValue, max: this.ViewModel.MaxValue});
@@ -129,8 +129,8 @@ define([
 		OnViewModelChanged: function(name, oldValue, newValue) {
 			this.inherited(arguments);	
 			
-			// Update Float
-			this._updateFloat();	
+			// Update Decimal
+			this._updateDecimal();	
 		}
 
 	});
