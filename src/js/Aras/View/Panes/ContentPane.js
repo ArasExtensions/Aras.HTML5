@@ -32,24 +32,17 @@ define([
 	return declare('Aras.View.Panes.ContentPane', [ContentPane, Control], {
 		
 		constructor: function() {
-		
-			this.style = 'overflow: auto';
+
 		},
-		
-		buildRendering: function() {
-			this.inherited(arguments);
-			
-			// Update ContentPane
-			this._updateContentPane();
-		},
-		
+
 		startup: function() {
 			this.inherited(arguments);
 			
 			// Call Control Startup
 			this._startup();
 			
-
+			// Update ContentPane
+			this._updateContentPane();
 		},
 		
 		destroy: function() {
