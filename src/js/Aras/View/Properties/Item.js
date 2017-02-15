@@ -76,7 +76,7 @@ define([
 		},
 		
 		_updateItem: function() {
-
+		
 			if (this.ViewModel != null)
 			{
 				// Set Value from ViewModel

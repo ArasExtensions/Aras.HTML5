@@ -27,9 +27,12 @@ define([
 	'dojo/when',
 	'dijit/layout/ContentPane',
 	'../Control',
-], function(declare, when, ContentPane, Control) {
+	'../ErrorDialog'
+], function(declare, when, ContentPane, Control, ErrorDialog) {
 	
 	return declare('Aras.View.Panes.ContentPane', [ContentPane, Control], {
+		
+		_content: null,
 		
 		constructor: function() {
 
@@ -53,11 +56,18 @@ define([
 				
 			if ((this.ViewModel != null) && (this.ViewModel.Content != null))
 			{
-				// Create Control
-				var control = this.ViewModel.Session.ViewControl(this.ViewModel.Content);
+				if (!this._content)
+				{
+					// Create Control
+					this._content = this.ViewModel.Session.ViewControl(this.ViewModel.Content);
 				
-				// Set Content
-				this.set("content", control);
+					// Set Content
+					this.set("content", this._content);
+				}
+				else
+				{
+					this._content.ViewModel = this.ViewModel.Content;
+				}
 			}
 			else
 			{
@@ -70,6 +80,14 @@ define([
 			
 			// Update ContentPane
 			this._updateContentPane();	
+		},
+		
+		OnError: function(Message) {
+			this.inherited(arguments);
+			
+			// Display Error Message
+			var message = ErrorDialog({ Message: Message });
+			message.show();		
 		}
 		
 	});

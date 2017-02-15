@@ -64,7 +64,7 @@ define([
 		},
 	
 		_updateDecimal: function() {
-			
+
 			if (this.ViewModel != null)
 			{
 				// Set Min and Max Values
@@ -78,27 +78,21 @@ define([
 				{
 					this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
 		
-						if (isNaN(newValue))
-						{
-							// Not a valid number, reset to old value
-							this.set("value", oldValue);
-						}
-						else
+						if (newValue)
 						{
 							var newnumber = Number(newValue);
 							var currentnumber = Number(this.ViewModel.get('Value'));
 				
 							if (currentnumber !== newnumber)
-							{	
+							{										
 								if (!this._updateFromViewModel)
 								{
 									// Update ViewModel Value
-									this.ViewModel.set('Value', newnumber);	
+									this.ViewModel.set('Value', newnumber);
 									this.ViewModel.Write();
 								}
 							}
 						}
-					
 					}));
 				}
 			
@@ -107,17 +101,22 @@ define([
 				{
 					this._viewModelValueHandle = this.ViewModel.watch('Value', lang.hitch(this, function(name, oldValue, newValue) {
 				
+						// Stop ViewModel Update
+						this._updateFromViewModel = true;
+							
 						if (newValue)
 						{
-							// Stop ViewModel Update
-							this._updateFromViewModel = true;
-
 							// Set Value
 							this.set("value", this.ViewModel.Value);
-					
-							// Start
-							this._updateFromViewModel = false;
 						}
+						else
+						{
+							// Set Value
+							this.set("value", null);
+						}
+						
+						// Start ViewModel Update
+						this._updateFromViewModel = false;
 					}));
 				}
 			}

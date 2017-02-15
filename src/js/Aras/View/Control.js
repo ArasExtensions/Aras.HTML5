@@ -89,18 +89,16 @@ define([
 				}
 				
 				// Watch ErrorMessage
-				if (this._errorMessageHandle)
+				if (!this._errorMessageHandle)
 				{
-					this._errorMessageHandle.unwatch();
-				}
-			
-				this._errorMessageHandle = this.ViewModel.watch('ErrorMessage', lang.hitch(this, function(name, oldValue, newValue) {
+					this._errorMessageHandle = this.ViewModel.watch('ErrorMessage', lang.hitch(this, function(name, oldValue, newValue) {
 					
-					if (newValue != null)
-					{
-						this.OnError(newValue);
-					}
-				}));
+						if (newValue != null)
+						{
+							this.OnError(newValue);
+						}
+					}));
+				}
 			}
 			else
 			{
