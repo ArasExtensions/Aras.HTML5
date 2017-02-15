@@ -65,65 +65,76 @@ define([
 				
 		_updateFloat: function() {
 			
-			// Set Min and Max Values
-			this.set("constraints", {min: this.ViewModel.MinValue, max: this.ViewModel.MaxValue});
-			
-			// Set Value
-			this.set("value", this.ViewModel.Value);
-			
-			// Watch for changes in Control value
-			if (this._valueHandle)
+			if (this.ViewModel != null)
 			{
-				this._valueHandle.unwatch();
-			}
+				// Set Min and Max Values
+				this.set("constraints", {min: this.ViewModel.MinValue, max: this.ViewModel.MaxValue});
 			
-			this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
+				// Set Value
+				this.set("value", this.ViewModel.Value);
+			
+				// Watch for changes in Control value
+				if (!this._valueHandle)
+				{
+					this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
 		
-				if (isNaN(newValue))
-				{
-					// Not a valid number, reset to old value
-					this.set("value", oldValue);
-				}
-				else
-				{
-					var newnumber = Number(newValue);
-					var currentnumber = Number(this.ViewModel.get('Value'));
-				
-					if (currentnumber !== newnumber)
-					{	
-						if (!this._updateFromViewModel)
+						if (isNaN(newValue))
 						{
-							// Update ViewModel Value
-							this.ViewModel.set('Value', newnumber);	
-							this.ViewModel.Write();
+							// Not a valid number, reset to old value
+							this.set("value", oldValue);
 						}
-					}
-				}
-					
-			}));
-			
-			// Unwatch current
-			if (this._viewModelValueHandle != null)
-			{
-				this._viewModelValueHandle.unwatch();
-			}
-			
-			// Watch for changes in ViewModel
-			this._viewModelValueHandle = this.ViewModel.watch('Value', lang.hitch(this, function(name, oldValue, newValue) {
+						else
+						{
+							var newnumber = Number(newValue);
+							var currentnumber = Number(this.ViewModel.get('Value'));
 				
-				if (newValue)
-				{
-					// Stop ViewModel Update
-					this._updateFromViewModel = true;
-
-					// Set Value
-					this.set("value", this.ViewModel.Value);
-					
-					// Start
-					this._updateFromViewModel = false;
+							if (currentnumber !== newnumber)
+							{	
+								if (!this._updateFromViewModel)
+								{
+									// Update ViewModel Value
+									this.ViewModel.set('Value', newnumber);	
+									this.ViewModel.Write();
+								}
+							}
+						}
+					}));
 				}
+			
+				// Watch for changes in ViewModel
+				if (!this._viewModelValueHandle)
+				{
+					this._viewModelValueHandle = this.ViewModel.watch('Value', lang.hitch(this, function(name, oldValue, newValue) {
+				
+						if (newValue)
+						{
+							// Stop ViewModel Update
+							this._updateFromViewModel = true;
+
+							// Set Value
+							this.set("value", this.ViewModel.Value);
 					
-			}));
+							// Start
+							this._updateFromViewModel = false;
+						}
+					
+					}));
+				}
+			}
+			else
+			{
+				this.set("value", null);
+				
+				if (this._viewModelValueHandle)
+				{
+					this._viewModelValueHandle.unwatch();
+				}
+				
+				if (this._valueHandle)
+				{
+					this._valueHandle.unwatch();
+				}				
+			}
 		},
 		
 		OnViewModelChanged: function(name, oldValue, newValue) {

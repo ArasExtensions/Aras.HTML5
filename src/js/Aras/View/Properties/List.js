@@ -40,11 +40,6 @@ define([
 			
 		},
 		
-		buildRendering: function() {
-			this.inherited(arguments);
-			
-		},
-		
 		startup: function() {
 			this.inherited(arguments);
 	
@@ -90,45 +85,41 @@ define([
 				this.addOption(options);
 					
 				// Watch for change in Select Value
-				if (this._valueHandle != null)
+				if (!this._valueHandle)
 				{
-					this._valueHandle.unwatch();
-				}
-			
-				this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
+					this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
 					
-					if (newValue !== this.ViewModel.Value)
-					{
-						if (!this._updateFromViewModel)
+						if (newValue !== this.ViewModel.Value)
 						{
-							// Update ViewModel
-							this.ViewModel.Value = newValue;
-							this.ViewModel.Write();
-						}
-					}	
-				}));
-				
-				// Watch for change in ViewModel Value
-				if (this._viewModelValueHandle != null)
-				{
-					this._viewModelValueHandle.unwatch();
+							if (!this._updateFromViewModel)
+							{
+								// Update ViewModel
+								this.ViewModel.Value = newValue;
+								this.ViewModel.Write();
+							}
+						}	
+					}));
 				}
 			
-				this._viewModelValueHandle = this.ViewModel.watch('Value', lang.hitch(this, function(name, oldValue, newValue) {
+				// Watch for change in ViewModel Value
+				if (!this._viewModelValueHandle)
+				{
+					this._viewModelValueHandle = this.ViewModel.watch('Value', lang.hitch(this, function(name, oldValue, newValue) {
 					
-					if (newValue !== this.get('value'))
-					{
-						// Stop ViewModel Update
-						this._updateFromViewModel = true;
+						if (newValue !== this.get('value'))
+						{
+							// Stop ViewModel Update
+							this._updateFromViewModel = true;
 					
-						// Set Value
-						this.set('value', newValue);
+							// Set Value
+							this.set('value', newValue);
 						
-						// Start ViewModel Update
-						this._updateFromViewModel = false;
-					}
+							// Start ViewModel Update
+							this._updateFromViewModel = false;
+						}
 					
-				}));
+					}));
+				}
 			}
 			else
 			{

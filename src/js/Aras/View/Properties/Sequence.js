@@ -44,7 +44,7 @@ define([
 			// Call Control Startup
 			this._startup();
 			
-			this._updateString();
+			this._updateSequence();
 		},
 		
 		destroy: function() {
@@ -59,7 +59,7 @@ define([
 			}
 		},
 		
-		_updateString: function() {
+		_updateSequence: function() {
 			
 			if (this.ViewModel != null)
 			{
@@ -67,22 +67,20 @@ define([
 				this.set("value", this.ViewModel.Value);
 						
 				// Watch for changes in the ViewModel
-				if (this._viewModelValueHandle)
+				if (!this._viewModelValueHandle)
 				{
-					this._viewModelValueHandle.unwatch();
-				}
-			
-				this._viewModelValueHandle = this.ViewModel.watch('Value', lang.hitch(this, function(name, oldValue, newValue) {
+					this._viewModelValueHandle = this.ViewModel.watch('Value', lang.hitch(this, function(name, oldValue, newValue) {
 					
-					// Stop ViewModel Update
-					this._updateFromViewModel = true;
+						// Stop ViewModel Update
+						this._updateFromViewModel = true;
 				
-					// Set Value
-					this.set("value", newValue);
+						// Set Value
+						this.set("value", newValue);
 
-					// Stop ViewModel Update
-					this._updateFromViewModel = false;				
-				}));
+						// Stop ViewModel Update
+						this._updateFromViewModel = false;				
+					}));
+				}
 			}
 			else
 			{
@@ -99,7 +97,7 @@ define([
 			this.inherited(arguments);	
 			
 			// Update String
-			this._updateString();	
+			this._updateSequence();	
 		}
 
 	});

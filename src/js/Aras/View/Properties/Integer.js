@@ -82,56 +82,51 @@ define([
 				this.set("value", this.ViewModel.Value);
 			
 				// Watch for changes in Control value
-				if (this._valueHandle != null)
+				if (!this._valueHandle)
 				{
-					this._valueHandle.unwatch();
-				}
-			
-				this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
+					this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
 				
-					if (isNaN(newValue))
-					{
-						this.set("value", oldValue);
-					}
-					else
-					{
-						var newnumber = Number(newValue);
-						var currentnumber = Number(this.ViewModel.get('Value'));
+						if (isNaN(newValue))
+						{
+							this.set("value", oldValue);
+						}
+						else
+						{
+							var newnumber = Number(newValue);
+							var currentnumber = Number(this.ViewModel.get('Value'));
 				
-						if (currentnumber !== newnumber)
-						{										
-							if (!this._updateFromViewModel)
-							{
-								// Update ViewModel Value
-								this.ViewModel.set('Value', newnumber);
-								this.ViewModel.Write();
+							if (currentnumber !== newnumber)
+							{										
+								if (!this._updateFromViewModel)
+								{
+									// Update ViewModel Value
+									this.ViewModel.set('Value', newnumber);
+									this.ViewModel.Write();
+								}
 							}
 						}
-					}
 					
-				}));
-			
-				// Watch for changes in ViewModel
-				if (this._viewModelValueHandle != null)
-				{
-					this._viewModelValueHandle.unwatch();
+					}));
 				}
 			
-				this._viewModelValueHandle = this.ViewModel.watch('Value', lang.hitch(this, function(name, oldValue, newValue) {
+				// Watch for changes in ViewModel
+				if (!this._viewModelValueHandle)
+				{
+					this._viewModelValueHandle = this.ViewModel.watch('Value', lang.hitch(this, function(name, oldValue, newValue) {
 					
-					if (newValue)
-					{
-						// Stop ViewModel Update
-						this._updateFromViewModel = true;
+						if (newValue)
+						{
+							// Stop ViewModel Update
+							this._updateFromViewModel = true;
 					
-						// Set Value
-						this.set("value", this.ViewModel.Value);
+							// Set Value
+							this.set("value", this.ViewModel.Value);
 					
-						// Start ViewModel Update
-						this._updateFromViewModel = false;
-					}
-					
-				}));
+							// Start ViewModel Update
+							this._updateFromViewModel = false;
+						}
+					}));
+				}
 			}
 		},
 		

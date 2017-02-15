@@ -73,42 +73,37 @@ define([
 				this.set("value", this.ViewModel.Value);
 
 				// Watch for changes in Control value
-				if (this._valueHandle)
+				if (!this._valueHandle)
 				{
-					this._valueHandle.unwatch();
-				}
-			
-				this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
+					this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
 				
-					if (oldValue !== newValue)
-					{										
-						if (!this._updateFromViewModel)
-						{
-							// Update ViewModel Value
-							this.ViewModel.set('Value', newValue);						
-							this.ViewModel.Write();
+						if (oldValue !== newValue)
+						{										
+							if (!this._updateFromViewModel)
+							{
+								// Update ViewModel Value
+								this.ViewModel.set('Value', newValue);						
+								this.ViewModel.Write();
+							}
 						}
-					}
-	
-				}));
+					}));
+				}
 			
 				// Watch for changes in the ViewModel
-				if (this._viewModelValueHandle)
+				if (!this._viewModelValueHandle)
 				{
-					this._viewModelValueHandle.unwatch();
-				}
-			
-				this._viewModelValueHandle = this.ViewModel.watch('Value', lang.hitch(this, function(name, oldValue, newValue) {
+					this._viewModelValueHandle = this.ViewModel.watch('Value', lang.hitch(this, function(name, oldValue, newValue) {
 					
-					// Stop ViewModel Update
-					this._updateFromViewModel = true;
+						// Stop ViewModel Update
+						this._updateFromViewModel = true;
 				
-					// Set Value from ViewModel
-					this.set("value", this.ViewModel.Value);
+						// Set Value from ViewModel
+						this.set("value", this.ViewModel.Value);
 
-					// Stop ViewModel Update
-					this._updateFromViewModel = false;				
-				}));
+						// Stop ViewModel Update
+						this._updateFromViewModel = false;				
+					}));
+				}
 			}
 			else
 			{

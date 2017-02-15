@@ -26,14 +26,24 @@ define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
 	'../Property',
-	'dijit/form/TextBox'
-], function(declare, lang, Property, TextBox) {
+	'dijit/form/ValidationTextBox',
+	'dijit/_HasDropDown',
+	'dojo/text!dijit/form/templates/DropDownBox.html'
+], function(declare, lang, Property, ValidationTextBox, _HasDropDown, template) {
 	
-	return declare('Aras.View.Properties.Item', [TextBox, Property], {
+	return declare('Aras.View.Properties.Item', [ValidationTextBox, _HasDropDown, Property], {
 			
 		_viewModelValueHandle: null, 
 		
 		_valueHandle: null,
+		
+		templateString: template,
+		
+		hasDownArrow: true,
+		
+		cssStateNodes: { '_buttonNode': 'dijitDownArrowButton' },
+		
+		baseClass: 'dijitTextBox dijitComboBox',
 		
 		constructor: function() {
 			
@@ -45,7 +55,7 @@ define([
 			// Call Control Startup
 			this._startup();
 			
-			this._updateString();
+			this._updateItem();
 		},
 		
 		destroy: function() {
@@ -65,7 +75,7 @@ define([
 			}
 		},
 		
-		_updateString: function() {
+		_updateItem: function() {
 
 			if (this.ViewModel != null)
 			{
@@ -73,42 +83,38 @@ define([
 				this.set("value", this.ViewModel.Value);
 			
 				// Watch for changes in Control value
-				if (this._valueHandle)
+				if (!this._valueHandle)
 				{
-					this._valueHandle.unwatch();
-				}
-			
-				this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
+					this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
 				
-					if (oldValue !== newValue)
-					{										
-						if (!this._updateFromViewModel)
-						{
-							// Update ViewModel Value
-							this.ViewModel.set('Value', newValue);
-							this.ViewModel.Write();
+						if (oldValue !== newValue)
+						{										
+							if (!this._updateFromViewModel)
+							{
+								// Update ViewModel Value
+								this.ViewModel.set('Value', newValue);
+								this.ViewModel.Write();
+							}
 						}
-					}
 	
-				}));
+					}));
+				}
 			
 				// Watch for changes in the ViewModel
-				if (this._viewModelValueHandle)
+				if (!this._viewModelValueHandle)
 				{
-					this._viewModelValueHandle.unwatch();
-				}
-			
-				this._viewModelValueHandle = this.ViewModel.watch('Value', lang.hitch(this, function(name, oldValue, newValue) {
+					this._viewModelValueHandle = this.ViewModel.watch('Value', lang.hitch(this, function(name, oldValue, newValue) {
 					
-					// Stop ViewModel Update
-					this._updateFromViewModel = true;
+						// Stop ViewModel Update
+						this._updateFromViewModel = true;
 				
-					// Set Value
-					this.set("value", newValue);
+						// Set Value
+						this.set("value", newValue);
 
-					// Stop ViewModel Update
-					this._updateFromViewModel = false;				
-				}));
+						// Stop ViewModel Update
+						this._updateFromViewModel = false;				
+					}));
+				}
 			}
 			else
 			{
@@ -130,8 +136,14 @@ define([
 			this.inherited(arguments);	
 			
 			// Update String
-			this._updateString();	
-		}
+			this._updateItem();	
+		},
+		
+		openDropDown: function(callback) {
+
+
+			this.inherited(arguments);
+		},
 
 	});
 });
