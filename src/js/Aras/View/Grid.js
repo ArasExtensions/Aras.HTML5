@@ -52,6 +52,8 @@ define([
 		
 		SelectedRows: null,
 		
+		baseClass: 'dijitContentPaneNoPadding',
+		
 		constructor: function() {
 
 			this.Columns = [];
