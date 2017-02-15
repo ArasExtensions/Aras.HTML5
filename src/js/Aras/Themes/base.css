@@ -67,12 +67,16 @@
 	height: 22px;
 }
 
-.dgrid
+.dgrid-grid
 {
 	height: 100%;
 	width: 100%;
 }
 
+ .dgrid-cell {
+    width: 80px;
+ }
+ 
 .tableContainer-labelCell
 {
 	padding: 5px 0px 0px 5px;

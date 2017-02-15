@@ -27,14 +27,13 @@ define([
 	'dojo/_base/lang',
 	'dojo/dom-construct',
 	'dojo/_base/array',
-	'dojo/when',
 	'./Control',
 	'./Properties/String',
 	'./Properties/List',
 	'./Properties/Float',
 	'./Properties/Integer',
 	'./Properties/Sequence'
-], function(declare, lang, construct, array, when, Control, String, List, Float, Integer, Sequence) {
+], function(declare, lang, construct, array, Control, String, List, Float, Integer, Sequence) {
 	
 	return declare('Aras.View.Cell', [Control], {
 		
@@ -97,56 +96,25 @@ define([
 		RenderCell: function() {
 		
 			if ((this.ViewModel != null) && (this.ViewModel.Value != null))
-			{	
-				return when(this.ViewModel.Value).then(lang.hitch(this, function(valueviewmodel) {
-
-					if ( dojo.isIE)
-					{						
-						if (this.Value != null)
-						{
-							this.Value = null;
-						}
-					}
-					
-					if (this.Value == null)
+			{
+				if ( dojo.isIE)
+				{						
+					if (this.Value != null)
 					{
-						// Need to create new Widget
-						switch(valueviewmodel.Type)
-						{
-							case 'Aras.View.Properties.Boolean':							
-								this.Value = new Boolean( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
-								break;
-							case 'Aras.View.Properties.String':							
-								this.Value = new String( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
-								break;
-							case 'Aras.View.Properties.List':							
-								this.Value = new List( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
-								break;
-							case 'Aras.View.Properties.Float':							
-								this.Value = new Float( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
-								break;	
-							case 'Aras.View.Properties.Integer':							
-								this.Value = new Integer( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
-								break;
-							case 'Aras.View.Properties.Sequence':
-								this.Value = new Sequence( {style: 'width:100%; height:100%; padding:0; margin:0; border:0'} );
-								break;						
-							default:
-								console.debug('ViewModel Type not supported: ' + valueviewmodel.Type);
-								break;				
-						}
-					
-						// Start Control
-						this.Value.startup();
-					
+						this.Value = null;
 					}
-	
-					// Update Value ViewModel
-					this.Value.set("ViewModel", valueviewmodel);
+				}
+					
+				if (this.Value == null)
+				{
+					// Need to create new Widget
+					this.Value = this.ViewModel.Session.ViewControl(this.ViewModel.Value, {style: 'width:100%; height:100%; padding:0; margin:0; border:0'});
+									
+					// Start Control
+					this.Value.startup();
+				}
 				
-					return this.Value;	
-				}));
-
+				return this.Value;
 			}
 			else
 			{

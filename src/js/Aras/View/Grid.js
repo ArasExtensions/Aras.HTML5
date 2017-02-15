@@ -26,16 +26,15 @@ define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
 	'dojo/_base/array',
-	'dojo/promise/all',
-	'dojo/when',
 	'./_Grid',
-	'dijit/layout/BorderContainer',
+	'dgrid/util/misc',
+	'dijit/layout/ContentPane',
 	'./Control',
 	'./Column',
 	'./Row'
-], function(declare, lang, array, all, when, _Grid, BorderContainer, Control, Column, Row) {
+], function(declare, lang, array, _Grid, GridMisc, ContentPane, Control, Column, Row) {
 	
-	return declare('Aras.View.Grid', [BorderContainer, Control], {
+	return declare('Aras.View.Grid', [ContentPane, Control], {
 			
 		_grid: null,
 		
@@ -69,7 +68,7 @@ define([
 			
 			// Create Grid
 			this._grid = new _Grid({ region: 'center', selectionMode: 'extended' });
-			this.addChild(this._grid);
+			this.set('content', this._grid);
 			
 			// Process Grid Select Event
 			this._grid.on('dgrid-select', lang.hitch(this, function(event) {
@@ -164,6 +163,11 @@ define([
 				gridcolumns[this.Columns[i].Name] = {};
 				gridcolumns[this.Columns[i].Name].label = this.Columns[i].Label;
 				gridcolumns[this.Columns[i].Name].renderCell = lang.hitch(this.Columns[i], this._renderCell);
+				
+				// Set Column Width
+				var rule = GridMisc.addCssRule('#' + GridMisc.escapeCssIdentifier(this._grid.domNode.id) +
+						' .dgrid-column-' + GridMisc.escapeCssIdentifier(this.Columns[i].Name, '-'),
+						'width: ' + columnviewmodel.Width + 'px;');
 					
 			}, this);
 			
@@ -216,7 +220,7 @@ define([
 										
 				// Clear Grid
 				this._grid.refresh();
-					
+				
 				// Render Grid
 				this._grid.renderArray(rowdata);
 			}	
@@ -228,15 +232,12 @@ define([
 			this.Grid.Rows[object.id].Cells[this.Index].Node = node;
 		
 			// Place Widget in Cell Node
-			when(this.Grid.Rows[object.id].Cells[this.Index].RenderCell(), lang.hitch(this, function(widget) {
+			var widget = this.Grid.Rows[object.id].Cells[this.Index].RenderCell();
 			
-				if (widget)
-				{
-					widget.placeAt(this.Grid.Rows[object.id].Cells[this.Index].Node);
-				}
-			
-			}));
-
+			if (widget)
+			{
+				widget.placeAt(this.Grid.Rows[object.id].Cells[this.Index].Node);
+			}
 		}
 		
 	});

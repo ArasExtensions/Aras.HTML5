@@ -284,42 +284,46 @@ define([
 			);				
 		},
 		
-		ViewControl: function(ViewModelControl) {
+		ViewControl: function(ViewModelControl, Parameters) {
 			
 			var viewcontrol = null;
 			
 			// Build Parameters for Control
-			var parameters = new Object();
+			
+			if (!Parameters)
+			{
+				Parameters = new Object();
+			}
 			
 			// ViewModel
-			parameters['ViewModel'] = ViewModelControl;
+			Parameters['ViewModel'] = ViewModelControl;
 			
 			// Region 
 			switch(ViewModelControl.Region)
 			{
 				case 1:
-					parameters['region'] = 'top';
+					Parameters['region'] = 'top';
 					break;
 				case 2:
-					parameters['region'] = 'bottom';
+					Parameters['region'] = 'bottom';
 					break;
 				case 3:
-					parameters['region'] = 'right';
+					Parameters['region'] = 'right';
 					break;
 				case 4:
-					parameters['region'] = 'left';
+					Parameters['region'] = 'left';
 					break;
 				case 5:
-					parameters['region'] = 'center';
+					Parameters['region'] = 'center';
 					break;
 				case 6:
-					parameters['region'] = 'leading';
+					Parameters['region'] = 'leading';
 					break;
 				case 7:
-					parameters['region'] = 'trailing';
+					Parameters['region'] = 'trailing';
 					break;
 				default:
-					parameters['region'] = 'center';
+					Parameters['region'] = 'center';
 					break;			
 			}
 			
@@ -338,55 +342,55 @@ define([
 			
 			if (style.length > 0)
 			{
-				parameters['style'] = style;
+				Parameters['style'] = style;
 			}
 			
 			switch(ViewModelControl.Type)
 			{
 				case 'Aras.View.Containers.BorderContainer':
-					viewcontrol = new BorderContainer(parameters);
+					viewcontrol = new BorderContainer(Parameters);
 					break;
 				case 'Aras.View.Grid':
-					viewcontrol = new Grid(parameters);
+					viewcontrol = new Grid(Parameters);
 					break;
 				case 'Aras.View.Panes.TitlePane':
-					viewcontrol = new TitlePane(parameters);
+					viewcontrol = new TitlePane(Parameters);
 					break;
 				case 'Aras.View.Button':
-					viewcontrol = new Button(parameters);
+					viewcontrol = new Button(Parameters);
 					break;
 				case 'Aras.View.Properties.Integer':
-					viewcontrol = new Integer(parameters);
+					viewcontrol = new Integer(Parameters);
 					break;
 				case 'Aras.View.Properties.String':
-					viewcontrol = new String(parameters);
+					viewcontrol = new String(Parameters);
 					break;
 				case 'Aras.View.Properties.Integers.Spinner':
-					viewcontrol = new Spinner(parameters);
+					viewcontrol = new Spinner(Parameters);
 					break;
 				case 'Aras.View.ToolbarSeparator':
-					viewcontrol = new ToolbarSeparator(parameters);
+					viewcontrol = new ToolbarSeparator(Parameters);
 					break;
 				case 'Aras.View.Containers.TableContainer':
-					viewcontrol = new TableContainer(parameters);
+					viewcontrol = new TableContainer(Parameters);
 					break;	
 				case 'Aras.View.Properties.Item':
-					viewcontrol = new Item(parameters);
+					viewcontrol = new Item(Parameters);
 					break;	
 				case 'Aras.View.Properties.Sequence':
-					viewcontrol = new Sequence(parameters);
+					viewcontrol = new Sequence(Parameters);
 					break;	
 				case 'Aras.View.Properties.Date':
-					viewcontrol = new DateProp(parameters);
+					viewcontrol = new DateProp(Parameters);
 					break;
 				case 'Aras.View.Properties.List':
-					viewcontrol = new ListProp(parameters);
+					viewcontrol = new ListProp(Parameters);
 					break;	
 				case 'Aras.View.Properties.Decimal':
-					viewcontrol = new DecimalProp(parameters);
+					viewcontrol = new DecimalProp(Parameters);
 					break;
 				case 'Aras.View.Panes.ContentPane':
-					viewcontrol = new ContentPane(parameters);
+					viewcontrol = new ContentPane(Parameters);
 					break;				
 				default:
 					console.debug("View not supported: " + ViewModelControl.Type);
