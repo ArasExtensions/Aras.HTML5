@@ -122,24 +122,26 @@ define([
 		
 		_updateGrid: function() {
 	
-			// Watch for changes in Columns
+			// Unatch for changes in Columns
 			if (this._columnsHandle)
 			{
 				this._columnsHandle.unwatch();
 			}
 			
-			this._columnsHandle = this.ViewModel.watch("Columns", lang.hitch(this, this._updateColumns));
-	
-			// Watch for Changes in Rows
+			// Unwatch for Changes in Rows
 			if (this._rowsHandle)
 			{
 				this._rowsHandle.unwatch();
 			}
-
-			this._rowsHandle = this.ViewModel.watch("Rows", lang.hitch(this, this._updateRows));
-	
+			
 			// Update Columns
 			this._updateColumns();
+			
+			// Watch for changes in Columns
+			this._columnsHandle = this.ViewModel.watch("Columns", lang.hitch(this, this._updateColumns));
+	
+			// Watch for Changes in Rows
+			this._rowsHandle = this.ViewModel.watch("Rows", lang.hitch(this, this._updateRows));
 		},
 		
 		_updateColumns: function() {
@@ -184,7 +186,6 @@ define([
 		},
 
 		_updateRows: function() {
-				
 
 			array.forEach(this.ViewModel.Rows, function(rowviewmodel, i) {
 					
