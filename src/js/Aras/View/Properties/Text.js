@@ -26,15 +26,15 @@ define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
 	'../Property',
-	'dijit/form/CheckBox'
-], function(declare, lang, Property, CheckBox) {
+	'dijit/form/TextBox'
+], function(declare, lang, Property, TextBox) {
 	
-	return declare('Aras.View.Properties.Boolean', [CheckBox, Property], {
+	return declare('Aras.View.Properties.Text', [TextBox, Property], {
 			
 		_viewModelValueHandle: null, 
 		
 		_valueHandle: null,
-
+		
 		constructor: function() {
 			
 		},
@@ -45,12 +45,12 @@ define([
 			// Call Control Startup
 			this._startup();
 			
-			this._updateBoolean();
+			this._updateString();
 		},
 		
 		destroy: function() {
-			this.inherited(arguments);
-			
+			this.inherited(arguments);	
+
 			// Call Control Destroy
 			this._destroy();
 			
@@ -65,17 +65,17 @@ define([
 			}
 		},
 		
-		_updateBoolean: function() {
+		_updateString: function() {
 
 			if (this.ViewModel != null)
 			{
 				// Set Value from ViewModel
-				this.set("checked", this.ViewModel.Value);
+				this.set("value", this.ViewModel.Value);
 			
 				// Watch for changes in Control value
 				if (!this._valueHandle)
 				{
-					this._valueHandle = this.watch('checked', lang.hitch(this, function(name, oldValue, newValue) {
+					this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
 				
 						if (oldValue !== newValue)
 						{										
@@ -99,7 +99,7 @@ define([
 						this._updateFromViewModel = true;
 				
 						// Set Value
-						this.set("checked", newValue);
+						this.set("value", newValue);
 
 						// Stop ViewModel Update
 						this._updateFromViewModel = false;				
@@ -108,7 +108,7 @@ define([
 			}
 			else
 			{
-				this.set("checked", false);
+				this.set("value", null);
 				
 				if (this._valueHandle)
 				{
@@ -125,8 +125,8 @@ define([
 		OnViewModelChanged: function(name, oldValue, newValue) {
 			this.inherited(arguments);	
 			
-			// Update Boolean
-			this._updateBoolean();	
+			// Update String
+			this._updateString();	
 		}
 
 	});

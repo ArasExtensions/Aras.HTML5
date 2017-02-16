@@ -46,6 +46,8 @@ define([
 	'../View/Properties/Date',
 	'../View/Properties/List',
 	'../View/Properties/Decimal',
+	'../View/Properties/Text',
+	'../View/Properties/Boolean',
 	'../View/Panes/ContentPane'
 ], function(
 	declare, 
@@ -71,6 +73,8 @@ define([
 	DateProp,
 	ListProp,
 	DecimalProp,
+	TextProp,
+	BooleanProp,
 	ContentPane
 ) {
 	
@@ -388,6 +392,12 @@ define([
 					break;	
 				case 'Aras.View.Properties.Decimal':
 					viewcontrol = new DecimalProp(Parameters);
+					break;
+				case 'Aras.View.Properties.Text':
+					viewcontrol = new TextProp(Parameters);
+					break;
+				case 'Aras.View.Properties.Boolean':
+					viewcontrol = new BooleanProp(Parameters);
 					break;
 				case 'Aras.View.Panes.ContentPane':
 					viewcontrol = new ContentPane(Parameters);

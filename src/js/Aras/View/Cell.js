@@ -107,8 +107,15 @@ define([
 					
 				if (this.Value == null)
 				{
-					// Need to create new Widget
-					this.Value = this.ViewModel.Session.ViewControl(this.ViewModel.Value, {style: 'width:100%; height:100%; padding:0; margin:0; border:0'});
+					// Need to create new Widget					
+					if (this.ViewModel.Value.Type == 'Aras.View.Properties.Boolean')
+					{
+						this.Value = this.ViewModel.Session.ViewControl(this.ViewModel.Value);
+					}
+					else
+					{
+						this.Value = this.ViewModel.Session.ViewControl(this.ViewModel.Value, {style: 'width:100%; height:100%; padding:0; margin:0; border:0'});
+					}
 									
 					// Start Control
 					this.Value.startup();
