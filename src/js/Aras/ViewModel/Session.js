@@ -96,9 +96,10 @@ define([
 			declare.safeMixin(this, args);
 		},
 		
-		_processCommands: function(Commands)
-		{
-			array.forEach(Commands, lang.hitch(this, function(command) {
+		_processResponse: function(Response) {
+			
+			// Process Commands
+			array.forEach(Response.CommandQueue, lang.hitch(this, function(command) {
 				
 				if (this._commandCache[command.ID] === undefined)
 				{
@@ -110,22 +111,17 @@ define([
 					// Set CanExecute
 					this._commandCache[command.ID].set('CanExecute', command.CanExecute);	
 				}
-			}));		
-		},
-		
-		_processResponse: function(Response) {
+			}));
 			
 			// Ensure Controls are in Cache
 			array.forEach(Response.ControlQueue, lang.hitch(this, function(control) {
-				
-				// Process attached Commands
-				this._processCommands(control.Commands);
 				
 				if (this._controlCache[control.ID] === undefined)
 				{
 					// Create new Control
 					this._controlCache[control.ID] = new Control(this, control.ID, control.Type);
 				}
+
 			}));
 			
 			// Set Control Data
@@ -181,10 +177,7 @@ define([
 				
 					// Process Response
 					this._processResponse(result);
-					
-					// Process Attached Commands
-					this._processCommands(result.Value.Commands);
-					
+				
 					// Create Plugin
 					if (this._controlCache[result.Value.ID] === undefined)
 					{
@@ -214,10 +207,7 @@ define([
 							
 					// Process Response
 					this._processResponse(result);
-					
-					// Process Attached Commands
-					this._processCommands(result.Value.Commands);
-					
+									
 					// Update Data on Control
 					Control.set("Data", result.Value);
 				}),

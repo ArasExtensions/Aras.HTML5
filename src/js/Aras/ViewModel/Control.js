@@ -57,7 +57,7 @@ define([
 		},
 		
 		_readData: function() {
-
+						
 			// Process Properties
 			array.forEach(this.Data.Properties, function(property){
 				
@@ -163,7 +163,13 @@ define([
 								this.set(property.Name, new Number(property.Values[0]));
 							}
 						
-							break;					
+							break;	
+						case 10:
+						
+							// Command
+							this.set(property.Name, this.Session.Command(property.Values[0]));
+							
+							break;							
 						default:
 							console.debug('Property Type not implemented: ' + property.Type);
 							break;
@@ -175,20 +181,7 @@ define([
 				}
 
 			}, this);
-			
-			// Process Commands
-			array.forEach(this.Data.Commands, function(command){
-				
-				// Set Command
-				this[command.Name] = this.Session.Command(command.ID);
-				
-				// Update Command Name
-				this[command.Name].set('Name', command.Name);
-				
-				// Update Command CanExecute
-				this[command.Name].set('CanExecute', command.CanExecute);
-			}, this);
-				
+		
 			// Remove ReadOnly Properties, these will never be written back to Server
 			this.Data.Properties = array.filter(this.Data.Properties, function(property) {
 				
