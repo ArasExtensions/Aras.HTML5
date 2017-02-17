@@ -141,8 +141,7 @@ define([
 		
 		openDropDown: function(callback) {
 
-
-			this.inherited(arguments);
+			console.debug('Item Open Dialogue');
 		},
 
 	});
