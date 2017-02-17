@@ -34,8 +34,7 @@ define([
 		_viewModelValueHandle: null, 
 				
 		constructor: function() {
-			
-			this._forceReadOnly = true;
+
 		},
 		
 		startup: function() {

@@ -34,8 +34,6 @@ define([
 		
 		_updateFromViewModel: null,
 		
-		_forceReadOnly: false,
-				
 		_startup: function() {
 			this.inherited(arguments);
 
@@ -70,17 +68,9 @@ define([
 			{	
 				// Set Label
 				this.set('title', this.ViewModel.Label);
-						
-				if (this._forceReadOnly)
-				{
-					// Force ReadOnly
-					this.set("readOnly", true);
-				}
-				else
-				{
-					// Set ReadOnly
-					this.set("readOnly", !this.ViewModel.Enabled);
-				}
+
+				// Set ReadOnly
+				this.set("readOnly", !this.ViewModel.Enabled);
 				
 				// Watch for changes in ViewModel Enabled
 				if (this._viewModelEnabledHandle != null)
