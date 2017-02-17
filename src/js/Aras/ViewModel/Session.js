@@ -113,22 +113,19 @@ define([
 				}
 			}));
 			
-			// Ensure Controls are in Cache
+			// Process Controls
 			array.forEach(Response.ControlQueue, lang.hitch(this, function(control) {
 				
 				if (this._controlCache[control.ID] === undefined)
 				{
 					// Create new Control
-					this._controlCache[control.ID] = new Control(this, control.ID, control.Type);
+					this._controlCache[control.ID] = new Control(this, control);
 				}
-
-			}));
-			
-			// Set Control Data
-			array.forEach(Response.ControlQueue, lang.hitch(this, function(control) {
-
-				// Set new Data in existing Control
-				this._controlCache[control.ID].set('Data', control);
+				else
+				{
+					// Set new Data in existing Control
+					this._controlCache[control.ID].set('Data', control);
+				}
 			}));
 		},
 		

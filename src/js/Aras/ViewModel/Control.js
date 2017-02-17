@@ -39,16 +39,15 @@ define([
 		
 		Type: null,
 				
-		constructor: function(Session, ID, Type) {
+		constructor: function(Session, Data) {
 			
-			// Set Session
-			this.set('Session', Session);
+			this.Session = Session;
+			this.ID = Data.ID;
+			this.Type = Data.Type;
+			this.Data = Data;
 			
-			// Set ID
-			this.set('ID', ID);
-				
-			// Set Type
-			this.set('Type', Type);
+			// Read Data
+			this._readData();
 			
 			// Watch for Data Updates
 			this.watch('Data', lang.hitch(this, function(name, oldValue, newValue) {
