@@ -48,7 +48,9 @@ define([
 	'../View/Properties/Decimal',
 	'../View/Properties/Text',
 	'../View/Properties/Boolean',
-	'../View/Panes/ContentPane'
+	'../View/Panes/ContentPane',
+	'../View/Dialog',
+	'../View/Containers/Toolbar'
 ], function(
 	declare, 
 	request, 
@@ -75,7 +77,9 @@ define([
 	DecimalProp,
 	TextProp,
 	BooleanProp,
-	ContentPane
+	ContentPane,
+	Dialog,
+	Toolbar
 ) {
 	
 	return declare('Aras.ViewModel.Session', null, {
@@ -388,6 +392,12 @@ define([
 					break;
 				case 'Aras.View.Panes.ContentPane':
 					viewcontrol = new ContentPane(Parameters);
+					break;	
+				case 'Aras.View.Dialog':
+					viewcontrol = new Dialog(Parameters);
+					break;
+				case 'Aras.View.Containers.Toolbar':
+					viewcontrol = new Toolbar(Parameters);
 					break;				
 				default:
 					console.debug("View not supported: " + ViewModelControl.Type);

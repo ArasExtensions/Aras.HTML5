@@ -33,9 +33,13 @@ define([
 	
 	return declare('Aras.View.Properties.Item', [ValidationTextBox, _HasDropDown, Property], {
 			
+		_dialog: null,
+		
 		_viewModelValueHandle: null, 
 		
 		_valueHandle: null,
+		
+		_viewModelDialogHandle: null,
 		
 		templateString: template,
 		
@@ -100,7 +104,7 @@ define([
 					}));
 				}
 			
-				// Watch for changes in the ViewModel
+				// Watch for changes in the ViewModel Value
 				if (!this._viewModelValueHandle)
 				{
 					this._viewModelValueHandle = this.ViewModel.watch('Value', lang.hitch(this, function(name, oldValue, newValue) {
@@ -113,6 +117,34 @@ define([
 
 						// Stop ViewModel Update
 						this._updateFromViewModel = false;				
+					}));
+				}
+				
+				// Watch for changes in the ViewModel Dialog
+				if (!this._viewModelDialogHandle)
+				{
+					this._viewModelDialogHandle = this.ViewModel.watch('Dialog', lang.hitch(this, function(name, oldValue, newValue) {
+					
+						if (newValue != null)
+						{
+							if (this._dialog == null)
+							{
+								this._dialog = newValue.Session.ViewControl(newValue);
+								this._dialog.startup();
+							}
+							else
+							{
+								this._dialog.set('ViewModel', newValue);
+							}
+						}
+						else
+						{
+							if (this._dialog != null)
+							{
+								this._dialog.destroyRecursive();
+								this._dialog = null;
+							}
+						}
 					}));
 				}
 			}
@@ -129,6 +161,11 @@ define([
 				{
 					this._viewModelValueHandle.unwatch();
 				}
+				
+				if (this._viewModelDialogHandle)
+				{
+					this._viewModelDialogHandle.unwatch();
+				}
 			}
 		},
 		
@@ -141,8 +178,13 @@ define([
 		
 		openDropDown: function(callback) {
 
-			console.debug('Item Open Dialogue');
-		},
+			if ((this.ViewModel != null) && this.ViewModel.Select.CanExecute)
+			{
+				// Execute Select
+				var Parameters = [];
+				this.ViewModel.Select.Execute(Parameters);
+			}
+		}
 
 	});
 });

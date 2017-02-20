@@ -53,7 +53,7 @@ define([
 			// Call Container Startup
 			this._startup();
 			
-			this._addTopButtons();
+			this._updateToolbar();
 		},
 		
 		destroy: function() {
@@ -128,9 +128,8 @@ define([
 			}				
 		},
 		
-		OnViewModelChanged: function() {
-			this.inherited(arguments);
-
+		_updateToolbar: function() {
+			
 			// Clear Toolbar
 			this._removeChildren()
 						
@@ -139,6 +138,12 @@ define([
 			
 			// Add Control Buttons
 			this._addChildren();
+		},
+		
+		OnViewModelChanged: function() {
+			this.inherited(arguments);
+
+			this._updateToolbar();
 		}
 	});
 });

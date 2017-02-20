@@ -33,12 +33,15 @@ define([
 			
 		_addChildren: function() {
 			
-			array.forEach(this.ViewModel.Children, function(childviewmodel) {
+			if (this.ViewModel != null)
+			{
+				array.forEach(this.ViewModel.Children, function(childviewmodel) {
 					
-				var control = childviewmodel.Session.ViewControl(childviewmodel);
-				this.addChild(control);
+					var control = childviewmodel.Session.ViewControl(childviewmodel);
+					this.addChild(control);
 					
-			}, this);
+				}, this);
+			}
 		},
 		
 		_removeChildren: function() {
