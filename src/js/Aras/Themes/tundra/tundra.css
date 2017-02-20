@@ -9,3 +9,13 @@
 {
     background: #F2F5F9;
 }
+
+.tundra .dijitDialogPaneContent 
+{
+	padding: 0px;
+}
+
+.tundra .dijitTextBoxReadOnly
+{
+	background:#fff url("../../../dijit/themes/tundra/images/validationInputBg.png") repeat-x top left;
+}

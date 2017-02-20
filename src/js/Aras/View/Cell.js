@@ -114,7 +114,7 @@ define([
 					}
 					else
 					{
-						this.Value = this.ViewModel.Session.ViewControl(this.ViewModel.Value, {style: 'width:100%; height:100%; padding:0; margin:0; border:0'});
+						this.Value = this.ViewModel.Session.ViewControl(this.ViewModel.Value, {style: 'width:100%; padding:0; margin:1px; border:0'});
 					}
 									
 					// Start Control
