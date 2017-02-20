@@ -72,6 +72,9 @@ define([
 				// Set ReadOnly
 				this.set("readOnly", !this.ViewModel.Enabled);
 				
+				// Set IntermediateChanges
+				this.set("intermediateChanges", this.ViewModel.IntermediateChanges);
+				
 				// Watch for changes in ViewModel Enabled
 				if (this._viewModelEnabledHandle != null)
 				{
