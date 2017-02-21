@@ -37,8 +37,6 @@ define([
 		
 		_openHandle: null,
 		
-		baseClass: 'dijitContentPaneNoPadding',
-		
 		constructor: function () {
 			
 		},
