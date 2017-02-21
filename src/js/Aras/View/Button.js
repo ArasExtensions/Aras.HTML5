@@ -37,12 +37,17 @@ define([
 		_canExecuteHandle: null,
 				
 		startup: function() {
-			this.inherited(arguments);
 
-			// Call Control Startup
-			this._startup();
+			if(!this._started)
+			{
+				// Call Control Startup
+				this._startup();
 			
-			this._updateButton();
+				// Update Button
+				this._updateButton();
+			}
+			
+			this.inherited(arguments);
 		},
 		
 		destroy: function() {

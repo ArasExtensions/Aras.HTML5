@@ -63,8 +63,8 @@ define([
 			this.inherited(arguments);
 
 			// Create Layout
-			var layout = new ContentPane({content: '<table><tr><td>Database</td><td id="logindatabase"></td></tr><tr><td>Username</td><td id="loginusername"></td></tr><tr><td>Password</td><td id="loginpassword"></td></tr><tr><td></td><td align="right"><div id="loginlogin"></div><div id="logincancel"></div></td></tr><tr><td id="errormessage" colspan="2"></td></tr></table>'});
-			this.addChild(layout);
+			var layout = new ContentPane({content: '<table style="padding:15px 10px 0px 5px;"><tr><td>Database</td><td id="logindatabase"></td></tr><tr><td>Username</td><td id="loginusername"></td></tr><tr><td>Password</td><td id="loginpassword"></td></tr><tr><td></td><td align="right"><div id="loginlogin"></div><div id="logincancel"></div></td></tr><tr><td id="errormessage" colspan="2"></td></tr></table>'});
+			this.set('content', layout);
 			
 			// Add Database 
 			var databasetarget = dom.byId('logindatabase');	

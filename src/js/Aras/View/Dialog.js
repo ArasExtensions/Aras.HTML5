@@ -42,6 +42,7 @@ define([
 		},
 		
 		startup: function() {
+			
 			this.inherited(arguments);
 			
 			// Call Control Startup

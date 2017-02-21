@@ -39,14 +39,19 @@ define([
 		},
 				
 		startup: function() {
-			this.inherited(arguments);
+	
+			if(!this._started)
+			{
+				// Create Layout
+				var layout = new ContentPane({content: '<span class="dijitInline mediumErrorIcon" style="padding-right: 5px;"></span><span class="dijitInline" style="min-width: 200px;">' + this.Message + '</span>'});
+				this.set('content', layout);
+					
+								
+				// Set Title
+				this.set('title', 'Error');	
+			}		
 
-			// Create Layout
-			var layout = new ContentPane({content: '<span class="dijitInline mediumErrorIcon" style="padding-right: 5px;"></span><span class="dijitInline">' + this.Message + '</span>'});
-			this.addChild(layout);
-						
-			// Set Title
-			this.set('title', 'Error');			
+			this.inherited(arguments);				
 		}
 
 	});

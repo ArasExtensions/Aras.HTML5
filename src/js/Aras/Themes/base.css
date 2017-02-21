@@ -68,7 +68,8 @@
 	width: 100%;
 }
 
- .dgrid-cell {
+ .dgrid-cell 
+ {
 	padding: 0px;
     width: 80px;
  }
@@ -84,4 +85,10 @@
 .dijitSpinner input.dijitInputInner 
 {
 	text-align: left;
+}
+
+.dijitBorderContainer
+{
+	height: 100%;
+	width: 100%;
 }
