@@ -130,7 +130,6 @@ define([
 							if (this._dialog == null)
 							{
 								this._dialog = newValue.Session.ViewControl(newValue);
-								this._dialog.startup();
 							}
 							else
 							{
