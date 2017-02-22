@@ -24,10 +24,11 @@
 
 define([
 	'dojo/_base/declare',
+	'dojo/_base/array',
 	'dojo/Stateful',
 	'dojo/_base/lang',
 	'dijit/Tooltip'
-], function(declare, Stateful, lang, Tooltip) {
+], function(declare, array, Stateful, lang, Tooltip) {
 	
 	return declare('Aras.View.Control', [Stateful], {
 		
@@ -38,6 +39,10 @@ define([
 		_errorMessageHandle: null,
 		
 		_toolTip: null,
+		
+		_dialogsCache: new Object(),
+		
+		_dialogsHandle: null,
 				
 		_startup: function() {
 
@@ -99,6 +104,18 @@ define([
 						}
 					}));
 				}
+				
+				// Process Dialogs
+				this._createDialogs();
+				
+				// Watch for changes in Dialogs
+				if (!this._dialogsHandle)
+				{
+					this._dialogsHandle = this.ViewModel.watch('Dialogs', lang.hitch(this, function(name, oldValue, newValue) {
+						this._createDialogs();
+					}));
+				}				
+				
 			}
 			else
 			{
@@ -114,7 +131,29 @@ define([
 				{
 					this._errorMessageHandle.unwatch();
 				}
+				
+				// Unwatch Dialogs
+				if (this._dialogsHandle)
+				{
+					this._dialogsHandle.unwatch();
+				}
 			}	
+		},
+		
+		_createDialogs: function() {
+			
+			array.forEach(this.ViewModel.Dialogs, function(dialogviewmodel) {
+									
+				if (this._dialogsCache[dialogviewmodel.ID] === undefined)
+				{
+					// Create new Dialog
+					this._dialogsCache[dialogviewmodel.ID] = dialogviewmodel.Session.ViewControl(dialogviewmodel);
+					
+					// Start Dialog
+					this._dialogsCache[dialogviewmodel.ID].startup();
+				}
+					
+			}, this);
 		},
 
 		OnViewModelChanged: function(name, oldValue, newValue) {

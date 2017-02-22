@@ -39,8 +39,6 @@ define([
 		
 		_valueHandle: null,
 		
-		_viewModelDialogHandle: null,
-		
 		templateString: template,
 		
 		hasDownArrow: true,
@@ -119,33 +117,6 @@ define([
 						this._updateFromViewModel = false;				
 					}));
 				}
-				
-				// Watch for changes in the ViewModel Dialog
-				if (!this._viewModelDialogHandle)
-				{
-					this._viewModelDialogHandle = this.ViewModel.watch('Dialog', lang.hitch(this, function(name, oldValue, newValue) {
-					
-						if (newValue != null)
-						{
-							if (this._dialog == null)
-							{
-								this._dialog = newValue.Session.ViewControl(newValue);
-							}
-							else
-							{
-								this._dialog.set('ViewModel', newValue);
-							}
-						}
-						else
-						{
-							if (this._dialog != null)
-							{
-								this._dialog.destroyRecursive();
-								this._dialog = null;
-							}
-						}
-					}));
-				}
 			}
 			else
 			{
@@ -159,11 +130,6 @@ define([
 				if (this._viewModelValueHandle)
 				{
 					this._viewModelValueHandle.unwatch();
-				}
-				
-				if (this._viewModelDialogHandle)
-				{
-					this._viewModelDialogHandle.unwatch();
 				}
 			}
 		},

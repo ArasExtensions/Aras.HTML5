@@ -398,7 +398,6 @@ define([
 					break;	
 				case 'Aras.View.Dialog':
 					viewcontrol = new Dialog(Parameters);
-					viewcontrol.startup();
 					break;
 				case 'Aras.View.Containers.Toolbar':
 					viewcontrol = new Toolbar(Parameters);
