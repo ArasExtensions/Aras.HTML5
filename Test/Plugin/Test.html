@@ -1,7 +1,7 @@
 <!--
   Aras.HTML5 provides a HTML5 client library to build Aras Innovator Applications
 
-  Copyright (C) 2015 Processwall Limited.
+  Copyright (C) 2017 Processwall Limited.
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published
@@ -24,10 +24,9 @@
 
 <html>
 	<head>
-		<title>Aras.ViewModel Plugin Test</title>
+		<title>Plugin Test</title>
 		<style>
-			@import "../../../dijit/themes/tundra/tundra.css";
-			@import "../../../dojo/resources/dojo.css";
+			@import "../../Client/js/Aras/Themes/tundra/tundra.css";
 		</style>
 		<script>
 			dojoConfig={
@@ -36,12 +35,13 @@
 				async: true
 			};
 		</script>
-		<script type="text/javascript" src="../../../dojo/dojo.js"></script>
+		<script type="text/javascript" src="../../Client/js/dojo/dojo.js"></script>
 		<script>
-			require(['Aras/View/Plugin', 'dojo/dom', 'dojo/domReady!'], function(Plugin, dom) {
+			require(['Aras/View/Containers/Plugin', 'dojo/dom', 'dojo/domReady!'], function(Plugin, dom) {
 				var target = dom.byId('main');			
-				var plugin = new Plugin({ URL: 'http://localhost/Aras.WebService', DatabaseID: 'VariantsDemo11SP1', Username: 'admin', Password: '607920b64fe136f9ab2389e371852af2', Name: 'AESSiS.Variants.Plugins.Order', Context: '164AA16BC3674CD8AD62E9EE81DAA473'}, target);
+				var plugin = new Plugin({ URL: 'http://localhost/InnovatorServer100SP4/AAD', DatabaseID: 'CMB', Username: 'admin', Password: '607920b64fe136f9ab2389e371852af2', Name: 'CMB.ViewModel.ContractManagement.Plugins.Order', Context: '17E4C652AF9D49AAA7EFFBF489D47CF7'}, target);
 				plugin.startup();
+				plugin.Refresh();
 			});
 		</script>
 	</head>

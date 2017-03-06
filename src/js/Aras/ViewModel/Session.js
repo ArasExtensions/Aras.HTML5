@@ -46,6 +46,7 @@ define([
 	'../View/Properties/Date',
 	'../View/Properties/List',
 	'../View/Properties/Decimal',
+	'../View/Properties/Float',
 	'../View/Properties/Text',
 	'../View/Properties/Boolean',
 	'../View/Panes/ContentPane',
@@ -75,6 +76,7 @@ define([
 	DateProp,
 	ListProp,
 	DecimalProp,
+	FloatProp,
 	TextProp,
 	BooleanProp,
 	ContentPane,
@@ -386,6 +388,9 @@ define([
 					break;	
 				case 'Aras.View.Properties.Decimal':
 					viewcontrol = new DecimalProp(Parameters);
+					break;
+				case 'Aras.View.Properties.Float':
+					viewcontrol = new FloatProp(Parameters);
 					break;
 				case 'Aras.View.Properties.Text':
 					viewcontrol = new TextProp(Parameters);
