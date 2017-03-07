@@ -49,6 +49,7 @@ define([
 	'../View/Properties/Float',
 	'../View/Properties/Text',
 	'../View/Properties/Boolean',
+	'../View/Properties/Federated',
 	'../View/Panes/ContentPane',
 	'../View/Dialog',
 	'../View/Containers/Toolbar'
@@ -79,6 +80,7 @@ define([
 	FloatProp,
 	TextProp,
 	BooleanProp,
+	FederatedProp,
 	ContentPane,
 	Dialog,
 	Toolbar
@@ -397,6 +399,9 @@ define([
 					break;
 				case 'Aras.View.Properties.Boolean':
 					viewcontrol = new BooleanProp(Parameters);
+					break;
+				case 'Aras.View.Properties.Federated':
+					viewcontrol = new FederatedProp(Parameters);
 					break;
 				case 'Aras.View.Panes.ContentPane':
 					viewcontrol = new ContentPane(Parameters);
