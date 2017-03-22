@@ -24,10 +24,11 @@
 
 define([
 	'dojo/_base/declare',
+	'dojo/_base/array',
 	'dojo/_base/lang',
 	'dijit/layout/TabContainer',
 	'../Container'
-], function(declare, lang, TabContainer, Container) {
+], function(declare, array, lang, TabContainer, Container) {
 	
 	return declare('Aras.View.Containers.TabContainer', [TabContainer, Container], {
 		
@@ -35,9 +36,40 @@ define([
 			
 		},
 		
+		_addChildren: function() {
+			
+			if (this.ViewModel != null)
+			{
+				array.forEach(this.ViewModel.Children, function(childviewmodel) {
+					
+					var control = childviewmodel.Session.ViewControl(childviewmodel);
+					
+					if (childviewmodel.Title)
+					{
+						control.set("title", childviewmodel.Title);
+					}
+					
+					this.addChild(control);
+					
+				}, this);
+			}
+		},
+		
 		startup: function() {
 			this.inherited(arguments);
 			
+			// Call Container Startup
+			this._startup();
+			
+			// Add Children
+			this._addChildren();
+		},
+		
+		destroy: function() {
+			this.inherited(arguments);
+			
+			// Call Container Destroy
+			this._destroy();
 		}
 
 	});

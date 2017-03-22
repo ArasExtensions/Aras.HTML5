@@ -33,6 +33,7 @@ define([
 	'./Command',
 	'./ApplicationType',
 	'../View/Containers/BorderContainer',
+	'../View/Containers/TabContainer',
 	'../View/Grid',
 	'../View/Panes/TitlePane',
 	'../View/Button',
@@ -63,7 +64,8 @@ define([
 	Control, 
 	Command, 
 	ApplicationType, 
-	BorderContainer, 
+	BorderContainer,
+	TabContainer,
 	Grid, 
 	TitlePane, 
 	Button, 
@@ -375,6 +377,9 @@ define([
 					break;
 				case 'Aras.View.Containers.TableContainer':
 					viewcontrol = new TableContainer(Parameters);
+					break;	
+				case 'Aras.View.Containers.TabContainer':
+					viewcontrol = new TabContainer(Parameters);
 					break;	
 				case 'Aras.View.Properties.Item':
 					viewcontrol = new Item(Parameters);
