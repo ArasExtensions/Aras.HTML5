@@ -28,13 +28,13 @@ define([
 	'dojo/_base/array',
 	'./_Grid',
 	'dgrid/util/misc',
-	'dijit/layout/ContentPane',
+	'dijit/layout/BorderContainer',
 	'./Control',
 	'./Column',
 	'./Row'
-], function(declare, lang, array, _Grid, GridMisc, ContentPane, Control, Column, Row) {
+], function(declare, lang, array, _Grid, GridMisc, BorderContainer, Control, Column, Row) {
 	
-	return declare('Aras.View.Grid', [ContentPane, Control], {
+	return declare('Aras.View.Grid', [BorderContainer, Control], {
 			
 		_grid: null,
 		
@@ -72,7 +72,7 @@ define([
 			
 			// Create Grid
 			this._grid = new _Grid({ region: 'center', selectionMode: 'extended', showHeader: this.ShowHeader });
-			this.set('content', this._grid);
+			this.addChild(this._grid);
 			
 			// Process Grid Select Event
 			this._grid.on('dgrid-select', lang.hitch(this, function(event) {

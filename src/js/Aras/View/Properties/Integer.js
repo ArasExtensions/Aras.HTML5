@@ -114,17 +114,14 @@ define([
 				{
 					this._viewModelValueHandle = this.ViewModel.watch('Value', lang.hitch(this, function(name, oldValue, newValue) {
 					
-						if (newValue)
-						{
-							// Stop ViewModel Update
-							this._updateFromViewModel = true;
+						// Stop ViewModel Update
+						this._updateFromViewModel = true;
 					
-							// Set Value
-							this.set("value", this.ViewModel.Value);
+						// Set Value
+						this.set("value", newValue);
 					
-							// Start ViewModel Update
-							this._updateFromViewModel = false;
-						}
+						// Start ViewModel Update
+						this._updateFromViewModel = false;
 					}));
 				}
 			}

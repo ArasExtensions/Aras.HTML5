@@ -81,7 +81,16 @@ define([
 						case 1:
 						
 							// Int32
-							this.set(property.Name, parseInt(property.Values[0]));
+							
+							if (property.Values[0] != null)
+							{
+								this.set(property.Name, parseInt(property.Values[0]));
+							}
+							else
+							{
+								this.set(property.Name, null);
+							}
+							
 							break;
 							
 						case 2:

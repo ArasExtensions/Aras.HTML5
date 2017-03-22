@@ -329,24 +329,26 @@ define([
 			}
 			
 			// Style
-			if (!Parameters['style'])
+			var style = '';
+			
+			if (Parameters['style'])
 			{
-				var style = '';
-			
-				if (ViewModelControl.Height != null)
-				{
-					style = style + 'height:' + ViewModelControl.Height + 'px;';
-				}
+				style = Parameters['style'];
+			}
+				
+			if (ViewModelControl.Height != null)
+			{
+				style = style + 'height:' + ViewModelControl.Height + 'px;';
+			}
 	
-				if (ViewModelControl.Width != null)
-				{
-					style = style + 'width:' + ViewModelControl.Width + 'px;';
-				}
+			if (ViewModelControl.Width != null)
+			{
+				style = style + 'width:' + ViewModelControl.Width + 'px;';
+			}
 			
-				if (style.length > 0)
-				{
-					Parameters['style'] = style;
-				}
+			if (style.length > 0)
+			{
+				Parameters['style'] = style;
 			}
 			
 			switch(ViewModelControl.Type)

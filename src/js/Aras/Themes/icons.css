@@ -52,6 +52,42 @@
   width: 16px;
 }
 
+.mediumAddFilterIcon 
+{
+  background-repeat: no-repeat;
+  background-image:  url('./images/AddSearchCriteria.svg');
+  background-size: 20px 20px;
+  height: 20px;
+  width: 20px;
+}
+
+.smallAddFilterIcon 
+{
+  background-repeat: no-repeat;
+  background-image:  url('./images/AddSearchCriteria.svg');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}
+
+.mediumClearFilterIcon 
+{
+  background-repeat: no-repeat;
+  background-image:  url('./images/ClearSearchCriteria.svg');
+  background-size: 20px 20px;
+  height: 20px;
+  width: 20px;
+}
+
+.smallClearFilterIcon 
+{
+  background-repeat: no-repeat;
+  background-image:  url('./images/ClearSearchCriteria.svg');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}
+
 .mediumRefreshIcon 
 {
   background-repeat: no-repeat;
