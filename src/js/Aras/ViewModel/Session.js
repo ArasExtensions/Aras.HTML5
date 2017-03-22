@@ -355,6 +355,7 @@ define([
 					viewcontrol = new BorderContainer(Parameters);
 					break;
 				case 'Aras.View.Grid':
+					Parameters['ShowHeader'] = ViewModelControl.ShowHeader;
 					viewcontrol = new Grid(Parameters);
 					break;
 				case 'Aras.View.Panes.TitlePane':

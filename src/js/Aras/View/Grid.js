@@ -54,6 +54,8 @@ define([
 		
 		baseClass: 'dijitContentPaneNoPadding',
 		
+		ShowHeader: null,
+		
 		constructor: function() {
 
 			this.Columns = [];
@@ -69,7 +71,7 @@ define([
 			this._startup();
 			
 			// Create Grid
-			this._grid = new _Grid({ region: 'center', selectionMode: 'extended' });
+			this._grid = new _Grid({ region: 'center', selectionMode: 'extended', showHeader: this.ShowHeader });
 			this.set('content', this._grid);
 			
 			// Process Grid Select Event
@@ -122,7 +124,7 @@ define([
 		
 		_updateGrid: function() {
 	
-			// Unatch for changes in Columns
+			// Unwatch for changes in Columns
 			if (this._columnsHandle)
 			{
 				this._columnsHandle.unwatch();
