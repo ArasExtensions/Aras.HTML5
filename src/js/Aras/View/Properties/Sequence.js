@@ -32,7 +32,9 @@ define([
 	return declare('Aras.View.Properties.Sequence', [TextBox, Property], {
 			
 		_viewModelValueHandle: null, 
-				
+			
+		_valueHandle: null,
+			
 		constructor: function() {
 
 		},
@@ -64,7 +66,25 @@ define([
 			{
 				// Set Value from ViewModel
 				this.set("value", this.ViewModel.Value);
-						
+					
+				// Watch for changes in Control value
+				if (!this._valueHandle)
+				{
+					this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
+				
+						if (oldValue !== newValue)
+						{										
+							if (!this._updateFromViewModel)
+							{
+								// Update ViewModel Value
+								this.ViewModel.set('Value', newValue);
+								this.ViewModel.Write();
+							}
+						}
+	
+					}));
+				}
+				
 				// Watch for changes in the ViewModel
 				if (!this._viewModelValueHandle)
 				{
