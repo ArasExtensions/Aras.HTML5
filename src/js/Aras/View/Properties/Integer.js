@@ -85,10 +85,10 @@ define([
 				if (!this._valueHandle)
 				{
 					this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
-				
+						
 						if (isNaN(newValue))
 						{
-							this.set("value", oldValue);
+							this.set("value", null);
 						}
 						else
 						{
@@ -113,7 +113,7 @@ define([
 				if (!this._viewModelValueHandle)
 				{
 					this._viewModelValueHandle = this.ViewModel.watch('Value', lang.hitch(this, function(name, oldValue, newValue) {
-					
+						
 						// Stop ViewModel Update
 						this._updateFromViewModel = true;
 					
