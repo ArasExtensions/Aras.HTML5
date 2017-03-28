@@ -25,6 +25,7 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
+	'dojo/has',
 	'dojo/dom-construct',
 	'dojo/_base/array',
 	'./Control',
@@ -32,8 +33,9 @@ define([
 	'./Properties/List',
 	'./Properties/Float',
 	'./Properties/Integer',
-	'./Properties/Sequence'
-], function(declare, lang, construct, array, Control, String, List, Float, Integer, Sequence) {
+	'./Properties/Sequence',
+	'dojo/_base/sniff'
+], function(declare, lang, has, construct, array, Control, String, List, Float, Integer, Sequence) {
 	
 	return declare('Aras.View.Cell', [Control], {
 		
@@ -96,13 +98,10 @@ define([
 		RenderCell: function() {
 		
 			if ((this.ViewModel != null) && (this.ViewModel.Value != null))
-			{
-				if ( dojo.isIE)
-				{						
-					if (this.Value != null)
-					{
-						this.Value = null;
-					}
+			{				
+				if (has('ie') || has('trident'))
+				{
+					this.Value = null;
 				}
 					
 				if (this.Value == null)
