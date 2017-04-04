@@ -403,7 +403,6 @@ define([
 					viewcontrol = new FloatProp(Parameters);
 					break;
 				case 'Aras.View.Properties.Text':
-					Parameters['rows'] = ViewModelControl.Rows;
 					viewcontrol = new TextProp(Parameters);
 					break;
 				case 'Aras.View.Properties.Boolean':
