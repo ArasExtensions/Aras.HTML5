@@ -26,10 +26,10 @@ define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
 	'../Property',
-	'dijit/form/TextBox'
-], function(declare, lang, Property, TextBox) {
+	'dijit/form/SimpleTextarea'
+], function(declare, lang, Property, SimpleTextarea) {
 	
-	return declare('Aras.View.Properties.Text', [TextBox, Property], {
+	return declare('Aras.View.Properties.Text', [SimpleTextarea, Property], {
 			
 		_viewModelValueHandle: null, 
 		
@@ -44,7 +44,8 @@ define([
 			
 			// Call Control Startup
 			this._startup();
-			
+
+			// Update Stop
 			this._updateString();
 		},
 		
