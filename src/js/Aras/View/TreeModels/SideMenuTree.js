@@ -32,6 +32,8 @@ define([
 	
 	return declare('Aras.View.TreeModels.SideMenuTree', [Stateful], {
 		
+		SideMenu: null,
+		
 		Session: null,
 		
 		RootNode: null,
@@ -78,6 +80,9 @@ define([
 					// Signal Change
 					this.onChange(this.RootNode);
 					this.onChildrenChange(this.RootNode, this.RootNode.Children);	
+					
+					// Auto Start
+					this.SideMenu._autoStart(applicationtype);
 				}));
 			}
 		},

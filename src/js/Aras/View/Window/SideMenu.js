@@ -25,12 +25,13 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
+	'dojo/_base/array',
 	'dojo/aspect',
 	'dijit/layout/ContentPane',
 	'dojox/layout/TableContainer',
 	'../TreeModels/SideMenuTree',
 	'../_Tree',
-], function(declare, lang, aspect, ContentPane, TableContainer, TreeModel, _Tree) {
+], function(declare, lang, array, aspect, ContentPane, TableContainer, TreeModel, _Tree) {
 	
 	return declare('Aras.View.Window.SideMenu', [ContentPane], {
 			
@@ -62,7 +63,7 @@ define([
 			this.Table.addChild(this.Logo);
 			
 			// Add Tree Model
-			this.TreeModel = new TreeModel({ Session: this.Window.Session });
+			this.TreeModel = new TreeModel({ SideMenu: this, Session: this.Window.Session });
 			
 			// Add Tree
 			this.Tree = new _Tree({ id: "sideMenuTree", class: "sideMenuTree", style: 'height: 100%; width: 100%', region: 'center', gutters: false, persist: false, model: this.TreeModel, getIconClass: this.getIconClass, showRoot: false, autoExpand: true });
@@ -81,6 +82,26 @@ define([
 				// Update Session in Tree Model
 				this.TreeModel.set("Session", this.Window.Session);
 			}));
+		},
+		
+		_autoStart: function(ApplicationType) {
+			
+			if (ApplicationType != null)
+			{
+				if (ApplicationType.Start)
+				{
+					// Start Application
+					this.Window._startApplication(ApplicationType);
+				}
+				
+				// Check Children
+				if (ApplicationType.Children)
+				{
+					array.forEach(ApplicationType.Children, function(apptype){
+						this._autoStart(apptype);
+					}, this);
+				}
+			}
 		},
 		
 		destroy: function() {

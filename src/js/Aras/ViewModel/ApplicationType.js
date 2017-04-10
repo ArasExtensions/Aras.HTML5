@@ -40,6 +40,8 @@ define([
 		
 		Icon: null,
 		
+		Start: null,
+		
 		constructor: function(args) {
 			declare.safeMixin(this, args);
 		}
