@@ -124,6 +124,24 @@
   width: 16px;
 }
 
+.mediumPromoteIcon 
+{
+  background-repeat: no-repeat;
+  background-image:  url('./images/Promote.svg');
+  background-size: 20px 20px;
+  height: 20px;
+  width: 20px;
+}
+
+.smallPromoteIcon 
+{
+  background-repeat: no-repeat;
+  background-image:  url('./images/Promote.svg');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}
+
 .mediumSaveUnlockIcon 
 {
   background-repeat: no-repeat;
