@@ -24,6 +24,7 @@
 
 define([
 	'dojo/_base/declare',
+	'dojo/html',
 	'dojo/_base/lang',
 	'dojo/has',
 	'dojo/dom-construct',
@@ -35,7 +36,7 @@ define([
 	'./Properties/Integer',
 	'./Properties/Sequence',
 	'dojo/_base/sniff'
-], function(declare, lang, has, construct, array, Control, String, List, Float, Integer, Sequence) {
+], function(declare, html, lang, has, construct, array, Control, String, List, Float, Integer, Sequence) {
 	
 	return declare('Aras.View.Cell', [Control], {
 		
@@ -97,16 +98,11 @@ define([
 				
 		RenderCell: function() {
 		
-			if ((this.ViewModel != null) && (this.ViewModel.Value != null))
-			{				
-				if (has('ie') || has('trident'))
-				{
-					this.Value = null;
-				}
-					
-				if (this.Value == null)
-				{
-					// Need to create new Widget					
+			if (this.Node)
+			{
+				if ((this.ViewModel != null) && (this.ViewModel.Value != null))
+				{					
+					// Create Widget					
 					if (this.ViewModel.Value.Type == 'Aras.View.Properties.Boolean')
 					{
 						this.Value = this.ViewModel.Session.ViewControl(this.ViewModel.Value);
@@ -116,15 +112,17 @@ define([
 						this.Value = this.ViewModel.Session.ViewControl(this.ViewModel.Value, {style: 'width:100%; padding:0; margin:2px; border:0'});
 					}
 									
-					// Start Control
+					// Start Widget
 					this.Value.startup();
+					
+					// Place Widget at Node
+					this.Value.placeAt(this.Node);
 				}
-				
-				return this.Value;
-			}
-			else
-			{
-				return null;
+				else
+				{
+					// Clear Node
+					html.set(this.Node, '');
+				}
 			}
 		}
 		

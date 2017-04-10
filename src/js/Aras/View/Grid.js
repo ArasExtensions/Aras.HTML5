@@ -236,13 +236,8 @@ define([
 			// Store Node in Cell
 			this.Grid.Rows[object.id].Cells[this.Index].Node = node;
 		
-			// Place Widget in Cell Node
-			var widget = this.Grid.Rows[object.id].Cells[this.Index].RenderCell();
-			
-			if (widget)
-			{
-				widget.placeAt(this.Grid.Rows[object.id].Cells[this.Index].Node);
-			}
+			// Render Cell
+			this.Grid.Rows[object.id].Cells[this.Index].RenderCell();
 		}
 		
 	});
