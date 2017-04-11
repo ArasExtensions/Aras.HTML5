@@ -41,6 +41,8 @@ define([
 		
 		LogoutButton: null,
 		
+		HideSideMenuButton: null,
+		
 		_sessionHandle: null,
 		
 		constructor: function(args) {
@@ -72,6 +74,14 @@ define([
 		
 			if (this.Window != null)
 			{
+				// Add Toggle Side Menu
+				this.HideSideMenuButton = new Button({ iconClass: "mediumMenuIcon"});
+				this.HideSideMenuButton.set('onClick', lang.hitch(this, function() {
+					this.Window.toggleSideMenu();
+				}));
+				this.addChild(this.HideSideMenuButton);
+				var hidesidemenutip = new Tooltip({connectId: this.HideSideMenuButton.id, label: 'Toggle Side Menu'});
+				
 				// Add Login Button
 				this.LoginButton = new Button({ iconClass: "mediumLoginIcon"});
 				
@@ -88,7 +98,7 @@ define([
 				}));
 				this.addChild(this.LogoutButton);
 				var logouttooltip = new Tooltip({connectId: this.LogoutButton.id, label: 'Logout'});
-			
+				
 				var sep = new Separator();
 				this.addChild(sep);
 				

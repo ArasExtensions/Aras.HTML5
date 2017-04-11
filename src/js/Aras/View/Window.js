@@ -50,6 +50,8 @@ define([
 		
 		SideMenu: null,
 		
+		_sideMenuOpen: null,
+		
 		TopMenu: null,
 		
 		TopToolBar: null,
@@ -63,6 +65,7 @@ define([
 		constructor: function() {
 			
 			this._applicationViewModelCache = new Object();
+			this._sideMenuOpen = true;
 		},
 				
 		startup: function() {
@@ -101,6 +104,20 @@ define([
 			this.Login.show();
 		},
 
+		toggleSideMenu: function() {
+		
+			if (this._sideMenuOpen)
+			{
+				this.removeChild(this.SideMenu);
+				this._sideMenuOpen = false;
+			}
+			else
+			{
+				this.addChild(this.SideMenu);
+				this._sideMenuOpen = true;
+			}
+		},
+		
 		destroy: function() {
 			this.inherited(arguments);
 			

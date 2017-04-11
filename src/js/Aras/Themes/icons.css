@@ -1,3 +1,21 @@
+.mediumMenuIcon 
+{
+  background-repeat: no-repeat;
+  background-image:  url('./images/Menu.svg');
+  background-size: 20px 20px;
+  height: 20px;
+  width: 20px;
+}
+
+.smallMenuIcon 
+{
+  background-repeat: no-repeat;
+  background-image:  url('./images/Menu.svg');
+  background-size: 16px 16px;
+  height: 16px;
+  width: 16px;
+}
+
 .mediumEditIcon 
 {
   background-repeat: no-repeat;
