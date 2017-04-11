@@ -31,13 +31,12 @@ define([
 	'dijit/form/Button',
 	'./Login',
 	'./Window/SideMenu',
-	'./Window/Status',
 	'./Window/TopMenu',
 	'./Containers/Toolbar',
 	'./Window/Workspace',
 	'./ErrorDialog',
 	'../ViewModel/Server'
-], function(declare, lang, BorderContainer, ContentPane, TableContainer, Button, Login, SideMenu, Status, TopMenu, TopToolBar, Workspace, ErrorDialog, Server) {
+], function(declare, lang, BorderContainer, ContentPane, TableContainer, Button, Login, SideMenu, TopMenu, TopToolBar, Workspace, ErrorDialog, Server) {
 	
 	return declare('Aras.View.Window', [BorderContainer], {
 		
@@ -54,9 +53,7 @@ define([
 		TopMenu: null,
 		
 		TopToolBar: null,
-		
-		Status: null,
-		
+				
 		Workspace: null,
 		
 		_applicationViewModelCache: null,
@@ -85,11 +82,7 @@ define([
 			// Create Top ToolBar
 			this.TopToolBar = new TopToolBar({ id: "topToolBar", class: "topToolBar", region: "top", Window: this, splitter: false });
 			this.addChild(this.TopToolBar);
-			
-			// Create Status
-			this.Status = new Status({ id: "status", class: "status", region: "bottom", Window: this, splitter: false });
-			this.addChild(this.Status);
-			
+						
 			// Create Workspace
 			this.Workspace = new Workspace({ id: "workspace", class: "workspace", region: "center", Window: this,  splitter:true });
 			this.addChild(this.Workspace);
