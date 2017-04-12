@@ -328,6 +328,12 @@ define([
 					break;			
 			}
 			
+			// Splitter
+			if (ViewModelControl.Splitter)
+			{
+				Parameters['splitter'] = true;
+			}
+			
 			// Style
 			var style = '';
 			
