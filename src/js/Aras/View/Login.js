@@ -141,8 +141,21 @@ define([
 
 		},
 		
+		Display: function() {
+			
+			// Enable Buttons
+			this.CancelButton.SetEnabled(true);
+			this.LoginButton.SetEnabled(true);
+			
+			this.show();
+		},
+		
 		_login: function() {
 			
+			// Disable Buttons
+			this.CancelButton.SetEnabled(false);
+			this.LoginButton.SetEnabled(false);
+				
 			// Get Database
 			this.Window.Server.Database(this.Database.item.name).then(lang.hitch(this, function(database) {
 		
@@ -166,6 +179,10 @@ define([
 					else
 					{
 						this._errorMessage('Login failed, check Username and Password');
+						
+						// Enable Buttons
+						this.CancelButton.SetEnabled(true);
+						this.LoginButton.SetEnabled(true);
 					}
 				}));
 			}));	

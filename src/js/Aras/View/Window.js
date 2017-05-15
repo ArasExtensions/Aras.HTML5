@@ -131,7 +131,7 @@ define([
 		_login: function() {
 				
 			// Display Login
-			this.Login.show();
+			this.Login.Display();
 		},
 		
 		_logout: function() {
