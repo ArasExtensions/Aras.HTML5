@@ -30,25 +30,21 @@ define([
 	'dgrid/util/misc',
 	'dijit/layout/BorderContainer',
 	'./Control',
-	'./Column',
-	'./Row'
-], function(declare, lang, array, _Grid, GridMisc, BorderContainer, Control, Column, Row) {
+	'./Cells/Boolean',
+	'./Cells/Decimal',
+	'./Cells/Float',
+	'./Cells/Integer',
+	'./Cells/Item',
+	'./Cells/List',
+	'./Cells/String',
+	'./Cells/Text'
+], function(declare, lang, array, _Grid, GridMisc, BorderContainer, Control, BooleanCell, DecimalCell, FloatCell, IntegerCell, ItemCell, ListCell, StringCell, TextCell) {
 	
 	return declare('Aras.View.Grid', [BorderContainer, Control], {
-			
-		_grid: null,
-		
-		Columns: null,
-		
-		NoColumns: null,
-			
-		_columnsHandle: null,
-			
-		Rows: null,
-		
-		NoRows: null,
-		
+
 		_rowsHandle: null,
+		
+		_columnsHandle: null,
 		
 		SelectedRows: null,
 		
@@ -58,10 +54,6 @@ define([
 		
 		constructor: function() {
 
-			this.Columns = [];
-			this.NoColumns = 0;
-			this.Rows = [];
-			this.NoRows = 0;
 		},
 		
 		startup: function() {
@@ -69,175 +61,226 @@ define([
 			
 			// Call Control Startup
 			this._startup();
-			
+
 			// Create Grid
 			this._grid = new _Grid({ region: 'center', selectionMode: 'extended', showHeader: this.ShowHeader });
 			this.addChild(this._grid);
-			
+		
 			// Process Grid Select Event
 			this._grid.on('dgrid-select', lang.hitch(this, function(event) {
 				
-				if (this.ViewModel != null && this.ViewModel.Select.CanExecute)
+				if ((this.ViewModel != null) && (this.ViewModel.Select.CanExecute))
 				{					
 					var Parameters = [];
 				
 					array.forEach(event.rows, function(row) {
-						
-						if (this.Rows[row.data.id].ViewModel != null)
-						{
-							Parameters.push(this.Rows[row.data.id].ViewModel.ID);
-						}
-						
+						Parameters.push(this.ViewModel.Rows[row.data.id].ID);
 					}, this);
 
 					this.ViewModel.Select.Execute(Parameters);
 				}
 			}));
 			
-			// Update Grid
-			this._updateGrid();
+			// Process Grid Editor Event
+			this._grid.on('dgrid-editor-show', lang.hitch(this, function(event) {
+				
+				if (this.ViewModel != null)
+				{
+					// Get Cell ViewModel
+					var rowid = event.cell.row.id;
+					var colname = event.cell.column.id;
+					var rowviewmodel = this.ViewModel.Rows[rowid];
+					var colindex = -1;
+					
+					for (var j=0; j<this.ViewModel.Columns.length; j++) 
+					{
+						if (this.ViewModel.Columns[j].Name == colname)
+						{
+							colindex = j;
+							break;
+						}
+					}
+					
+					var cellviewmodel = this.ViewModel.Rows[rowid].Cells[colindex];
+					
+					// Set Editor ViewModel
+					event.editor.set('ViewModel', cellviewmodel);
+				}
+				
+			}));
+			
+			// Watch for Changes in Columns
+			this._columnsHandle = this.ViewModel.watch("Columns", lang.hitch(this, this._updateColumns));
+			
+			// Watch for Changes in Rows
+			this._rowsHandle = this.ViewModel.watch("Rows", lang.hitch(this, this._updateRows));
+			
+			// Update Rows
+			this._updateColumns();	
 		},
-
+		
 		destroy: function() {
 			this.inherited(arguments);
 			
 			// Call Control Destroy
 			this._destroy();
+						
+			if (this._rowsHandle)
+			{
+				this._rowsHandle.unwatch();
+			}
 			
 			if (this._columnsHandle)
 			{
 				this._columnsHandle.unwatch();
 			}
-			
-			if (this._rowsHandle)
-			{
-				this._rowsHandle.unwatch();
-			}
 		},
-		
+
 		OnViewModelChanged: function(name, oldValue, newValue) {
 			this.inherited(arguments);
 			
-			// Update Grid
-			this._updateGrid();	
-		},
-		
-		_updateGrid: function() {
-	
 			// Unwatch for changes in Columns
 			if (this._columnsHandle)
 			{
 				this._columnsHandle.unwatch();
 			}
 			
-			// Unwatch for Changes in Rows
+			// Unwatch for Changes in Rows			
 			if (this._rowsHandle)
 			{
 				this._rowsHandle.unwatch();
 			}
 			
-			// Update Columns
-			this._updateColumns();
-			
-			// Watch for changes in Columns
+			// Watch for Changes in Columns
 			this._columnsHandle = this.ViewModel.watch("Columns", lang.hitch(this, this._updateColumns));
-	
+			
 			// Watch for Changes in Rows
 			this._rowsHandle = this.ViewModel.watch("Rows", lang.hitch(this, this._updateRows));
+			
+			// Update Columns
+			this._updateColumns();	
 		},
 		
 		_updateColumns: function() {
 		
-			// Refresh Columns
+			// Create Columns
 			var gridcolumns = {};
 				
 			array.forEach(this.ViewModel.Columns, function(columnviewmodel, i) {
-								
-				if (!this.Columns[i])
+	
+				gridcolumns[columnviewmodel.Name] = {};
+				gridcolumns[columnviewmodel.Name].label = columnviewmodel.Label;	
+				gridcolumns[columnviewmodel.Name].sortable = false;
+				gridcolumns[columnviewmodel.Name].editOn = 'dgrid-cellfocusin';
+				gridcolumns[columnviewmodel.Name].dismissOnEnter = false;
+				
+				if (columnviewmodel.Editable)
 				{
-					// Create Column
-					this.Columns[i] = new Column({ Grid: this, ViewModel: columnviewmodel, Index: i });
-					this.Columns[i]._startup();
+					switch(columnviewmodel.Type)
+					{
+						case "Aras.View.Columns.Boolean":
+							gridcolumns[columnviewmodel.Name].editor = BooleanCell;
+							break;
+
+						case "Aras.View.Columns.Decimal":
+							gridcolumns[columnviewmodel.Name].editor = DecimalCell;
+							break;
+	
+						case "Aras.View.Columns.Float":
+							gridcolumns[columnviewmodel.Name].editor = FloatCell;
+							break;
+							
+						case "Aras.View.Columns.Integer":
+							gridcolumns[columnviewmodel.Name].editor = IntegerCell;
+							break;
+
+						case "Aras.View.Columns.Item":
+							gridcolumns[columnviewmodel.Name].editor = ItemCell;
+							break;
+	
+						case "Aras.View.Columns.List":
+							gridcolumns[columnviewmodel.Name].editor = ListCell;
+							break;
+	
+						case "Aras.View.Columns.String":
+							gridcolumns[columnviewmodel.Name].editor = StringCell;
+							break;
+
+						case "Aras.View.Columns.Text":
+							gridcolumns[columnviewmodel.Name].editor = TextCell;
+							break;
+							
+						default:
+							gridcolumns[columnviewmodel.Name].editor = undefined;
+							break;
+					}
+					
+					// gridcolumns[columnviewmodel.Name].editorArgs = { ViewModel: columnviewmodel };
 				}
 				else
 				{
-					// Update Column
-					this.Columns[i].set('Index', i);
-					this.Columns[i].set('ViewModel', columnviewmodel);	
-				}				
-	
-				gridcolumns[this.Columns[i].Name] = {};
-				gridcolumns[this.Columns[i].Name].label = this.Columns[i].Label;
-				gridcolumns[this.Columns[i].Name].renderCell = lang.hitch(this.Columns[i], this._renderCell);
+					gridcolumns[columnviewmodel.Name].editor = undefined;
+				}
+				
+				switch(columnviewmodel.Type)
+				{
+					case "Aras.View.Columns.Boolean":
+						gridcolumns[columnviewmodel.Name].formatter = lang.hitch(this, this._formatBoolean);
+						break;
+						
+					default:
+					
+						break;
+				}
 				
 				// Set Column Width
 				var rule = GridMisc.addCssRule('#' + GridMisc.escapeCssIdentifier(this._grid.domNode.id) +
-						' .dgrid-column-' + GridMisc.escapeCssIdentifier(this.Columns[i].Name, '-'),
+						' .dgrid-column-' + GridMisc.escapeCssIdentifier(columnviewmodel.Name, '-'),
 						'width: ' + columnviewmodel.Width + 'px;');
-					
+						
 			}, this);
-			
-			// Update NoColumns
-			this.NoColumns = this.ViewModel.Columns.length;
 			
 			// Set Grid Columns
 			this._grid._setColumns(gridcolumns);
 
 			// Update Rows
-			this._updateRows();				
+			this._updateRows();	
 		},
-
+		
 		_updateRows: function() {
-
+			
+			// Render Grid
+			var rowdata = [];
+				
 			array.forEach(this.ViewModel.Rows, function(rowviewmodel, i) {
 					
-				if (!this.Rows[i])
-				{
-					// Create Row
-					this.Rows[i] = new Row({ Grid: this, ViewModel: rowviewmodel, Index: i });
-					this.Rows[i]._startup();
-				}
-				else
-				{
-					// Update ViewModel
-					this.Rows[i].set('ViewModel', rowviewmodel);
-				}
-			}, this);	
-
-			if (this.NoRows != this.ViewModel.Rows.length)
-			{
-				// Update NoRows
-				this.NoRows = this.ViewModel.Rows.length;
-				
-				// Render Grid
-				var rowdata = [];
-					
-				for(var i=0; i<this.NoRows; i++)
-				{
-					rowdata[i] = new Object();
-					rowdata[i]['id'] = i;
+				rowdata[i] = new Object();
+				rowdata[i]['id'] = i;
 						
-					for (var j=0; j<this.Columns.length; j++) 
-					{
-						rowdata[i][this.Columns[j].Name] = null;
-					}
+				for (var j=0; j<this.ViewModel.Columns.length; j++) 
+				{
+					rowdata[i][this.ViewModel.Columns[j].Name] = rowviewmodel.Cells[j].Value;
 				}
-										
-				// Clear Grid
-				this._grid.refresh();
+					
+			}, this);
+											
+			// Clear Grid
+			this._grid.refresh();
 				
-				// Render Grid
-				this._grid.renderArray(rowdata);
-			}	
+			// Render Grid
+			this._grid.renderArray(rowdata);
 		},
 		
-		_renderCell: function(object, value, node, options) {
-
-			// Store Node in Cell
-			this.Grid.Rows[object.id].Cells[this.Index].Node = node;
-		
-			// Render Cell
-			this.Grid.Rows[object.id].Cells[this.Index].RenderCell();
+		_formatBoolean: function(value, object) {
+			
+			if (value == '1')
+			{
+				return '<input type="checkbox" disabled checked="checked">';
+			}
+			else
+			{
+				return '<input type="checkbox" disabled>';
+			}
 		}
 		
 	});

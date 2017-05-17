@@ -27,10 +27,12 @@ define([
 	'dgrid/Grid',
 	'dgrid/extensions/DijitRegistry',
 	'dgrid/extensions/ColumnResizer',
-	'dgrid/Selection'
-], function(declare, Grid, DijitRegistry, ColumnResizer, Selection) {
+	'dgrid/Keyboard',
+	'dgrid/Selection',
+	'dgrid/Editor'
+], function(declare, Grid, DijitRegistry, ColumnResizer, Keyboard, Selection, Editor) {
 	
-	return declare('Aras.View._Grid', [Grid, DijitRegistry, ColumnResizer, Selection], {
+	return declare('Aras.View._Grid', [Grid, DijitRegistry, ColumnResizer, Keyboard, Selection, Editor], {
 		
 		_applySort: function () {
 			

@@ -24,107 +24,16 @@
 
 define([
 	'dojo/_base/declare',
-	'dojo/html',
 	'dojo/_base/lang',
-	'dojo/has',
-	'dojo/dom-construct',
-	'dojo/_base/array',
-	'./Control',
-	'./Properties/String',
-	'./Properties/List',
-	'./Properties/Float',
-	'./Properties/Integer',
-	'./Properties/Sequence',
-	'dojo/_base/sniff'
-], function(declare, html, lang, has, construct, array, Control, String, List, Float, Integer, Sequence) {
+	'./Control'
+], function(declare, lang, Control) {
 	
 	return declare('Aras.View.Cell', [Control], {
-		
-		Column: null,
-		
-		Row: null,
-		
-		Value: null,
-
-		Node: null,
-		
-		_viewModelValueHandle: null,
-
+					
 		_startup: function() {
 			this.inherited(arguments);
-			
-			// Update Cell
-			this._updateCell();	
-		},
-		
-		_destroy: function() {
-			this.inherited(arguments);
-			
-			if (this._viewModelValueHandle)
-			{
-				this._viewModelValueHandle.unwatch();
-			}		
-		},
-		
-		OnViewModelChanged: function(name, oldValue, newValue) {
-			this.inherited(arguments);
-			
-			// Update Cell
-			this._updateCell();	
-		},
-		
-		_updateCell: function() {
 
-			if (this.ViewModel != null)
-			{
-				// Watch for changes in ViewModel Value
-				if (this._viewModelValueHandle)
-				{
-					this._viewModelValueHandle.unwatch();
-				}
-
-				this._viewModelValueHandle = this.ViewModel.watch("Value", lang.hitch(this, this.OnViewModelValueChange));
-			}
-		},
-		
-		OnViewModelValueChange: function(name, oldValue, newValue) {
-
-			if (this.Value)
-			{
-				// Update Value ViewModel
-				this.Value.set("ViewModel", newValue);
-			}
-		},
-				
-		RenderCell: function() {
-		
-			if (this.Node)
-			{
-				if ((this.ViewModel != null) && (this.ViewModel.Value != null))
-				{					
-					// Create Widget					
-					if (this.ViewModel.Value.Type == 'Aras.View.Properties.Boolean')
-					{
-						this.Value = this.ViewModel.Session.ViewControl(this.ViewModel.Value);
-					}
-					else
-					{
-						this.Value = this.ViewModel.Session.ViewControl(this.ViewModel.Value, {style: 'width:100%; padding:0; margin:2px; border:0'});
-					}
-									
-					// Start Widget
-					this.Value.startup();
-					
-					// Place Widget at Node
-					this.Value.placeAt(this.Node);
-				}
-				else
-				{
-					// Clear Node
-					html.set(this.Node, '');
-				}
-			}
 		}
-		
+
 	});
 });
