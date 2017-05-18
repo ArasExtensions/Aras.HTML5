@@ -41,8 +41,6 @@ define([
 	
 			// Call Control Startup
 			this._startup();
-			
-			this._updateList();
 		},
 		
 		destroy: function() {
@@ -54,26 +52,27 @@ define([
 			}
 		},
 		
-		_updateList: function() {
+		OnViewModelChanged: function(name, oldValue, newValue) {
+			this.inherited(arguments);	
 			
 			if (this.ViewModel != null)
 			{
 				// Load Options
-				var options = [];
+				this.options = [];
 					
 				array.forEach(this.ViewModel.Values, function(valueviewmodel, i) {
 			
 					if (this.ViewModel.Value == valueviewmodel.Value)
 					{
-						options[i] = { label: valueviewmodel.Label, value: valueviewmodel.Value, selected: true };
+						this.options[i] = { label: valueviewmodel.Label, value: valueviewmodel.Value, selected: true };
 					}
 					else
 					{
-						options[i] = { label: valueviewmodel.Label, value: valueviewmodel.Value };
+						this.options[i] = { label: valueviewmodel.Label, value: valueviewmodel.Value };
 					}
 				}, this);					
-					
-				this.addOption(options);
+				
+				this._loadChildren();
 					
 				if (this._valueHandle != null)
 				{
@@ -83,37 +82,10 @@ define([
 				// Watch for change in Select Value
 				this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
 					
-					if (newValue !== this.ViewModel.Value)
-					{
-						if (!this._updateFromViewModel)
-						{
-							// Update ViewModel
-							this.ViewModel.UpdateValue = newValue;
-							this.ViewModel.Write();
-						}
-					}	
+					// Update ViewModel
+					this.ViewModel.UpdateValue = newValue;			
 				}));
 			}
-			else
-			{
-				// Unwatch for change in Select Value
-				if (this._valueHandle != null)
-				{
-					this._valueHandle.unwatch();
-				}
-								
-				this.addOption([]);
-				
-				// Set Value
-				this.set('value', null);
-			}
-		},
-		
-		OnViewModelChanged: function(name, oldValue, newValue) {
-			this.inherited(arguments);	
-			
-			// Update List
-			this._updateList();	
 		}
 
 	});

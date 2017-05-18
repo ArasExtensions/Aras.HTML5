@@ -40,9 +40,7 @@ define([
 			this.inherited(arguments);
 
 			// Call Control Startup
-			this._startup();
-			
-			this._updateFloat();				
+			this._startup();			
 		},
 		
 		destroy: function() {
@@ -53,9 +51,15 @@ define([
 				this._valueHandle.unwatch();
 			}
 		},
-				
-		_updateFloat: function() {
+		
+		OnViewModelChanged: function(name, oldValue, newValue) {
+			this.inherited(arguments);	
 			
+			if (this._valueHandle)
+			{
+				this._valueHandle.unwatch();
+			}
+				
 			if (this.ViewModel != null)
 			{
 				// Set Min and Max Values
@@ -63,53 +67,19 @@ define([
 			
 				// Set Value
 				this.set("value", this.ViewModel.Value);
-
-				if (this._valueHandle)
-				{
-					this._valueHandle.unwatch();
-				}
-				
+	
 				// Watch for changes in Control value
 				this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
 		
-					if (isNaN(newValue))
-					{
-						// Not a valid number, reset to old value
-						this.set("value", oldValue);
-					}
-					else
-					{
-						var newnumber = Number(newValue);
-						var currentnumber = Number(this.ViewModel.get('Value'));
-				
-						if (currentnumber !== newnumber)
-						{	
-							if (!this._updateFromViewModel)
-							{
-								// Update ViewModel Value
-								this.ViewModel.set('UpdateValue', newnumber);	
-								this.ViewModel.Write();
-							}
-						}
-					}
+					// Update ViewModel Value
+					this.ViewModel.set('UpdateValue', newValue);
+					//this.ViewModel.Write();
 				}));
 			}
 			else
 			{
-				this.set("value", null);
-				
-				if (this._valueHandle)
-				{
-					this._valueHandle.unwatch();
-				}				
-			}
-		},
-		
-		OnViewModelChanged: function(name, oldValue, newValue) {
-			this.inherited(arguments);	
-			
-			// Update Float
-			this._updateFloat();	
+				this.set("value", null);			
+			}	
 		}
 
 	});

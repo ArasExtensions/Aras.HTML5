@@ -40,9 +40,6 @@ define([
 			
 			// Call Control Startup
 			this._startup();
-
-			// Update Stop
-			this._updateString();
 		},
 		
 		destroy: function() {
@@ -57,50 +54,31 @@ define([
 			}
 		},
 		
-		_updateString: function() {
-
+		OnViewModelChanged: function(name, oldValue, newValue) {
+			this.inherited(arguments);	
+			
+			if (this._valueHandle)
+			{
+				this._valueHandle.unwatch();
+			}
+				
 			if (this.ViewModel != null)
 			{
 				// Set Value from ViewModel
 				this.set("value", this.ViewModel.Value);
-			
-				if (this._valueHandle)
-				{
-					this._valueHandle.unwatch();
-				}
 				
 				// Watch for changes in Control value
 				this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
-				
-					if (oldValue !== newValue)
-					{										
-						if (!this._updateFromViewModel)
-						{
-							// Update ViewModel Value
-							this.ViewModel.set('UpdateValue', newValue);
-							this.ViewModel.Write();
-						}
-					}
-	
+
+					// Update ViewModel Value
+					this.ViewModel.set('UpdateValue', newValue);
+					//this.ViewModel.Write();
 				}));
-			
 			}
 			else
 			{
 				this.set("value", null);
-				
-				if (this._valueHandle)
-				{
-					this._valueHandle.unwatch();
-				}
-			}
-		},
-		
-		OnViewModelChanged: function(name, oldValue, newValue) {
-			this.inherited(arguments);	
-			
-			// Update String
-			this._updateString();	
+			}	
 		}
 
 	});

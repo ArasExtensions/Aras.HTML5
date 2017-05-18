@@ -43,8 +43,6 @@ define([
 		
 			// Call Cell Startup
 			this._startup();
-			
-			this._updateInteger();
 		},
 
 		destroy: function() {
@@ -58,9 +56,16 @@ define([
 				this._valueHandle.unwatch();
 			}
 		},
-		
-		_updateInteger: function() {
-			
+				
+		OnViewModelChanged: function(name, oldValue, newValue) {
+			this.inherited(arguments);	
+	
+			// Stop watching for changes in Control value
+			if (this._valueHandle != null)
+			{
+				this._valueHandle.unwatch();
+			}
+				
 			if (this.ViewModel != null)
 			{
 				// Set Minimum Value
@@ -71,41 +76,19 @@ define([
 				
 				// Set Value from ViewModel
 				this.set("value", this.ViewModel.Value);
-			
-				// Stop watching for changes in Control value
-				if (this._valueHandle != null)
-				{
-					this._valueHandle.unwatch();
-				}
 					
 				// Watch for changes in Control value
 				this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
 
-					if (isNaN(newValue))
-					{
-						this.set("value", null);
-					}
-					else
-					{
-						var newnumber = Number(newValue);
-						var currentnumber = Number(this.ViewModel.get('Value'));
-				
-						if (currentnumber !== newnumber)
-						{								
-							// Update ViewModel Value
-							this.ViewModel.set('UpdateValue', newnumber);
-							this.ViewModel.Write();
-						}
-					}
-					
+					// Update ViewModel Value
+					this.ViewModel.set('UpdateValue', newValue);
+					//this.ViewModel.Write();
 				}));
 			}
-		},
-		
-		OnViewModelChanged: function(name, oldValue, newValue) {
-			this.inherited(arguments);	
-			
-			this._updateInteger();	
+			else
+			{
+				this.set("value", null);
+			}
 		}
 	});
 });

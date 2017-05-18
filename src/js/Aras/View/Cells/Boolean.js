@@ -40,8 +40,6 @@ define([
 			
 			// Call Control Startup
 			this._startup();
-			
-			this._updateBoolean();
 		},
 		
 		destroy: function() {
@@ -56,53 +54,46 @@ define([
 			}
 		},
 		
-		_updateBoolean: function() {
-
+		OnViewModelChanged: function(name, oldValue, newValue) {
+			this.inherited(arguments);	
+			
 			if (this._valueHandle)
 			{
 				this._valueHandle.unwatch();
 			}
 				
 			if (this.ViewModel != null)
-			{
-				// Set Value from ViewModel
-				this.set("checked", this.ViewModel.Value);
+			{			
+				// Set Value from ViewModel	
+				if (this.ViewModel.Value == '1')
+				{
+					this.set("checked", true);
+				}
+				else
+				{
+					this.set("checked", false);
+				}
 			
 				// Watch for changes in Control value
 				this._valueHandle = this.watch('checked', lang.hitch(this, function(name, oldValue, newValue) {
-				
-					if (oldValue !== newValue)
-					{										
-						if (!this._updateFromViewModel)
-						{
-							// Update ViewModel Value
-							
-							if (newValue)
-							{
-								this.ViewModel.set('UpdateValue', "1");
-							}
-							else
-							{
-								this.ViewModel.set('UpdateValue', "0");
-							}
-							
-							this.ViewModel.Write();
-						}
+								
+					// Update ViewModel							
+					if (newValue)
+					{
+						this.ViewModel.set('UpdateValue', "1");
 					}
-	
+					else
+					{
+						this.ViewModel.set('UpdateValue', "0");
+					}
+
+					this.ViewModel.Write();
 				}));
 			}
 			else
 			{
 				this.set("checked", false);
 			}
-		},
-		
-		OnViewModelChanged: function(name, oldValue, newValue) {
-			this.inherited(arguments);	
-			
-			// Update Boolean
-			this._updateBoolean();	
 		}
 
 	});

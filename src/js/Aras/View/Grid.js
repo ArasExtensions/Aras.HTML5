@@ -79,7 +79,7 @@ define([
 				}
 			}));
 			
-			// Process Grid Editor Event
+			// Process Grid Editor Show Event
 			this._grid.on('dgrid-editor-show', lang.hitch(this, function(event) {
 				
 				if (this.ViewModel != null)
@@ -103,6 +103,34 @@ define([
 					
 					// Set Editor ViewModel
 					event.editor.set('ViewModel', cellviewmodel);
+				}
+				
+			}));
+			
+			// Process Grid Editor Changed Event
+			this._grid.on('dgrid-datachange', lang.hitch(this, function(event) {
+				
+				if (this.ViewModel != null)
+				{
+					// Get Cell ViewModel
+					var rowid = event.cell.row.id;
+					var colname = event.cell.column.id;
+					var rowviewmodel = this.ViewModel.Rows[rowid];
+					var colindex = -1;
+					
+					for (var j=0; j<this.ViewModel.Columns.length; j++) 
+					{
+						if (this.ViewModel.Columns[j].Name == colname)
+						{
+							colindex = j;
+							break;
+						}
+					}
+	
+					var cellviewmodel = this.ViewModel.Rows[rowid].Cells[colindex];
+								
+					// Write New Value
+					cellviewmodel.Write();
 				}
 				
 			}));
@@ -169,7 +197,7 @@ define([
 				gridcolumns[columnviewmodel.Name] = {};
 				gridcolumns[columnviewmodel.Name].label = columnviewmodel.Label;	
 				gridcolumns[columnviewmodel.Name].sortable = false;
-				gridcolumns[columnviewmodel.Name].editOn = 'dgrid-cellfocusin';
+				gridcolumns[columnviewmodel.Name].editOn = 'click';
 				gridcolumns[columnviewmodel.Name].dismissOnEnter = false;
 				
 				if (columnviewmodel.Editable)
