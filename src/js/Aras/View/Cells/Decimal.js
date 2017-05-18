@@ -63,7 +63,7 @@ define([
 			if (this.ViewModel != null)
 			{
 				// Set Min and Max Values
-				//this.set("constraints", {min: this.ViewModel.MinValue, max: this.ViewModel.MaxValue});
+				this.set("constraints", {min: this.ViewModel.MinValue, max: this.ViewModel.MaxValue});
 			
 				// Set Value
 				this.set("value", this.ViewModel.Value);
@@ -73,7 +73,6 @@ define([
 		
 					// Update ViewModel Value
 					this.ViewModel.set('UpdateValue', newValue);
-					//this.ViewModel.Write();
 				}));
 			}
 			else

@@ -84,7 +84,6 @@ define([
 				
 					// Update ViewModel Value
 					this.ViewModel.set('UpdateValue', newValue);
-					//this.ViewModel.Write();
 				}));
 			}
 			else
