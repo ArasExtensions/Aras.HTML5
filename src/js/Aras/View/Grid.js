@@ -36,8 +36,11 @@ define([
 	'./CellEditors/Item',
 	'./CellEditors/List',
 	'./CellEditors/String',
-	'./CellEditors/Text'
-], function(declare, lang, array, _Grid, GridMisc, BorderContainer, Control, BooleanEditor, DateEditor, DecimalEditor, FloatEditor, IntegerEditor, ItemEditor, ListEditor, StringEditor, TextEditor) {
+	'./CellEditors/Text',
+	'./Column',
+	'./Row',
+	'./Cell',
+], function(declare, lang, array, _Grid, GridMisc, BorderContainer, Control, BooleanEditor, DateEditor, DecimalEditor, FloatEditor, IntegerEditor, ItemEditor, ListEditor, StringEditor, TextEditor, Column, Row, Cell) {
 	
 	return declare('Aras.View.Grid', [BorderContainer, Control], {
 
@@ -51,8 +54,14 @@ define([
 		
 		ShowHeader: null,
 		
+		Columns: null,
+		
+		Rows: null,
+		
 		constructor: function() {
 
+			this.Columns = [];
+			this.Rows = [];
 		},
 		
 		startup: function() {
@@ -190,11 +199,27 @@ define([
 		
 		_updateColumns: function() {
 		
+			// Reset Columns
+			array.forEach(this.Columns, function(column) {
+				column.Visible = false;
+			}, this);
+			
 			// Create Columns
 			var gridcolumns = {};
 				
 			array.forEach(this.ViewModel.Columns, function(columnviewmodel, i) {
 	
+				if (this.Columns[i])
+				{
+					this.Columns[i].Visible = true;
+				}
+				else
+				{
+					this.Columns[i] = new Column({ Grid: this});	
+				}
+				
+				this.Columns[i].ViewModel = columnviewmodel;
+				
 				gridcolumns[columnviewmodel.Name] = {};
 				gridcolumns[columnviewmodel.Name].label = columnviewmodel.Label;	
 				gridcolumns[columnviewmodel.Name].sortable = false;
@@ -279,16 +304,39 @@ define([
 		
 		_updateRows: function() {
 			
+			// Reset Rows
+			array.forEach(this.Rows, function(row) {
+				row.Visible = false;
+			}, this);
+			
 			// Render Grid
 			var rowdata = [];
 				
 			array.forEach(this.ViewModel.Rows, function(rowviewmodel, i) {
+					
+				if (this.Rows[i])
+				{
+					this.Rows[i].Visible = true;
+				}
+				else
+				{
+					this.Rows[i] = new Row({ Grid: this });
+				}
+				
+				this.Rows[i].ViewModel = rowviewmodel;
 					
 				rowdata[i] = new Object();
 				rowdata[i]['id'] = i;
 						
 				for (var j=0; j<this.ViewModel.Columns.length; j++) 
 				{
+					if (!this.Rows[i].Cells[j])
+					{
+						this.Rows[i].Cells[j] = new Cell({ Row: this.Rows[i], Column: this.Columns[j]});
+					}
+
+					this.Rows[i].Cells[j].ViewModel = rowviewmodel.Cells[j];
+					
 					rowdata[i][this.ViewModel.Columns[j].Name] = rowviewmodel.Cells[j].Value;
 				}
 					
