@@ -23,13 +23,25 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
-	'../Cell',
-	'dijit/form/SimpleTextarea'
-], function(declare, lang, Cell, SimpleTextarea) {
+	'../CellEditor',
+	'dijit/form/ValidationTextBox',
+	'dijit/_HasDropDown',
+	'dojo/text!dijit/form/templates/DropDownBox.html'
+], function(declare, lang, CellEditor, ValidationTextBox, _HasDropDown, template) {
 	
-	return declare('Aras.View.Cells.Text', [SimpleTextarea, Cell], {
+	return declare('Aras.View.CellEditors.Item', [ValidationTextBox, _HasDropDown, CellEditor], {
+			
+		_dialog: null,
 		
 		_valueHandle: null,
+		
+		templateString: template,
+		
+		hasDownArrow: true,
+		
+		cssStateNodes: { '_buttonNode': 'dijitDownArrowButton' },
+		
+		baseClass: 'dijitTextBox dijitComboBox',
 		
 		constructor: function() {
 			
@@ -56,7 +68,7 @@ define([
 		
 		OnViewModelChanged: function(name, oldValue, newValue) {
 			this.inherited(arguments);	
-			
+		
 			if (this._valueHandle)
 			{
 				this._valueHandle.unwatch();
@@ -66,10 +78,10 @@ define([
 			{
 				// Set Value from ViewModel
 				this.set("value", this.ViewModel.Value);
-				
+			
 				// Watch for changes in Control value
 				this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
-
+				
 					// Update ViewModel Value
 					this.ViewModel.set('UpdateValue', newValue);
 				}));
@@ -77,7 +89,17 @@ define([
 			else
 			{
 				this.set("value", null);
-			}	
+			}
+		},
+		
+		openDropDown: function(callback) {
+
+			if ((this.ViewModel != null) && this.ViewModel.Select.CanExecute)
+			{
+				// Execute Select
+				var Parameters = [];
+				this.ViewModel.Select.Execute(Parameters);
+			}
 		}
 
 	});

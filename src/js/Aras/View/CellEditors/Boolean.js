@@ -23,71 +23,78 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
-	'dojo/on',
-	'../Cell',
-	'dijit/form/NumberTextBox'
-], function(declare, lang, on, Cell, NumberTextBox) {
+	'../CellEditor',
+	'dijit/form/CheckBox'
+], function(declare, lang, CellEditor, CheckBox) {
 	
-	return declare('Aras.View.Cells.Integer', [NumberTextBox, Cell], {
+	return declare('Aras.View.CellEditors.Boolean', [CheckBox, CellEditor], {
 		
 		_valueHandle: null,
-		
+
 		constructor: function() {
-		
-			// Set Default Contraints
-			this.constraints = { pattern: '#', places: 0 };
+			
 		},
 		
 		startup: function() {
-			this.inherited(arguments);	
-		
-			// Call Cell Startup
+			this.inherited(arguments);
+			
+			// Call Control Startup
 			this._startup();
 		},
-
+		
 		destroy: function() {
-			this.inherited(arguments);	
-
-			// Call Property Destroy
+			this.inherited(arguments);
+			
+			// Call Control Destroy
 			this._destroy();
 			
-			if (this._valueHandle != null)
+			if (this._valueHandle)
 			{
 				this._valueHandle.unwatch();
 			}
 		},
-				
+		
 		OnViewModelChanged: function(name, oldValue, newValue) {
 			this.inherited(arguments);	
-	
-			// Stop watching for changes in Control value
-			if (this._valueHandle != null)
+			
+			if (this._valueHandle)
 			{
 				this._valueHandle.unwatch();
 			}
 				
 			if (this.ViewModel != null)
-			{
-				// Set Minimum Value
-				this.constraints.min = this.ViewModel.MinValue;
-				
-				// Set Maximum Value
-				this.constraints.max = this.ViewModel.MaxValue;
-				
-				// Set Value from ViewModel
-				this.set("value", this.ViewModel.Value);
-					
+			{			
+				// Set Value from ViewModel	
+				if (this.ViewModel.Value == '1')
+				{
+					this.set("checked", true);
+				}
+				else
+				{
+					this.set("checked", false);
+				}
+			
 				// Watch for changes in Control value
-				this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
+				this._valueHandle = this.watch('checked', lang.hitch(this, function(name, oldValue, newValue) {
+								
+					// Update ViewModel							
+					if (newValue)
+					{
+						this.ViewModel.set('UpdateValue', "1");
+					}
+					else
+					{
+						this.ViewModel.set('UpdateValue', "0");
+					}
 
-					// Update ViewModel Value
-					this.ViewModel.set('UpdateValue', newValue);
+					this.ViewModel.Write();
 				}));
 			}
 			else
 			{
-				this.set("value", null);
+				this.set("checked", false);
 			}
 		}
+
 	});
 });

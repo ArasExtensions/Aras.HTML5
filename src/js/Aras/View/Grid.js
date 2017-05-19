@@ -28,16 +28,16 @@ define([
 	'dgrid/util/misc',
 	'dijit/layout/BorderContainer',
 	'./Control',
-	'./Cells/Boolean',
-	'./Cells/Date',
-	'./Cells/Decimal',
-	'./Cells/Float',
-	'./Cells/Integer',
-	'./Cells/Item',
-	'./Cells/List',
-	'./Cells/String',
-	'./Cells/Text'
-], function(declare, lang, array, _Grid, GridMisc, BorderContainer, Control, BooleanCell, DateCell, DecimalCell, FloatCell, IntegerCell, ItemCell, ListCell, StringCell, TextCell) {
+	'./CellEditors/Boolean',
+	'./CellEditors/Date',
+	'./CellEditors/Decimal',
+	'./CellEditors/Float',
+	'./CellEditors/Integer',
+	'./CellEditors/Item',
+	'./CellEditors/List',
+	'./CellEditors/String',
+	'./CellEditors/Text'
+], function(declare, lang, array, _Grid, GridMisc, BorderContainer, Control, BooleanEditor, DateEditor, DecimalEditor, FloatEditor, IntegerEditor, ItemEditor, ListEditor, StringEditor, TextEditor) {
 	
 	return declare('Aras.View.Grid', [BorderContainer, Control], {
 
@@ -206,40 +206,40 @@ define([
 					switch(columnviewmodel.Type)
 					{
 						case "Aras.View.Columns.Boolean":
-							gridcolumns[columnviewmodel.Name].editor = BooleanCell;
+							gridcolumns[columnviewmodel.Name].editor = BooleanEditor;
 							break;
 
 						case "Aras.View.Columns.Date":
-							gridcolumns[columnviewmodel.Name].editor = DateCell;
+							gridcolumns[columnviewmodel.Name].editor = DateEditor;
 							gridcolumns[columnviewmodel.Name].editorArgs = { style: 'width:' + (columnviewmodel.Width - 5) + 'px;' };
 							break;
 							
 						case "Aras.View.Columns.Decimal":
-							gridcolumns[columnviewmodel.Name].editor = DecimalCell;
+							gridcolumns[columnviewmodel.Name].editor = DecimalEditor;
 							break;
 	
 						case "Aras.View.Columns.Float":
-							gridcolumns[columnviewmodel.Name].editor = FloatCell;
+							gridcolumns[columnviewmodel.Name].editor = FloatEditor;
 							break;
 							
 						case "Aras.View.Columns.Integer":
-							gridcolumns[columnviewmodel.Name].editor = IntegerCell;
+							gridcolumns[columnviewmodel.Name].editor = IntegerEditor;
 							break;
 
 						case "Aras.View.Columns.Item":
-							gridcolumns[columnviewmodel.Name].editor = ItemCell;
+							gridcolumns[columnviewmodel.Name].editor = ItemEditor;
 							break;
 	
 						case "Aras.View.Columns.List":
-							gridcolumns[columnviewmodel.Name].editor = ListCell;
+							gridcolumns[columnviewmodel.Name].editor = ListEditor;
 							break;
 	
 						case "Aras.View.Columns.String":
-							gridcolumns[columnviewmodel.Name].editor = StringCell;
+							gridcolumns[columnviewmodel.Name].editor = StringEditor;
 							break;
 
 						case "Aras.View.Columns.Text":
-							gridcolumns[columnviewmodel.Name].editor = TextCell;
+							gridcolumns[columnviewmodel.Name].editor = TextEditor;
 							break;
 							
 						default:

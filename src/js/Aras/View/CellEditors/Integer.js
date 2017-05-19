@@ -23,65 +23,63 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
-	'../Cell',
-	'dijit/form/ValidationTextBox',
-	'dijit/_HasDropDown',
-	'dojo/text!dijit/form/templates/DropDownBox.html'
-], function(declare, lang, Cell, ValidationTextBox, _HasDropDown, template) {
+	'dojo/on',
+	'../CellEditor',
+	'dijit/form/NumberTextBox'
+], function(declare, lang, on, CellEditor, NumberTextBox) {
 	
-	return declare('Aras.View.Cells.Item', [ValidationTextBox, _HasDropDown, Cell], {
-			
-		_dialog: null,
+	return declare('Aras.View.CellEditors.Integer', [NumberTextBox, CellEditor], {
 		
 		_valueHandle: null,
 		
-		templateString: template,
-		
-		hasDownArrow: true,
-		
-		cssStateNodes: { '_buttonNode': 'dijitDownArrowButton' },
-		
-		baseClass: 'dijitTextBox dijitComboBox',
-		
 		constructor: function() {
-			
+		
+			// Set Default Contraints
+			this.constraints = { pattern: '#', places: 0 };
 		},
 		
 		startup: function() {
-			this.inherited(arguments);
-			
-			// Call Control Startup
+			this.inherited(arguments);	
+		
+			// Call Cell Startup
 			this._startup();
 		},
-		
+
 		destroy: function() {
 			this.inherited(arguments);	
 
-			// Call Control Destroy
+			// Call Property Destroy
 			this._destroy();
 			
-			if (this._valueHandle)
+			if (this._valueHandle != null)
 			{
 				this._valueHandle.unwatch();
 			}
 		},
-		
+				
 		OnViewModelChanged: function(name, oldValue, newValue) {
 			this.inherited(arguments);	
-		
-			if (this._valueHandle)
+	
+			// Stop watching for changes in Control value
+			if (this._valueHandle != null)
 			{
 				this._valueHandle.unwatch();
 			}
 				
 			if (this.ViewModel != null)
 			{
+				// Set Minimum Value
+				this.constraints.min = this.ViewModel.MinValue;
+				
+				// Set Maximum Value
+				this.constraints.max = this.ViewModel.MaxValue;
+				
 				// Set Value from ViewModel
 				this.set("value", this.ViewModel.Value);
-			
+					
 				// Watch for changes in Control value
 				this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
-				
+
 					// Update ViewModel Value
 					this.ViewModel.set('UpdateValue', newValue);
 				}));
@@ -90,17 +88,6 @@ define([
 			{
 				this.set("value", null);
 			}
-		},
-		
-		openDropDown: function(callback) {
-
-			if ((this.ViewModel != null) && this.ViewModel.Select.CanExecute)
-			{
-				// Execute Select
-				var Parameters = [];
-				this.ViewModel.Select.Execute(Parameters);
-			}
 		}
-
 	});
 });

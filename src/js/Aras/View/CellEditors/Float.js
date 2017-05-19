@@ -23,30 +23,28 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
-	'../Cell',
-	'dijit/form/CheckBox'
-], function(declare, lang, Cell, CheckBox) {
+	'dojo/on',
+	'../CellEditor',
+	'dijit/form/NumberTextBox'
+], function(declare, lang, on, CellEditor, NumberTextBox) {
 	
-	return declare('Aras.View.Cells.Boolean', [CheckBox, Cell], {
+	return declare('Aras.View.CellEditors.Float', [NumberTextBox, CellEditor], {
 		
 		_valueHandle: null,
-
+		
 		constructor: function() {
-			
+
 		},
 		
 		startup: function() {
 			this.inherited(arguments);
-			
+
 			// Call Control Startup
-			this._startup();
+			this._startup();			
 		},
 		
 		destroy: function() {
-			this.inherited(arguments);
-			
-			// Call Control Destroy
-			this._destroy();
+			this.inherited(arguments);	
 			
 			if (this._valueHandle)
 			{
@@ -63,37 +61,24 @@ define([
 			}
 				
 			if (this.ViewModel != null)
-			{			
-				// Set Value from ViewModel	
-				if (this.ViewModel.Value == '1')
-				{
-					this.set("checked", true);
-				}
-				else
-				{
-					this.set("checked", false);
-				}
+			{
+				// Set Min and Max Values
+				this.set("constraints", {min: this.ViewModel.MinValue, max: this.ViewModel.MaxValue});
 			
+				// Set Value
+				this.set("value", this.ViewModel.Value);
+	
 				// Watch for changes in Control value
-				this._valueHandle = this.watch('checked', lang.hitch(this, function(name, oldValue, newValue) {
-								
-					// Update ViewModel							
-					if (newValue)
-					{
-						this.ViewModel.set('UpdateValue', "1");
-					}
-					else
-					{
-						this.ViewModel.set('UpdateValue', "0");
-					}
-
-					this.ViewModel.Write();
+				this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
+		
+					// Update ViewModel Value
+					this.ViewModel.set('UpdateValue', newValue);
 				}));
 			}
 			else
 			{
-				this.set("checked", false);
-			}
+				this.set("value", null);			
+			}	
 		}
 
 	});

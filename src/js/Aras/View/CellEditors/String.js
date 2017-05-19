@@ -23,11 +23,11 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
-	'../Cell',
+	'../CellEditor',
 	'dijit/form/TextBox'
-], function(declare, lang, Cell, TextBox) {
+], function(declare, lang, CellEditor, TextBox) {
 	
-	return declare('Aras.View.Cells.String', [TextBox, Cell], {
+	return declare('Aras.View.CellEditors.String', [TextBox, CellEditor], {
 		
 		_valueHandle: null,
 		

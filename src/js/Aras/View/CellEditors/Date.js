@@ -23,28 +23,30 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
-	'dojo/on',
-	'../Cell',
-	'dijit/form/NumberTextBox'
-], function(declare, lang, on, Cell, NumberTextBox) {
+	'../CellEditor',
+	'dijit/form/DateTextBox'
+], function(declare, lang, CellEditor, DateTextBox) {
 	
-	return declare('Aras.View.Cells.Float', [NumberTextBox, Cell], {
+	return declare('Aras.View.CellEditors.Date', [DateTextBox, CellEditor], {
 		
 		_valueHandle: null,
 		
 		constructor: function() {
-
+			
 		},
 		
 		startup: function() {
 			this.inherited(arguments);
-
+			
 			// Call Control Startup
-			this._startup();			
+			this._startup();
 		},
 		
 		destroy: function() {
 			this.inherited(arguments);	
+
+			// Call Control Destroy
+			this._destroy();
 			
 			if (this._valueHandle)
 			{
@@ -55,6 +57,8 @@ define([
 		OnViewModelChanged: function(name, oldValue, newValue) {
 			this.inherited(arguments);	
 			
+			console.debug('date', newValue);
+			
 			if (this._valueHandle)
 			{
 				this._valueHandle.unwatch();
@@ -62,22 +66,19 @@ define([
 				
 			if (this.ViewModel != null)
 			{
-				// Set Min and Max Values
-				this.set("constraints", {min: this.ViewModel.MinValue, max: this.ViewModel.MaxValue});
-			
-				// Set Value
+				// Set Value from ViewModel
 				this.set("value", this.ViewModel.Value);
-	
+				
 				// Watch for changes in Control value
 				this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
-		
+
 					// Update ViewModel Value
 					this.ViewModel.set('UpdateValue', newValue);
 				}));
 			}
 			else
 			{
-				this.set("value", null);			
+				this.set("value", null);
 			}	
 		}
 

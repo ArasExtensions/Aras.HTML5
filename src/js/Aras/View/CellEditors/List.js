@@ -23,32 +23,30 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
-	'../Cell',
-	'dijit/form/DateTextBox'
-], function(declare, lang, Cell, DateTextBox) {
+	'dojo/_base/array',
+	'../CellEditor',
+	'dijit/form/Select'
+], function(declare, lang, array, CellEditor, Select) {
 	
-	return declare('Aras.View.Cells.Date', [DateTextBox, Cell], {
+	return declare('Aras.View.CellEditors.List', [Select, CellEditor], {
 		
 		_valueHandle: null,
-		
+	
 		constructor: function() {
 			
 		},
 		
 		startup: function() {
 			this.inherited(arguments);
-			
+	
 			// Call Control Startup
 			this._startup();
 		},
 		
 		destroy: function() {
 			this.inherited(arguments);	
-
-			// Call Control Destroy
-			this._destroy();
 			
-			if (this._valueHandle)
+			if (this._valueHandle != null)
 			{
 				this._valueHandle.unwatch();
 			}
@@ -57,29 +55,37 @@ define([
 		OnViewModelChanged: function(name, oldValue, newValue) {
 			this.inherited(arguments);	
 			
-			console.debug('date', newValue);
-			
-			if (this._valueHandle)
-			{
-				this._valueHandle.unwatch();
-			}
-				
 			if (this.ViewModel != null)
 			{
-				// Set Value from ViewModel
-				this.set("value", this.ViewModel.Value);
+				// Load Options
+				this.options = [];
+					
+				array.forEach(this.ViewModel.Values, function(valueviewmodel, i) {
+			
+					if (this.ViewModel.Value == valueviewmodel.Value)
+					{
+						this.options[i] = { label: valueviewmodel.Label, value: valueviewmodel.Value, selected: true };
+					}
+					else
+					{
+						this.options[i] = { label: valueviewmodel.Label, value: valueviewmodel.Value };
+					}
+				}, this);					
 				
-				// Watch for changes in Control value
+				this._loadChildren();
+					
+				if (this._valueHandle != null)
+				{
+					this._valueHandle.unwatch();
+				}
+				
+				// Watch for change in Select Value
 				this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
-
-					// Update ViewModel Value
-					this.ViewModel.set('UpdateValue', newValue);
+					
+					// Update ViewModel
+					this.ViewModel.UpdateValue = newValue;			
 				}));
 			}
-			else
-			{
-				this.set("value", null);
-			}	
 		}
 
 	});

@@ -26,7 +26,7 @@ define([
 	'./Control'
 ], function(declare, lang, Control) {
 	
-	return declare('Aras.View.Cell', [Control], {
+	return declare('Aras.View.CellEditor', [Control], {
 					
 		_startup: function() {
 			this.inherited(arguments);

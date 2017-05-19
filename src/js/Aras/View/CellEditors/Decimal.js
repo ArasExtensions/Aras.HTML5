@@ -23,30 +23,30 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
-	'dojo/_base/array',
-	'../Cell',
-	'dijit/form/Select'
-], function(declare, lang, array, Cell, Select) {
+	'dojo/on',
+	'../CellEditor',
+	'dijit/form/NumberTextBox'
+], function(declare, lang, on, CellEditor, NumberTextBox) {
 	
-	return declare('Aras.View.Cells.List', [Select, Cell], {
+	return declare('Aras.View.CellEditors.Decimal', [NumberTextBox, CellEditor], {
 		
 		_valueHandle: null,
-	
+		
 		constructor: function() {
-			
+
 		},
 		
 		startup: function() {
 			this.inherited(arguments);
-	
+
 			// Call Control Startup
-			this._startup();
+			this._startup();	
 		},
 		
 		destroy: function() {
 			this.inherited(arguments);	
 			
-			if (this._valueHandle != null)
+			if (this._valueHandle)
 			{
 				this._valueHandle.unwatch();
 			}
@@ -54,37 +54,30 @@ define([
 		
 		OnViewModelChanged: function(name, oldValue, newValue) {
 			this.inherited(arguments);	
-			
+		
+			if (this._valueHandle)
+			{
+				this._valueHandle.unwatch();
+			}
+				
 			if (this.ViewModel != null)
 			{
-				// Load Options
-				this.options = [];
-					
-				array.forEach(this.ViewModel.Values, function(valueviewmodel, i) {
+				// Set Min and Max Values
+				this.set("constraints", {min: this.ViewModel.MinValue, max: this.ViewModel.MaxValue});
 			
-					if (this.ViewModel.Value == valueviewmodel.Value)
-					{
-						this.options[i] = { label: valueviewmodel.Label, value: valueviewmodel.Value, selected: true };
-					}
-					else
-					{
-						this.options[i] = { label: valueviewmodel.Label, value: valueviewmodel.Value };
-					}
-				}, this);					
-				
-				this._loadChildren();
-					
-				if (this._valueHandle != null)
-				{
-					this._valueHandle.unwatch();
-				}
-				
-				// Watch for change in Select Value
+				// Set Value
+				this.set("value", this.ViewModel.Value);
+			
+				// Watch for changes in Control value
 				this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
-					
-					// Update ViewModel
-					this.ViewModel.UpdateValue = newValue;			
+		
+					// Update ViewModel Value
+					this.ViewModel.set('UpdateValue', newValue);
 				}));
+			}
+			else
+			{
+				this.set("value", null);
 			}
 		}
 
