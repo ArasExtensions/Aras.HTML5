@@ -29,6 +29,7 @@ define([
 	'dijit/layout/BorderContainer',
 	'./Control',
 	'./Cells/Boolean',
+	'./Cells/Date',
 	'./Cells/Decimal',
 	'./Cells/Float',
 	'./Cells/Integer',
@@ -36,7 +37,7 @@ define([
 	'./Cells/List',
 	'./Cells/String',
 	'./Cells/Text'
-], function(declare, lang, array, _Grid, GridMisc, BorderContainer, Control, BooleanCell, DecimalCell, FloatCell, IntegerCell, ItemCell, ListCell, StringCell, TextCell) {
+], function(declare, lang, array, _Grid, GridMisc, BorderContainer, Control, BooleanCell, DateCell, DecimalCell, FloatCell, IntegerCell, ItemCell, ListCell, StringCell, TextCell) {
 	
 	return declare('Aras.View.Grid', [BorderContainer, Control], {
 
@@ -208,6 +209,11 @@ define([
 							gridcolumns[columnviewmodel.Name].editor = BooleanCell;
 							break;
 
+						case "Aras.View.Columns.Date":
+							gridcolumns[columnviewmodel.Name].editor = DateCell;
+							gridcolumns[columnviewmodel.Name].editorArgs = { style: 'width:' + (columnviewmodel.Width - 5) + 'px;' };
+							break;
+							
 						case "Aras.View.Columns.Decimal":
 							gridcolumns[columnviewmodel.Name].editor = DecimalCell;
 							break;
@@ -240,8 +246,6 @@ define([
 							gridcolumns[columnviewmodel.Name].editor = undefined;
 							break;
 					}
-					
-					// gridcolumns[columnviewmodel.Name].editorArgs = { ViewModel: columnviewmodel };
 				}
 				else
 				{
