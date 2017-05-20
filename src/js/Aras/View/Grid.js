@@ -44,6 +44,8 @@ define([
 	
 	return declare('Aras.View.Grid', [BorderContainer, Control], {
 
+		_grid: null,
+		
 		_rowsHandle: null,
 		
 		_columnsHandle: null,
@@ -108,11 +110,9 @@ define([
 							break;
 						}
 					}
-					
-					var cellviewmodel = this.ViewModel.Rows[rowid].Cells[colindex];
-					
+
 					// Set Editor ViewModel
-					event.editor.set('ViewModel', cellviewmodel);
+					event.editor.set('ViewModel', this.ViewModel.Rows[rowid].Cells[colindex]);
 				}
 				
 			}));
@@ -137,10 +137,8 @@ define([
 						}
 					}
 	
-					var cellviewmodel = this.ViewModel.Rows[rowid].Cells[colindex];
-								
 					// Write New Value
-					cellviewmodel.Write();
+					this.ViewModel.Rows[rowid].Cells[colindex].Write();
 				}
 				
 			}));
@@ -215,7 +213,8 @@ define([
 				}
 				else
 				{
-					this.Columns[i] = new Column({ Grid: this});	
+					this.Columns[i] = new Column({ Grid: this});
+					this.Columns[i].startup();
 				}
 				
 				this.Columns[i].ViewModel = columnviewmodel;
@@ -303,7 +302,7 @@ define([
 		},
 		
 		_updateRows: function() {
-			
+		
 			// Reset Rows
 			array.forEach(this.Rows, function(row) {
 				row.Visible = false;
@@ -321,9 +320,11 @@ define([
 				else
 				{
 					this.Rows[i] = new Row({ Grid: this });
+					this.Rows[i].startup();
 				}
 				
 				this.Rows[i].ViewModel = rowviewmodel;
+				this.Rows[i].ID = i;
 					
 				rowdata[i] = new Object();
 				rowdata[i]['id'] = i;
@@ -333,9 +334,10 @@ define([
 					if (!this.Rows[i].Cells[j])
 					{
 						this.Rows[i].Cells[j] = new Cell({ Row: this.Rows[i], Column: this.Columns[j]});
+						this.Rows[i].Cells[j].startup();
 					}
 
-					this.Rows[i].Cells[j].ViewModel = rowviewmodel.Cells[j];
+					this.Rows[i].Cells[j].set('ViewModel', rowviewmodel.Cells[j]);
 					
 					rowdata[i][this.ViewModel.Columns[j].Name] = rowviewmodel.Cells[j].Value;
 				}

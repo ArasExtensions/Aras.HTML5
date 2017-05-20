@@ -34,15 +34,19 @@ define([
 		
 		Visible: null,
 		
+		ID: null,
+		
 		constructor: function() {
 
 			this.Cells = [];
 			this.Visible = true;
 		},
 		
-		_startup: function() {
+		startup: function() {
 			this.inherited(arguments);
-
+			
+			// Call Control Startup
+			this._startup();
 		}
 
 	});

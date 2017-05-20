@@ -23,18 +23,67 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
+	'dojo/html',
 	'./Control'
-], function(declare, lang, Control) {
+], function(declare, lang, html, Control) {
 	
 	return declare('Aras.View.Cell', [Control], {
+		
+		_valueHandle: null,
 		
 		Column: null,
 		
 		Row: null,
 		
-		_startup: function() {
+		startup: function() {
 			this.inherited(arguments);
+			
+			// Call Control Startup
+			this._startup();
+		},
+		
+		OnViewModelChanged: function(name, oldValue, newValue) {
+			this.inherited(arguments);	
 
+			if (this._valueHandle)
+			{
+				this._valueHandle.unwatch();
+			}
+						
+			if (this.ViewModel != null)
+			{				
+				// Watch for changes in ViewModel Value
+				this._valueHandle = this.ViewModel.watch('Value', lang.hitch(this, function(name, oldValue, newValue) {
+
+					// Update Cell Value
+					if (this.Column.Visible && this.Row.Visible)
+					{
+						var row = this.Column.Grid._grid.row(this.Row.ID);
+						var cell = this.Column.Grid._grid.cell(row, this.Column.ViewModel.Name);
+												
+						switch(this.Column.ViewModel.Type)
+						{
+							case 'Aras.View.Columns.Boolean':
+							
+								html.set(cell.element, this.Column.Grid._formatBoolean(newValue));			
+								break;
+							default:
+							
+								if (newValue != null)
+								{
+									html.set(cell.element, newValue);
+								}
+								else
+								{
+									html.set(cell.element, '');
+								}
+								
+								break;
+						}
+					}
+					
+				}));
+			}
 		}
 
 	});

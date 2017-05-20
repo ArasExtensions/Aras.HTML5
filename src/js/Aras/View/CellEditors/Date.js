@@ -57,8 +57,6 @@ define([
 		OnViewModelChanged: function(name, oldValue, newValue) {
 			this.inherited(arguments);	
 			
-			console.debug('date', newValue);
-			
 			if (this._valueHandle)
 			{
 				this._valueHandle.unwatch();
