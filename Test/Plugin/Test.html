@@ -26,7 +26,7 @@
 	<head>
 		<title>Plugin Test</title>
 		<style>
-			@import "../../Client/js/Aras/Themes/tundra/tundra.css";
+			@import "./js/Aras/Themes/tundra/tundra.css";
 		</style>
 		<script>
 			dojoConfig={
@@ -35,11 +35,11 @@
 				async: true
 			};
 		</script>
-		<script type="text/javascript" src="../../Client/js/dojo/dojo.js"></script>
+		<script type="text/javascript" src="./js/dojo/dojo.js"></script>
 		<script>
 			require(['Aras/View/Containers/Plugin', 'dojo/dom', 'dojo/domReady!'], function(Plugin, dom) {
 				var target = dom.byId('main');			
-				var plugin = new Plugin({ URL: 'http://localhost/InnovatorServer100SP4/AAD', DatabaseID: 'CMB', Username: 'admin', Password: '607920b64fe136f9ab2389e371852af2', Name: 'CMB.ViewModel.ContractManagement.Plugins.Order', Context: '17E4C652AF9D49AAA7EFFBF489D47CF7'}, target);
+				var plugin = new Plugin({ URL: 'http://localhost/InnovatorServer100SP4/AAD', DatabaseID: 'CMB', Username: 'admin', Password: '607920b64fe136f9ab2389e371852af2', Name: 'CMB.ViewModel.ContractManagement.Plugins.Order', Context: '520D8CE33F6F4106956CAA67E2BF369B'}, target);
 				plugin.startup();
 				plugin.Refresh();
 			});
