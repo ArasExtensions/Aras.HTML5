@@ -98,8 +98,11 @@ define([
 				{
 					this._toolTipHandle = this.ViewModel.watch('Tooltip', lang.hitch(this, function(name, oldValue, newValue) {
 						
-						// Update Tooltip
-						this._toolTip.set('label', newValue);
+						if (this._toolTip != null)
+						{
+							// Update Tooltip
+							this._toolTip.set('label', newValue);
+						}
 					}));
 				}
 				
