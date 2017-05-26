@@ -38,6 +38,8 @@ define([
 		
 		_toolTip: null,
 		
+		_toolTipHandle: null,
+		
 		_dialogsCache: new Object(),
 		
 		_dialogsHandle: null,
@@ -91,6 +93,16 @@ define([
 					}
 				}
 				
+				// Watch Tooltip
+				if (!this._toolTipHandle)
+				{
+					this._toolTipHandle = this.ViewModel.watch('Tooltip', lang.hitch(this, function(name, oldValue, newValue) {
+						
+						// Update Tooltip
+						this._toolTip.set('label', newValue);
+					}));
+				}
+				
 				// Watch ErrorMessage
 				if (!this._errorMessageHandle)
 				{
@@ -122,6 +134,12 @@ define([
 				{
 					this._toolTip.destroyRecursive();
 					this._toolTip = null;
+				}
+				
+				// Unwatch Tooltip
+				if (this._toolTipHandle)
+				{
+					this._toolTipHandle.unwatch();
 				}
 				
 				// Unwatch ErrorMessage
