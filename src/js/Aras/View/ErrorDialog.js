@@ -41,7 +41,7 @@ define([
 			if(!this._started)
 			{
 				// Create Layout
-				var layout = new ContentPane({content: '<span class="dijitInline mediumErrorIcon" style="padding-right: 5px;"></span><span class="dijitInline" style="min-width: 200px;">' + this.Message + '</span>'});
+				var layout = new ContentPane({content: '<span class="dijitInline mediumErrorIcon" style="padding-right: 5px;"></span><span class="dijitInline" style="min-width:200px;padding:5px;">' + this.Message + '</span>'});
 				this.set('content', layout);
 					
 								

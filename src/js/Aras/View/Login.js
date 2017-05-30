@@ -30,15 +30,19 @@ define([
 	'dijit/Dialog',
 	'dijit/form/ComboBox',
 	'dijit/form/TextBox',
-	'dijit/layout/ContentPane',
 	'dojo/store/Memory',
 	'dojox/widget/Standby',
+	'dojox/layout/TableContainer',
+	'dijit/layout/BorderContainer',
+	'./ErrorDialog',
 	'./Button'
-], function(declare, lang, dom, domconstruct, html, MD5, Dialog, ComboBox, TextBox, ContentPane, Memory, Standby, Button) {
+], function(declare, lang, dom, domconstruct, html, MD5, Dialog, ComboBox, TextBox, Memory, Standby, TableContainer, BorderContainer, ErrorDialog, Button) {
 	
 	return declare('Aras.View.Login', [Dialog], {
 		
 		Window: null,
+		
+		Layout: null,
 		
 		Database: null,
 		
@@ -59,56 +63,7 @@ define([
 		
 		startup: function() {
 			this.inherited(arguments);
-
-			// Create Layout
-			var layout = new ContentPane({content: '<table style="padding:15px 10px 0px 5px;"><tr><td>Database</td><td id="logindatabase"></td></tr><tr><td>Username</td><td id="loginusername"></td></tr><tr><td>Password</td><td id="loginpassword"></td></tr><tr><td></td><td align="right"><div id="loginlogin"></div><div id="logincancel"></div></td></tr><tr><td id="errormessage" colspan="2"></td></tr></table>'});
-			this.set('content', layout);
 			
-			// Add Database 
-			var databasetarget = dom.byId('logindatabase');	
-			var dataStore = Memory({data: []});
-			this.Database = new ComboBox({store: dataStore}, databasetarget);
-			this.Database.startup();
-			
-			// Add Standby for Database
-			this.Standby = new Standby({target: this.Database.id});
-			document.body.appendChild(this.Standby.domNode);
-			this.Standby.startup();
-			this.Standby.show();
-			
-			// Add Username
-			var usernametarget = dom.byId('loginusername');	
-			this.Username = new TextBox({}, usernametarget);
-			this.Username.startup();
-			
-			// Add Password
-			var passwordtarget = dom.byId('loginpassword');	
-			this.Password = new TextBox({type: 'password'}, passwordtarget);
-			this.Password.startup();
-			
-			// Add Cancel Button
-			var cancelbuttontarget = dom.byId('logincancel');
-			this.CancelButton = new Button({label: 'Cancel'}, cancelbuttontarget);
-			this.CancelButton.startup();
-			
-			this.CancelButton.set('onClick', lang.hitch(this, function() {
-				
-				// Clear Password
-				this.Password.set('value', '');
-				
-				// Reset Error Message
-				this._errorMessage('');
-				
-				// Hide Login Widget
-				this.hide();	
-			}));
-	
-			// Add Login Button
-			var loginbuttontarget = dom.byId('loginlogin');
-			this.LoginButton = new Button({label: 'Login'}, loginbuttontarget);
-			this.LoginButton.startup();
-			this.LoginButton.set('onClick', lang.hitch(this, this._login));
-									
 			// Get Database
 			this.Window.Server.Databases().then(lang.hitch(this, function(databases) {
 				
@@ -136,7 +91,59 @@ define([
 				// Remove Standby
 				this.Standby.hide();
 			}));
-
+		},
+		
+		buildRendering: function() {
+			this.inherited(arguments);
+			
+			// Add Layout
+			this.Layout = new BorderContainer({ gutters:false, style:'height:130px;width:280px;' });
+			this.addChild(this.Layout);	
+			
+			// Create TableContainer
+			var table = new TableContainer({ cols: 1, showLabels: true, orientation: 'horiz', region: 'top' });
+			this.Layout.addChild(table);
+			
+			// Add Database 
+			var dataStore = Memory({data: []});
+			this.Database = new ComboBox({ store: dataStore, title: 'Database' });
+			table.addChild(this.Database);
+			
+			// Add Standby for Database
+			this.Standby = new Standby({target: this.Database.id});
+			document.body.appendChild(this.Standby.domNode);
+			this.Standby.startup();
+			this.Standby.show();
+			
+			// Add Username
+			this.Username = new TextBox({ title: 'Username' });
+			table.addChild(this.Username);
+			
+			// Add Password
+			this.Password = new TextBox({ type: 'password', title: 'Password' });
+			table.addChild(this.Password);
+							
+			// Add Login Button
+			this.LoginButton = new Button({label: 'Login', region: 'right', style: 'padding-right:5px;'});
+			this.Layout.addChild(this.LoginButton);
+			
+			this.LoginButton.set('onClick', lang.hitch(this, this._login));
+	
+			// Add Cancel Button
+			this.CancelButton = new Button({label: 'Cancel', region: 'right'});
+			this.Layout.addChild(this.CancelButton);
+			
+			this.CancelButton.set('onClick', lang.hitch(this, function() {
+				
+				// Clear Password
+				this.Password.set('value', '');
+				
+				// Reset Error Message
+				this._errorMessage('');
+				
+				// Hide Login Widget
+				this.hide();	
+			}));
 		},
 		
 		Display: function() {
@@ -164,10 +171,7 @@ define([
 					this.Password.set("value", '');
 					
 					if (session)
-					{
-						// Clear Error Message
-						this._errorMessage('');
-						
+					{						
 						// Set Session
 						this.Window.set("Session", session);
 	
@@ -187,7 +191,10 @@ define([
 		},
 		
 		_errorMessage: function(message) {
-			html.set(dom.byId('errormessage'), message);
+
+			// Display Error Message
+			var message = ErrorDialog({ Message: message });
+			message.show();
 		}
 
 	});
