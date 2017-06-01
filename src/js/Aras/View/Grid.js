@@ -372,7 +372,15 @@ define([
 					}
 					
 				default:
-					return value.ViewModel.Value;
+				
+					if (value.ViewModel.Value != null)
+					{
+						return value.ViewModel.Value;
+					}
+					else
+					{
+						return '';
+					}
 			}
 
 		}
