@@ -93,7 +93,7 @@ define([
 			
 			// Process Grid Editor Show Event
 			this._grid.on('dgrid-editor-show', lang.hitch(this, function(event) {
-				
+								
 				if (this.ViewModel != null)
 				{
 					// Get Cell ViewModel
@@ -114,11 +114,14 @@ define([
 					// Set Editor ViewModel
 					event.editor.set('ViewModel', this.ViewModel.Rows[rowid].Cells[colindex]);
 				}
-				
+
 			}));
 			
 			// Process Grid Editor Changed Event
 			this._grid.on('dgrid-datachange', lang.hitch(this, function(event) {
+				
+				// Cancel Event
+				event.preventDefault();
 				
 				if (this.ViewModel != null)
 				{
@@ -140,7 +143,7 @@ define([
 					// Write New Value
 					this.ViewModel.Rows[rowid].Cells[colindex].Write();
 				}
-				
+			
 			}));
 			
 			// Watch for Changes in Columns
@@ -276,19 +279,11 @@ define([
 					gridcolumns[columnviewmodel.Name].editor = undefined;
 				}
 				
-				switch(columnviewmodel.Type)
-				{
-					case "Aras.View.Columns.Boolean":
-						gridcolumns[columnviewmodel.Name].formatter = lang.hitch(this, this._formatBoolean);
-						break;
-						
-					default:
-					
-						break;
-				}
+				// Cell Formatter
+				gridcolumns[columnviewmodel.Name].formatter = lang.hitch(this, this._formatCell);
 				
 				// Set Column Width
-				var rule = GridMisc.addCssRule('#' + GridMisc.escapeCssIdentifier(this._grid.domNode.id) +
+				GridMisc.addCssRule('#' + GridMisc.escapeCssIdentifier(this._grid.domNode.id) +
 						' .dgrid-column-' + GridMisc.escapeCssIdentifier(columnviewmodel.Name, '-'),
 						'width: ' + columnviewmodel.Width + 'px;');
 						
@@ -339,7 +334,7 @@ define([
 
 					this.Rows[i].Cells[j].set('ViewModel', rowviewmodel.Cells[j]);
 					
-					rowdata[i][this.ViewModel.Columns[j].Name] = rowviewmodel.Cells[j].Value;
+					rowdata[i][this.ViewModel.Columns[j].Name] = this.Rows[i].Cells[j];
 				}
 					
 			}, this);
@@ -351,16 +346,35 @@ define([
 			this._grid.renderArray(rowdata);
 		},
 		
-		_formatBoolean: function(value, object) {
-			
-			if (value == '1')
+		_formatCell: function(value, object) {
+
+			switch(value.Column.ViewModel.Type)
 			{
-				return '<input type="checkbox" disabled checked="checked">';
+				case "Aras.View.Columns.Boolean":
+				
+					if (value.ViewModel.Value == '1')
+					{
+						return '<input type="checkbox" disabled checked="checked">';
+					}	
+					else
+					{
+						return '<input type="checkbox" disabled>';
+					}
+				case "Aras.View.Columns.List":
+				
+					if (value.ViewModel.Selected != null)
+					{
+						return value.ViewModel.Selected.Label;
+					}
+					else
+					{
+						return '';
+					}
+					
+				default:
+					return value.ViewModel.Value;
 			}
-			else
-			{
-				return '<input type="checkbox" disabled>';
-			}
+
 		}
 		
 	});

@@ -60,26 +60,8 @@ define([
 					{
 						var row = this.Column.Grid._grid.row(this.Row.ID);
 						var cell = this.Column.Grid._grid.cell(row, this.Column.ViewModel.Name);
-												
-						switch(this.Column.ViewModel.Type)
-						{
-							case 'Aras.View.Columns.Boolean':
-							
-								html.set(cell.element, this.Column.Grid._formatBoolean(newValue));			
-								break;
-							default:
-							
-								if (newValue != null)
-								{
-									html.set(cell.element, newValue);
-								}
-								else
-								{
-									html.set(cell.element, '');
-								}
 								
-								break;
-						}
+						html.set(cell.element, this.Column.Grid._formatCell(this));
 					}
 					
 				}));
