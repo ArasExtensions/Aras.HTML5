@@ -145,6 +145,9 @@ define([
 			
 			// Clear Toolbar
 			this.TopToolBar.set("ViewModel", null);
+			
+			// Clear Application Cache
+			this._applicationViewModelCache = new Object();
 		},
 		
 		_startApplication: function(ApplicationType) {
