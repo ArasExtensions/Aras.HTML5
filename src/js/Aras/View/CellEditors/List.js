@@ -56,19 +56,31 @@ define([
 			this.inherited(arguments);	
 			
 			if (this.ViewModel != null)
-			{
+			{		
 				// Load Options
 				this.options = [];
-					
-				array.forEach(this.ViewModel.Values, function(valueviewmodel, i) {
-			
-					if (this.ViewModel.Value == valueviewmodel.Value)
+
+				if (this.ViewModel.AllowNull)
+				{
+					if (this.ViewModel.Value == null)
 					{
-						this.options[i] = { label: valueviewmodel.Label, value: valueviewmodel.Value, selected: true };
+						this.options.push({ label: "", value: "--select--", selected: true });
 					}
 					else
 					{
-						this.options[i] = { label: valueviewmodel.Label, value: valueviewmodel.Value };
+						this.options.push({ label: "", value: "--select--" });
+					}
+				}
+				
+				array.forEach(this.ViewModel.Values, function(valueviewmodel) {
+			
+					if (this.ViewModel.Value == valueviewmodel.Value)
+					{
+						this.options.push({ label: valueviewmodel.Label, value: valueviewmodel.Value, selected: true });
+					}
+					else
+					{
+						this.options.push({ label: valueviewmodel.Label, value: valueviewmodel.Value });
 					}
 				}, this);					
 				
@@ -83,7 +95,14 @@ define([
 				this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
 					
 					// Update ViewModel
-					this.ViewModel.UpdateValue = newValue;			
+					if (newValue == "--select--")
+					{
+						this.ViewModel.UpdateValue = null;
+					}
+					else
+					{
+						this.ViewModel.UpdateValue = newValue;
+					}	
 				}));
 			}
 		}

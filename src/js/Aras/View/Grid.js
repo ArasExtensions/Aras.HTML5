@@ -139,7 +139,7 @@ define([
 							break;
 						}
 					}
-	
+										
 					// Write New Value
 					this.ViewModel.Rows[rowid].Cells[colindex].Write();
 				}

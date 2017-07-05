@@ -67,16 +67,28 @@ define([
 			{
 				// Load Options
 				var options = [];
-					
-				array.forEach(this.ViewModel.Values, function(valueviewmodel, i) {
-			
-					if (this.ViewModel.Value == valueviewmodel.Value)
+				
+				if (this.ViewModel.AllowNull)
+				{
+					if (this.ViewModel.Value == null)
 					{
-						options[i] = { label: valueviewmodel.Label, value: valueviewmodel.Value, selected: true };
+						this.options.push({ label: "", value: "--select--", selected: true });
 					}
 					else
 					{
-						options[i] = { label: valueviewmodel.Label, value: valueviewmodel.Value };
+						this.options.push({ label: "", value: "--select--" });
+					}
+				}				
+					
+				array.forEach(this.ViewModel.Values, function(valueviewmodel) {
+			
+					if (this.ViewModel.Value == valueviewmodel.Value)
+					{
+						options.push({ label: valueviewmodel.Label, value: valueviewmodel.Value, selected: true });
+					}
+					else
+					{
+						options.push({ label: valueviewmodel.Label, value: valueviewmodel.Value });
 					}
 				}, this);					
 					
@@ -86,16 +98,22 @@ define([
 				if (!this._valueHandle)
 				{
 					this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
-					
-						if (newValue !== this.ViewModel.Value)
+
+						if (!this._updateFromViewModel)
 						{
-							if (!this._updateFromViewModel)
+							// Update ViewModel
+							if (newValue == "--select--")
 							{
-								// Update ViewModel
-								this.ViewModel.Value = newValue;
-								this.ViewModel.Write();
+								this.ViewModel.UpdateValue = null;
 							}
-						}	
+							else
+							{
+								this.ViewModel.Value = newValue;
+							}
+							
+							this.ViewModel.Write();
+						}
+						
 					}));
 				}
 			
