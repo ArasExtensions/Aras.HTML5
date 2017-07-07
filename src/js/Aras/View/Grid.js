@@ -230,6 +230,9 @@ define([
 				
 				if (columnviewmodel.Editable)
 				{
+					// Set canEdit to allow row specific editing 
+					gridcolumns[columnviewmodel.Name].canEdit = lang.hitch(this, this._canEditCell);
+					
 					switch(columnviewmodel.Type)
 					{
 						case "Aras.View.Columns.Boolean":
@@ -294,6 +297,18 @@ define([
 
 			// Update Rows
 			this._updateRows();	
+		},
+		
+		_canEditCell(Grid, Cell) {
+		
+			if (Cell.ViewModel != null)
+			{
+				return Cell.ViewModel.Editable;
+			}
+			else
+			{
+				return false;
+			}
 		},
 		
 		_updateRows: function() {
