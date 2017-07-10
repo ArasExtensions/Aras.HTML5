@@ -299,7 +299,7 @@ define([
 			this._updateRows();	
 		},
 		
-		_canEditCell(Grid, Cell) {
+		_canEditCell: function(Grid, Cell) {
 		
 			if (Cell.ViewModel != null)
 			{
