@@ -31,6 +31,10 @@ define([
 		_startup: function() {
 			this.inherited(arguments);
 
+		},
+		
+		UpdateValue: function() {
+			
 		}
 
 	});

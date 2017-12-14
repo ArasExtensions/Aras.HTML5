@@ -93,9 +93,9 @@ define([
 			
 			// Process Grid Editor Show Event
 			this._grid.on('dgrid-editor-show', lang.hitch(this, function(event) {
-								
+				
 				if (this.ViewModel != null)
-				{
+				{					
 					// Get Cell ViewModel
 					var rowid = event.cell.row.id;
 					var colname = event.cell.column.id;
@@ -111,8 +111,14 @@ define([
 						}
 					}
 
-					// Set Editor ViewModel
-					event.editor.set('ViewModel', this.ViewModel.Rows[rowid].Cells[colindex]);
+					if ((event.editor.ViewModel == null) || (event.editor.ViewModel.ID != this.ViewModel.Rows[rowid].Cells[colindex].ID))
+					{
+						// Set Editor ViewModel
+						event.editor.set('ViewModel', this.ViewModel.Rows[rowid].Cells[colindex]);
+					}
+					
+					// Update Value
+					event.editor.UpdateValue();
 				}
 
 			}));

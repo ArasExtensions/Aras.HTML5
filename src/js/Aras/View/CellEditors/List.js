@@ -105,6 +105,37 @@ define([
 					}	
 				}));
 			}
+		},
+		
+		UpdateValue: function() {
+			this.inherited(arguments);	
+			
+			if ((this.ViewModel != null) && (this.options != null))
+			{
+				if (this.ViewModel.Value == null)
+				{
+					if ((this.options.length) > 0 && this.ViewModel.AllowNull)
+					{
+						this.options[0].selected = true;
+					}
+				}
+				else
+				{
+					for (var i = 0; i < this.options.length; i++) 
+					{
+						if (this.options[i].value == this.ViewModel.Value)
+						{
+							this.options[i].selected = true;
+						}
+						else
+						{
+							this.options[i].selected = false;
+						}
+					}
+				}
+				
+				this.ViewModel.UpdateValue = this.ViewModel.Value;
+			}
 		}
 
 	});

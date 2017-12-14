@@ -64,16 +64,6 @@ define([
 				
 			if (this.ViewModel != null)
 			{			
-				// Set Value from ViewModel	
-				if (this.ViewModel.Value == '1')
-				{
-					this.set("checked", true);
-				}
-				else
-				{
-					this.set("checked", false);
-				}
-			
 				// Watch for changes in Control value
 				this._valueHandle = this.watch('checked', lang.hitch(this, function(name, oldValue, newValue) {
 								
@@ -89,6 +79,22 @@ define([
 
 					this.ViewModel.Write();
 				}));
+			}
+		},
+		
+		UpdateValue: function() {
+			this.inherited(arguments);	
+			
+			if (this.ViewModel != null)
+			{
+				if (this.ViewModel.Value == '1')
+				{
+					this.set("checked", true);
+				}
+				else
+				{
+					this.set("checked", false);
+				}
 			}
 			else
 			{

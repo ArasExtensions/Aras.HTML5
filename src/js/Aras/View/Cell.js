@@ -59,8 +59,7 @@ define([
 					if (this.Column.Visible && this.Row.Visible)
 					{
 						var row = this.Column.Grid._grid.row(this.Row.ID);
-						var cell = this.Column.Grid._grid.cell(row, this.Column.ViewModel.Name);
-								
+						var cell = this.Column.Grid._grid.cell(row, this.Column.ViewModel.Name);	
 						html.set(cell.element, this.Column.Grid._formatCell(this));
 					}
 					

@@ -63,21 +63,27 @@ define([
 			}
 				
 			if (this.ViewModel != null)
-			{
-				// Set Value from ViewModel
-				this.set("value", this.ViewModel.Value);
-				
+			{				
 				// Watch for changes in Control value
 				this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
 
 					// Update ViewModel Value
 					this.ViewModel.set('UpdateValue', newValue);
 				}));
+			}	
+		},
+		
+		UpdateValue: function() {
+			this.inherited(arguments);	
+			
+			if (this.ViewModel != null)
+			{
+				this.set("value", this.ViewModel.Value);
 			}
 			else
 			{
 				this.set("value", null);
-			}	
+			}
 		}
 
 	});

@@ -64,9 +64,6 @@ define([
 			{
 				// Set Min and Max Values
 				this.set("constraints", {min: this.ViewModel.MinValue, max: this.ViewModel.MaxValue});
-			
-				// Set Value
-				this.set("value", this.ViewModel.Value);
 	
 				// Watch for changes in Control value
 				this._valueHandle = this.watch('value', lang.hitch(this, function(name, oldValue, newValue) {
@@ -75,10 +72,19 @@ define([
 					this.ViewModel.set('UpdateValue', newValue);
 				}));
 			}
+		},
+		
+		UpdateValue: function() {
+			this.inherited(arguments);	
+			
+			if (this.ViewModel != null)
+			{
+				this.set("value", this.ViewModel.Value);
+			}
 			else
 			{
-				this.set("value", null);			
-			}	
+				this.set("value", null);
+			}
 		}
 
 	});
