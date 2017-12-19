@@ -114,9 +114,10 @@ define([
 			{
 				if (this.ViewModel.Value == null)
 				{
-					if ((this.options.length) > 0 && this.ViewModel.AllowNull)
+					if ((this.options.length > 0) && !this.ViewModel.AllowNull)
 					{
 						this.options[0].selected = true;
+						this.ViewModel.UpdateValue = this.options[0].value;
 					}
 				}
 				else
@@ -132,9 +133,9 @@ define([
 							this.options[i].selected = false;
 						}
 					}
+					
+					this.ViewModel.UpdateValue = this.ViewModel.Value;
 				}
-				
-				this.ViewModel.UpdateValue = this.ViewModel.Value;
 			}
 		}
 
