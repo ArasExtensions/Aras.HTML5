@@ -222,7 +222,7 @@ define([
 			
 			array.forEach(this.Data.Properties, function(property, i){
 					
-				if (property.Type == 0)
+				if (property.Type === 0)
 				{
 					if (this.get(property.Name))
 					{
@@ -233,7 +233,7 @@ define([
 						property.Values[0] = '0';
 					}
 				}
-				else if (property.Type == 3)
+				else if (property.Type === 3)
 				{
 					// Reset Values
 					property.Values = [];
@@ -248,7 +248,7 @@ define([
 						property.Values[0] = this.get(property.Name).ID;
 					}
 				}
-				else if (property.Type == 4)
+				else if (property.Type === 4)
 				{
 					// Get List of Controls from Cache
 					property.Values = [];
@@ -266,7 +266,7 @@ define([
 						
 					}, this);
 				}
-				else if (property.Type == 8)
+				else if (property.Type === 8)
 				{
 					// Date
 					property.Values = [];
