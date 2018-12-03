@@ -64,9 +64,9 @@ define([
 			// Check for Top Aras and update connection parameters
 			if (this.TopAras != null)
 			{
-				this.DatabaseID = this.TopAras.commonProperties.database;
-				this.Username = this.TopAras.commonProperties.loginName;
-				this.Password = this.TopAras.commonProperties.password;
+				this.DatabaseID = this.TopAras.getDatabase();
+				this.Username = this.TopAras.getLoginName();
+				this.Password = this.TopAras.getPassword();
 			}
 			
 			// Create Server
