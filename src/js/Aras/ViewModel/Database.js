@@ -38,13 +38,13 @@ define([
 			declare.safeMixin(this, args);
 		},
 		
-		Login: function(Username, Password) {
+		Login: function(Username, AccessToken) {
 			return request.put(this.Server.URL + '/databases/' + this.ID + '/login', 
 								{ headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, 
 								  handleAs: 'json', 
-								  data: json.stringify({ Username: Username, Password: Password })
+								  data: json.stringify({ Username: Username, AccessToken: AccessToken })
 								}).then(lang.hitch(this, function(){
-					return new Session({ Database: this, Username: Username, Password: Password });
+					return new Session({ Database: this, Username: Username, AccessToken: AccessToken });
 				}),
 				lang.hitch(this, function(error) {
 				

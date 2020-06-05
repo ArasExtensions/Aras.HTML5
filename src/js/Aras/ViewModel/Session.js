@@ -92,7 +92,7 @@ define([
 		
 		Username: null,
 		
-		Password: null,
+		AccessToken: null,
 		
 		_controlCache: new Object(),
 		
