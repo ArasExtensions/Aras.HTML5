@@ -61,8 +61,6 @@ define([
 			// Set defaults for Tooltips
 			dijit.Tooltip.defaultPosition = ['above', 'below'];
 			
-			debugger;
-			
 			// Check for Top Aras and update connection parameters
 			if (this.TopAras != null)
 			{
@@ -108,13 +106,25 @@ define([
 								this._displayPluginError();
 							}
 						}));
+						
+						// Watch for Lock/UnLock on Form
+						parent.onbeforeunload = lang.hitch(this, function () {parent.aras.unregisterEventHandler("ItemLock", parent, this.ItemLock);});
+						parent.aras.registerEventHandler('ItemLock', parent, lang.hitch(this, this.ItemLock));	
 					}));
 				}));
 			}));
 		},
 		
-		Refresh: function() {
+		ItemLock: function() {
+			
+			if (this.ViewModel != null)
+			{
+				this.ViewModel.ItemLock.Execute();
+			}
+		},
 		
+		Refresh: function() {
+			
 			if (this.ViewModel != null)
 			{
 				this.ViewModel.Refresh.Execute();
