@@ -38,7 +38,7 @@ define([
 		
 		Username: null,
 		
-		Password: null,
+		AccessToken: null,
 		
 		Name: null,
 		
@@ -64,9 +64,9 @@ define([
 			// Check for Top Aras and update connection parameters
 			if (this.TopAras != null)
 			{
-				this.DatabaseID = this.TopAras.commonProperties.database;
-				this.Username = this.TopAras.commonProperties.loginName;
-				this.Password = this.TopAras.commonProperties.password;
+				this.DatabaseID = this.TopAras.getDatabase();
+				this.Username = this.TopAras.getLoginName();
+				this.AccessToken = this.TopAras.OAuthClient.getToken();
 			}
 			
 			// Create Server
@@ -79,7 +79,7 @@ define([
 			this.Server.Database(this.DatabaseID).then(lang.hitch(this, function(database) {
 		
 				// Login
-				database.Login(this.Username, this.Password).then(lang.hitch(this, function(session){
+				database.Login(this.Username, this.AccessToken).then(lang.hitch(this, function(session){
 
 					// Get Application ViewModel
 					session.Plugin(this.Name, this.Context).then(lang.hitch(this, function(plugin){ 
@@ -106,13 +106,25 @@ define([
 								this._displayPluginError();
 							}
 						}));
+						
+						// Watch for Lock/UnLock on Form
+						parent.onbeforeunload = lang.hitch(this, function () {parent.aras.unregisterEventHandler("ItemLock", parent, this.ItemLock);});
+						parent.aras.registerEventHandler('ItemLock', parent, lang.hitch(this, this.ItemLock));	
 					}));
 				}));
 			}));
 		},
 		
-		Refresh: function() {
+		ItemLock: function() {
+			
+			if (this.ViewModel != null)
+			{
+				this.ViewModel.ItemLock.Execute();
+			}
+		},
 		
+		Refresh: function() {
+			
 			if (this.ViewModel != null)
 			{
 				this.ViewModel.Refresh.Execute();
