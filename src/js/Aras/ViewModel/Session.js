@@ -163,7 +163,7 @@ define([
 		},
 		
 		Application: function(Name) {
-				return request.put(this.Database.Server.URL + '/applications', 
+				return request.post(this.Database.Server.URL + '/applications', 
 							   { headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'AUTH_TOKEN': this._getAccessToken()}, 
 								 handleAs: 'json',
 								 data: json.stringify({ Name: Name })
@@ -183,7 +183,7 @@ define([
 		},
 		
 		Plugin: function(Name, Context) {
-				return request.put(this.Database.Server.URL + '/plugins', 
+				return request.post(this.Database.Server.URL + '/plugins', 
 							   { headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'AUTH_TOKEN': this._getAccessToken()}, 
 								 handleAs: 'json',
 								 data: json.stringify({ Name: Name, Context: Context })
@@ -258,7 +258,7 @@ define([
 		Execute: function(Command, Parameters) {
 			
 			// Execute Command
-			request.put(this.Database.Server.URL + '/commands/' + Command.ID + '/execute', 
+			request.post(this.Database.Server.URL + '/commands/' + Command.ID + '/execute', 
 								{ headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'AUTH_TOKEN': this._getAccessToken() }, 
 								  handleAs: 'json',
 								  data: json.stringify(Parameters)
@@ -277,7 +277,7 @@ define([
 		_writeControl: function(Control) {
 			
 			// Send to Server
-			request.put(this.Database.Server.URL + '/controls/' + Control.ID, 
+			request.post(this.Database.Server.URL + '/controls/' + Control.ID, 
 								{ headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'AUTH_TOKEN': this._getAccessToken() }, 
 								  handleAs: 'json',
 								  data: json.stringify(Control.Data)
