@@ -94,6 +94,8 @@ define([
 		
 		AccessToken: null,
 		
+		OAuthClient: null,
+		
 		_controlCache: new Object(),
 		
 		_commandCache: new Object(),
@@ -137,9 +139,17 @@ define([
 			}));
 		},
 		
+		_getAccessToken: function() {
+			
+			// Get Latest Token
+			this.AccessToken = this.OAuthClient.getToken();
+
+			return this.AccessToken;
+		},
+		
 		ApplicationTypes: function() {
 			return request.get(this.Database.Server.URL + '/applicationtypes',
-							   { headers: {'Accept': 'application/json'}, 
+							   { headers: {'Accept': 'application/json', 'AUTH_TOKEN': this._getAccessToken()}, 
 								 handleAs: 'json'
 							   }).then(
 				lang.hitch(this, function(result) {					
@@ -154,7 +164,7 @@ define([
 		
 		Application: function(Name) {
 				return request.put(this.Database.Server.URL + '/applications', 
-							   { headers: {'Content-Type': 'application/json', 'Accept': 'application/json'}, 
+							   { headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'AUTH_TOKEN': this._getAccessToken()}, 
 								 handleAs: 'json',
 								 data: json.stringify({ Name: Name })
 							   }).then(
@@ -174,7 +184,7 @@ define([
 		
 		Plugin: function(Name, Context) {
 				return request.put(this.Database.Server.URL + '/plugins', 
-							   { headers: {'Content-Type': 'application/json', 'Accept': 'application/json'}, 
+							   { headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'AUTH_TOKEN': this._getAccessToken()}, 
 								 handleAs: 'json',
 								 data: json.stringify({ Name: Name, Context: Context })
 							   }).then(
@@ -205,7 +215,7 @@ define([
 		_readControl: function(Control) {
 		
 			request.get(this.Database.Server.URL + '/controls/' + Control.ID, 
-						{ headers: {'Accept': 'application/json'}, 
+						{ headers: {'Accept': 'application/json', 'AUTH_TOKEN': this._getAccessToken()}, 
 						  handleAs: 'json'
 						}).then(
 				lang.hitch(this, function(result) {
@@ -249,7 +259,7 @@ define([
 			
 			// Execute Command
 			request.put(this.Database.Server.URL + '/commands/' + Command.ID + '/execute', 
-								{ headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, 
+								{ headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'AUTH_TOKEN': this._getAccessToken() }, 
 								  handleAs: 'json',
 								  data: json.stringify(Parameters)
 								}).then(
@@ -268,7 +278,7 @@ define([
 			
 			// Send to Server
 			request.put(this.Database.Server.URL + '/controls/' + Control.ID, 
-								{ headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, 
+								{ headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'AUTH_TOKEN': this._getAccessToken() }, 
 								  handleAs: 'json',
 								  data: json.stringify(Control.Data)
 								}).then(

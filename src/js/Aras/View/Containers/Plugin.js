@@ -81,6 +81,9 @@ define([
 				// Login
 				database.Login(this.Username, this.AccessToken).then(lang.hitch(this, function(session){
 
+					// Store Function to get Access Token
+					session.OAuthClient = this.TopAras.OAuthClient;
+					
 					// Get Application ViewModel
 					session.Plugin(this.Name, this.Context).then(lang.hitch(this, function(plugin){ 
 								
