@@ -150,7 +150,7 @@ define([
 					// Prepare Message Text
 					var messagetext = this.Server.ErrorMessage;
 					
-					if (this.Server.ErrorCode == 0)
+					if (this.Server.ErrorCode === 0)
 					{
 						messagetext = 'Unable to connect to Innovator Server';
 					}
